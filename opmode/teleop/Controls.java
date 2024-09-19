@@ -10,4 +10,7 @@ public class Controls {
     public static final Input MIDDLE_WRIST = Input.A;
     public static final Input LEFT_WRIST = Input.X;
     public static final Input RIGHT_WRIST = Input.Y;
+    public static final Input LOW = Input.DPAD_DOWN;
+    public static final Input MEDIUM = Input.DPAD_LEFT;
+    public static final Input HIGH = Input.DPAD_UP;
 }
