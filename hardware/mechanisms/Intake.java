@@ -12,11 +12,24 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Intake extends Mechanism {
+    public static double POWER = 1;
 
     private CRServo intakeServo;
 
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
+    }
+
+    public void intake() {
+        intakeServo.setPower(POWER);
+    }
+
+    public void outtake() {
+        intakeServo.setPower(-POWER);
+    }
+
+    public void stop() {
+        intakeServo.setPower(0);
     }
 
     @Override
@@ -26,19 +39,12 @@ public class Intake extends Mechanism {
 
     @Override
     public void loop(Gamepad gamepad) {
-
-        while (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) && !GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE) ) {
-            intakeServo.setPower(1);
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+            intake();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+            outtake();
+        } else {
+            stop();
         }
-
-        while (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE) && !GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) ) {
-            intakeServo.setPower(-1);
-        }
-
-        while (!GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE) && !GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) ) {
-            intakeServo.setPower(0);
-        }
-
     }
-
 }

@@ -10,16 +10,14 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 import org.firstinspires.ftc.teamcode.util.PIDController;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
-public class Telescope extends Mechanism {
-    public static int LOW_POS = 160;
-    public static int MED_POS = 350;
-    public static int HIGH_POS = 845;
-    public static int ABIT = 180;
+public class Pivot extends Mechanism {
+    public static int INTAKE_POS = 160;
+    public static int OUTTAKE_POS = 320;
 
     public static double KP = 0.003;
     public static double KI = 0;
@@ -34,14 +32,14 @@ public class Telescope extends Mechanism {
 
     private VoltageSensor voltage;
 
-    public Telescope(LinearOpMode opMode) {
+    public Pivot(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
     @Override
     public void init(HardwareMap hwMap) {
-        motors[0] = hwMap.get(DcMotorEx.class, "telescopeLeftMotor");
-        motors[1] = hwMap.get(DcMotorEx.class, "telescopeRightMotor");
+        motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
+        motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");
 
         motors[0].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors[1].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -55,7 +53,7 @@ public class Telescope extends Mechanism {
         motors[0].setDirection(DcMotorEx.Direction.REVERSE);
         motors[1].setDirection(DcMotorEx.Direction.FORWARD);
 
-        lowPos();
+        intakePos();
     }
 
     public void telemetry(Telemetry telemetry) {
@@ -65,32 +63,20 @@ public class Telescope extends Mechanism {
         telemetry.update();
     }
 
-    public void lowPos() {
-        setTarget(LOW_POS);
+    public void intakePos() {
+        setTarget(INTAKE_POS);
     }
 
-    public void medPos() {
-        setTarget(MED_POS);
-    }
-
-    public void highPos() {
-        setTarget(HIGH_POS);
+    public void outtakePos() {
+        setTarget(OUTTAKE_POS);
     }
 
     public void setTarget(double target) {
-        Telescope.target = target;
+        Pivot.target = target;
     }
 
     public double getPosition() {
         return motors[0].getCurrentPosition();
-    }
-
-    public void upABit() {
-        setTarget(target + ABIT);
-    }
-
-    public void downABit() {
-        setTarget(target - ABIT);
     }
 
     public void update() {
@@ -103,13 +89,10 @@ public class Telescope extends Mechanism {
     @Override
     public void loop(Gamepad gamepad) {
         update();
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.LOW)) {
-            lowPos();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.MEDIUM)) {
-            medPos();
-        }
-        else if (GamepadStatic.isButtonPressed(gamepad, Controls.HIGH)) {
-            highPos();
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+            intakePos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+            outtakePos();
         }
     }
 }
