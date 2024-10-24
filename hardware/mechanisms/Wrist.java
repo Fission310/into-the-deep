@@ -48,7 +48,7 @@ public class Wrist extends Mechanism {
         if (GamepadStatic.isButtonPressed(gamepad, Controls.LEFT_WRIST)) {
             leftPos();
         }
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.MIDDLE_WRIST)) {
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.RIGHT_WRIST)) {
             rightPos();
         }
     }
