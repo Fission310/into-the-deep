@@ -6,9 +6,8 @@ public class Constant {
     public double X_POS;
     public double Y_POS;
     public double HEADING;
-    public double COLOR; // 0 = blue, 1 = red
 
-    public Constant(double x, double y, double h, double color) {
+    public Constant(double x, double y, double h) {
         X_POS = x;
         Y_POS = y;
         HEADING = h;

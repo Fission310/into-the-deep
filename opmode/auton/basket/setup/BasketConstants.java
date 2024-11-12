@@ -9,7 +9,6 @@ public class BasketConstants{
     public Constant CENTER_SAMPLE;
     public Constant FAR_SAMPLE;
 
-
     public Constant BASKET_1;
     public Constant BASKET_2;
     public Constant BASKET_3;
