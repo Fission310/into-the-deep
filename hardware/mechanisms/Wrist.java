@@ -12,7 +12,8 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Wrist extends Mechanism {
-    private Servo wristServo;
+    private Servo wristServoRight;
+    private Servo wristServoLeft;
 
     public static double LEFT_POS = 0;
     public static double MIDDLE_POS = 0.25;
@@ -24,20 +25,24 @@ public class Wrist extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        wristServo = hwMap.get(Servo.class, "wristServo");
+        wristServoRight = hwMap.get(Servo.class, "wristServoRight");
+        wristServoLeft = hwMap.get(Servo.class, "wristServoLeft");
         middlePos();
     }
 
     public void middlePos() {
-        wristServo.setPosition(MIDDLE_POS);
+        wristServoRight.setPosition(MIDDLE_POS);
+        wristServoLeft.setPosition(MIDDLE_POS);
     }
 
     public void leftPos() {
-        wristServo.setPosition(LEFT_POS);
+        wristServoRight.setPosition(LEFT_POS);
+        wristServoLeft.setPosition(LEFT_POS);
     }
 
     public void rightPos() {
-        wristServo.setPosition(RIGHT_POS);
+        wristServoRight.setPosition(RIGHT_POS);
+        wristServoLeft.setPosition(RIGHT_POS);
     }
 
     @Override

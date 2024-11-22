@@ -14,27 +14,32 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 public class Intake extends Mechanism {
     public static double POWER = 1;
 
-    private CRServo intakeServo;
+    private CRServo intakeServoRight;
+    private CRServo intakeServoLeft;
 
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
     public void intake() {
-        intakeServo.setPower(POWER);
+        intakeServoRight.setPower(-POWER);
+        intakeServoLeft.setPower(POWER);
     }
 
     public void outtake() {
-        intakeServo.setPower(-POWER);
+        intakeServoRight.setPower(POWER);
+        intakeServoLeft.setPower(-POWER);
     }
 
     public void stop() {
-        intakeServo.setPower(0);
+        intakeServoRight.setPower(0);
+        intakeServoLeft.setPower(0);
     }
 
     @Override
     public void init(HardwareMap hwMap) {
-        intakeServo = hwMap.get(CRServo.class, "intakeServo");
+        intakeServoRight = hwMap.get(CRServo.class, "intakeServoRight");
+        intakeServoLeft = hwMap.get(CRServo.class, "intakeServoLeft");
     }
 
     @Override
