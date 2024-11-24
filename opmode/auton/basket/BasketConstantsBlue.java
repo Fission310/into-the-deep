@@ -12,11 +12,10 @@ public class BasketConstantsBlue extends BasketConstants {
                 -TILE_LENGTH,
                 UP
         );
-
         WALL_SAMPLE = new Constant(
-                -TILE_LENGTH * 2,
-                -TILE_LENGTH,
-                Math.toRadians(180)
+                -TILE_LENGTH * 2.5,
+                -TILE_LENGTH * 3 / 2 + BOT_LENGTH / 2,
+                Math.toRadians(0)
         );
         CENTER_SAMPLE = new Constant(
                 -TILE_LENGTH * 5 / 2,
@@ -24,11 +23,10 @@ public class BasketConstantsBlue extends BasketConstants {
                 Math.toRadians(135)
         );
         FAR_SAMPLE = new Constant(
-                -TILE_LENGTH * 2.5,
-                -TILE_LENGTH * 3 / 2 + BOT_LENGTH / 2,
-                Math.toRadians(0)
+                -TILE_LENGTH * 2,
+                -TILE_LENGTH,
+                Math.toRadians(180)
         );
-
         BASKET_1 = new Constant(
                 -TILE_LENGTH * 2.5 + BOT_LENGTH / 2,
                 - TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,

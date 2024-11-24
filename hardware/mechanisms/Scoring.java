@@ -36,9 +36,8 @@ public class Scoring extends Mechanism{
 
     @Override
     public void telemetry(Telemetry telemetry) {
+
     }
-
-
 
     @Override
     public void loop(Gamepad gamepad) {

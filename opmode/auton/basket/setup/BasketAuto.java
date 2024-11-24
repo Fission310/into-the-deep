@@ -19,6 +19,7 @@ import com.stuyfission.fissionlib.command.AutoCommandMachine;
 import com.stuyfission.fissionlib.command.Command;
 import com.stuyfission.fissionlib.command.CommandSequence;
 
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 public class BasketAuto extends LinearOpMode{
@@ -44,10 +45,6 @@ public class BasketAuto extends LinearOpMode{
     private Scoring scoring;
     private Telescope telescope;
     private Wrist wrist;
-
-    private Command intakeStartCommand = () -> intake.intake();
-    private Command intakeStopCommand = () -> intake.stop();
-
     private Command chamberCommand = () -> drive.followTrajectorySequenceAsync(chamberTraj);
     private Command farSampleCommand = () -> drive.followTrajectorySequenceAsync(farTraj);
     private Command basket1Command = () -> drive.followTrajectorySequenceAsync(basket1Traj);
@@ -102,47 +99,41 @@ public class BasketAuto extends LinearOpMode{
         scoring.init(hardwareMap);
         wrist.init(hardwareMap);
 
-        drive.setPoseEstimate(reflectX(BasketConstantsDash.START_POSE));
+        drive.setPoseEstimate(reflect(BasketConstantsDash.START_POSE));
         chamberTraj = drive
-                .trajectorySequenceBuilder(reflectX(BasketConstantsDash.START_POSE))
-                .lineTo(basketConstants.CHAMBER.getV())
-                .waitSeconds(1)
-                .back(5)
+                .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
+                .lineTo(reflect(basketConstants.CHAMBER.getV()))
+                .setReversed(true)
                 .build();
-
         farTraj = drive
-                .trajectorySequenceBuilder(reflectX(chamberTraj.end()))
-                .splineTo(basketConstants.FAR_SAMPLE.getV(), basketConstants.FAR_SAMPLE.getH())
-                .waitSeconds(1)
+                .trajectorySequenceBuilder(reflect(chamberTraj.end()))
+                .back(5)
+                .splineTo(reflect(basketConstants.FAR_SAMPLE.getV()), reflect(basketConstants.FAR_SAMPLE.getH()))
+                .setReversed(false)
                 .build();
-
         basket1Traj = drive
-                .trajectorySequenceBuilder(reflectX(farTraj.end()))
-                .setTangent(DOWN)
-                .lineToSplineHeading(new Pose2d(basketConstants.BASKET_1.getV().getX(), basketConstants.BASKET_1.getV().getY(), basketConstants.BASKET_1.getH()))
-                .waitSeconds(1)
+                .trajectorySequenceBuilder(reflect(farTraj.end()))
+                .lineToSplineHeading(vecToPose(basketConstants.BASKET_1))
+                .setReversed(true)
                 .build();
         centerTraj = drive
-                .trajectorySequenceBuilder(reflectX(basket1Traj.end()))
-                .setTangent(UP)
-                .splineTo(basketConstants.CENTER_SAMPLE.getV(), basketConstants.CENTER_SAMPLE.getH())
-                .waitSeconds(1)
+                .trajectorySequenceBuilder(reflect(basket1Traj.end()))
+                .lineToSplineHeading(vecToPose(basketConstants.CENTER_SAMPLE))
+                .setReversed(false)
                 .build();
         basket2Traj = drive
-                .trajectorySequenceBuilder(reflectX(centerTraj.end()))
-                .lineToSplineHeading(new Pose2d(basketConstants.BASKET_2.getV().getX(), basketConstants.BASKET_2.getV().getY(), basketConstants.BASKET_2.getH()))
-                .waitSeconds(1)
+                .trajectorySequenceBuilder(reflect(centerTraj.end()))
+                .lineToSplineHeading(vecToPose(basketConstants.BASKET_2))
+                .setReversed(true)
                 .build();
         wallTraj = drive
-                .trajectorySequenceBuilder(reflectX(basket2Traj.end()))
-                .setTangent(UP)
-                .lineToSplineHeading(new Pose2d(basketConstants.WALL_SAMPLE.getV().getX(), basketConstants.WALL_SAMPLE.getV().getY(), basketConstants.WALL_SAMPLE.getH()))
-                .waitSeconds(1)
+                .trajectorySequenceBuilder(reflect(basket2Traj.end()))
+                .lineToSplineHeading(vecToPose(basketConstants.WALL_SAMPLE))
+                .setReversed(false)
                 .build();
         basket3Traj = drive
-                .trajectorySequenceBuilder(reflectX(wallTraj.end()))
-                .setTangent(DOWN)
-                .lineToSplineHeading(new Pose2d(basketConstants.BASKET_3.getV().getX(), basketConstants.BASKET_3.getV().getY(), basketConstants.BASKET_3.getH()))
+                .trajectorySequenceBuilder(reflect(wallTraj.end()))
+                .lineToSplineHeading(vecToPose(basketConstants.BASKET_3))
                 .build();
         waitForStart();
 
@@ -153,25 +144,30 @@ public class BasketAuto extends LinearOpMode{
             telemetry.update();
         }
     }
-    public Pose2d reflectX(Pose2d pose) {
+
+    public Pose2d vecToPose(Constant constant){
+        Vector2d vec = reflect(constant.getV());
+        return new Pose2d(vec.getX(), vec.getY(), reflect(constant.getH()));
+    }
+
+    public Pose2d reflect(Pose2d pose) {
         if (reflect) {
-            return new Pose2d(pose.getX(), pose.getY() * -1, -pose.getHeading());
+            return new Pose2d(pose.getX() * -1, pose.getY() * -1, -pose.getHeading());
         }
         return pose;
     }
 
-    public Vector2d reflectX(Vector2d vector) {
+    public Vector2d reflect(Vector2d vector) {
         if (reflect) {
-            return new Vector2d(vector.getX(), vector.getY() * -1);
+            return new Vector2d(vector.getX() * -1, vector.getY() * -1);
         }
         return vector;
     }
 
-    public double reflectX(double theta) {
+    public double reflect(double theta) {
         if (reflect) {
-            return -theta;
+            return Math.toRadians(180) + theta;
         }
         return theta;
     }
-
 }
