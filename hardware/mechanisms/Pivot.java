@@ -16,8 +16,10 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @Config
 public class Pivot extends Mechanism {
-    public static int INTAKE_POS = 160;
-    public static int OUTTAKE_POS = 320;
+    public static int FRONT_POS = 160;
+    public static int UP_FRONT_POS = 2000;
+    public static int UP_POS = 2800;
+    public static int BACK_POS = 3050;
 
     public static double KP = 0.003;
     public static double KI = 0;
@@ -25,6 +27,7 @@ public class Pivot extends Mechanism {
 
     public static double target = 0;
     public static double power = 0;
+    public static double POWER_MULTIPLIER = .1;
 
     private final PIDController controller = new PIDController(KP, KI, KD);
 
@@ -53,7 +56,7 @@ public class Pivot extends Mechanism {
         motors[0].setDirection(DcMotorEx.Direction.REVERSE);
         motors[1].setDirection(DcMotorEx.Direction.FORWARD);
 
-        intakePos();
+        frontPos();
     }
 
     public void telemetry(Telemetry telemetry) {
@@ -63,12 +66,18 @@ public class Pivot extends Mechanism {
         telemetry.update();
     }
 
-    public void intakePos() {
-        setTarget(INTAKE_POS);
+    public void frontPos() {
+        setTarget(FRONT_POS);
     }
 
-    public void outtakePos() {
-        setTarget(OUTTAKE_POS);
+    public void upFrontPos() {
+        setTarget(UP_FRONT_POS);
+    }
+    public void upPos() {
+        setTarget(UP_POS);
+    }
+    public void backPos() {
+        setTarget(BACK_POS);
     }
 
     public void setTarget(double target) {
@@ -81,7 +90,7 @@ public class Pivot extends Mechanism {
 
     public void update() {
         controller.setTarget(target);
-        power = controller.calculate(getPosition());
+        power = controller.calculate(getPosition()) * POWER_MULTIPLIER;
         motors[0].setPower(power);
         motors[1].setPower(power);
     }
@@ -89,10 +98,15 @@ public class Pivot extends Mechanism {
     @Override
     public void loop(Gamepad gamepad) {
         update();
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
-            intakePos();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
-            outtakePos();
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT) ||
+            GamepadStatic.isButtonPressed(gamepad, Controls.RETRACT)) {
+            frontPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP_FRONT)) {
+            upFrontPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP)) {
+            upPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BACK)) {
+            backPos();
         }
     }
 }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,10 +17,23 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class Telescope extends Mechanism {
-    public static int LOW_POS = 160;
-    public static int MED_POS = 350;
-    public static int HIGH_POS = 845;
+    public static int FRONT_POS = -50;
+    public static int UP_FRONT_POS = 160;
+    public static int UP_POS = 480;
+    public static int BACK_POS = 400;
     public static int ABIT = 180;
+
+    public static int FRONT_RETRACTION = -10;
+    public static int FRONT_EXTENSION = -50;
+    public static int FRONT_UP_RETRACTION = -60;
+    public static int FRONT_UP_EXTENSION = 1000;
+    public static int UP_RETRACTION = -10;
+    public static int UP_EXTENSION = 350;
+    public static int BACK_RETRACTION = -10;
+    public static int BACK_EXTENSION = 300;
+    public static int[] RETRACTIONS = new int[]{FRONT_RETRACTION, FRONT_UP_RETRACTION,
+                                                UP_RETRACTION, BACK_RETRACTION};
+    public static int retractionState = 0;
 
     public static double KP = 0.003;
     public static double KI = 0;
@@ -27,6 +41,7 @@ public class Telescope extends Mechanism {
 
     public static double target = 0;
     public static double power = 0;
+    public static double POWER_MULTIPLIER = 1;
 
     private final PIDController controller = new PIDController(KP, KI, KD);
 
@@ -53,9 +68,9 @@ public class Telescope extends Mechanism {
         motors[1].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         motors[0].setDirection(DcMotorEx.Direction.REVERSE);
-        motors[1].setDirection(DcMotorEx.Direction.FORWARD);
+        motors[1].setDirection(DcMotorEx.Direction.REVERSE);
 
-        lowPos();
+        frontPos();
     }
 
     public void telemetry(Telemetry telemetry) {
@@ -65,16 +80,25 @@ public class Telescope extends Mechanism {
         telemetry.update();
     }
 
-    public void lowPos() {
-        setTarget(LOW_POS);
+    public void frontPos() {
+        setTarget(FRONT_EXTENSION);
+        retractionState = 0;
+    }
+    public void frontUpPos() {
+        setTarget(FRONT_UP_EXTENSION);
+        retractionState = 1;
+    }
+    public void upPos() {
+        setTarget(UP_EXTENSION);
+        retractionState = 2;
+    }
+    public void backPos() {
+        setTarget(BACK_EXTENSION);
+        retractionState = 3;
     }
 
-    public void medPos() {
-        setTarget(MED_POS);
-    }
-
-    public void highPos() {
-        setTarget(HIGH_POS);
+    public void retractPos(int state) {
+        setTarget(RETRACTIONS[state]);
     }
 
     public void setTarget(double target) {
@@ -95,21 +119,31 @@ public class Telescope extends Mechanism {
 
     public void update() {
         controller.setTarget(target);
-        power = controller.calculate(getPosition());
+        power = controller.calculate(getPosition()) * POWER_MULTIPLIER;
         motors[0].setPower(power);
         motors[1].setPower(power);
+        Telemetry t = FtcDashboard.getInstance().getTelemetry();
+        t.update();
+        t.addData("Power", power);
+        RETRACTIONS[0] = FRONT_RETRACTION;
+        RETRACTIONS[1] = FRONT_UP_RETRACTION;
+        RETRACTIONS[2] = UP_RETRACTION;
+        RETRACTIONS[3] = BACK_RETRACTION;
     }
 
     @Override
     public void loop(Gamepad gamepad) {
         update();
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.LOW)) {
-            lowPos();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.MEDIUM)) {
-            medPos();
-        }
-        else if (GamepadStatic.isButtonPressed(gamepad, Controls.HIGH)) {
-            highPos();
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
+            frontPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP_FRONT)) {
+            frontUpPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP)) {
+            upPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BACK)) {
+            backPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.RETRACT)) {
+            retractPos(retractionState);
         }
     }
 }
