@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
-import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.FtcDashboard;import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,10 +16,10 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @Config
 public class Pivot extends Mechanism {
-    public static int FRONT_POS = 160;
-    public static int UP_FRONT_POS = 2000;
+    public static int FRONT_POS = 180;
+    public static int UP_FRONT_POS = 1950;
     public static int UP_POS = 2800;
-    public static int BACK_POS = 3050;
+    public static int BACK_POS = 3950;
 
     public static double KP = 0.003;
     public static double KI = 0;
@@ -27,7 +27,8 @@ public class Pivot extends Mechanism {
 
     public static double target = 0;
     public static double power = 0;
-    public static double POWER_MULTIPLIER = .1;
+    public static double BASE_MULTIPLIER = 0.1;
+    public static double GRAVITY_MULTIPLIER = 0.15;
 
     private final PIDController controller = new PIDController(KP, KI, KD);
 
@@ -89,17 +90,18 @@ public class Pivot extends Mechanism {
     }
 
     public void update() {
+        double multiplier = Math.abs(getPosition() - UP_FRONT_POS) / UP_FRONT_POS * GRAVITY_MULTIPLIER + BASE_MULTIPLIER;
         controller.setTarget(target);
-        power = controller.calculate(getPosition()) * POWER_MULTIPLIER;
+        power = controller.calculate(getPosition()) * multiplier;
         motors[0].setPower(power);
         motors[1].setPower(power);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
+        controller.setkP(KP);
         update();
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT) ||
-            GamepadStatic.isButtonPressed(gamepad, Controls.RETRACT)) {
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
             frontPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP_FRONT)) {
             upFrontPos();
@@ -108,5 +110,8 @@ public class Pivot extends Mechanism {
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BACK)) {
             backPos();
         }
+        Telemetry t = FtcDashboard.getInstance().getTelemetry();
+        t.addData("pivot encoder reading", getPosition());
+        t.update();
     }
 }

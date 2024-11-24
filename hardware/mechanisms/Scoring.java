@@ -44,7 +44,7 @@ public class Scoring extends Mechanism{
     public void loop(Gamepad gamepad) {
         drivetrain.loop(gamepad);
         intake.loop(gamepad);
-
+        wrist.loop(gamepad);
         telescope.loop(gamepad);
         pivot.loop(gamepad);
     }

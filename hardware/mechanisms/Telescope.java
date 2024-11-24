@@ -31,9 +31,6 @@ public class Telescope extends Mechanism {
     public static int UP_EXTENSION = 350;
     public static int BACK_RETRACTION = -10;
     public static int BACK_EXTENSION = 300;
-    public static int[] RETRACTIONS = new int[]{FRONT_RETRACTION, FRONT_UP_RETRACTION,
-                                                UP_RETRACTION, BACK_RETRACTION};
-    public static int retractionState = 0;
 
     public static double KP = 0.003;
     public static double KI = 0;
@@ -82,23 +79,15 @@ public class Telescope extends Mechanism {
 
     public void frontPos() {
         setTarget(FRONT_EXTENSION);
-        retractionState = 0;
     }
     public void frontUpPos() {
         setTarget(FRONT_UP_EXTENSION);
-        retractionState = 1;
     }
     public void upPos() {
         setTarget(UP_EXTENSION);
-        retractionState = 2;
     }
     public void backPos() {
         setTarget(BACK_EXTENSION);
-        retractionState = 3;
-    }
-
-    public void retractPos(int state) {
-        setTarget(RETRACTIONS[state]);
     }
 
     public void setTarget(double target) {
@@ -125,10 +114,6 @@ public class Telescope extends Mechanism {
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.update();
         t.addData("Power", power);
-        RETRACTIONS[0] = FRONT_RETRACTION;
-        RETRACTIONS[1] = FRONT_UP_RETRACTION;
-        RETRACTIONS[2] = UP_RETRACTION;
-        RETRACTIONS[3] = BACK_RETRACTION;
     }
 
     @Override
@@ -142,8 +127,6 @@ public class Telescope extends Mechanism {
             upPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BACK)) {
             backPos();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.RETRACT)) {
-            retractPos(retractionState);
         }
     }
 }

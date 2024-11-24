@@ -15,9 +15,10 @@ public class Wrist extends Mechanism {
     private Servo wristServoRight;
     private Servo wristServoLeft;
 
-    public static double LEFT_POS = 0;
-    public static double MIDDLE_POS = 0.25;
-    public static double RIGHT_POS = -0.25;
+    public static double FRONT_POS = 0;
+    public static double FRONT_UP_POS = 0.5;
+    public static double UP_POS = 0.4;
+    public static double BACK_POS = 1;
 
     public Wrist(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -27,34 +28,39 @@ public class Wrist extends Mechanism {
     public void init(HardwareMap hwMap) {
         wristServoRight = hwMap.get(Servo.class, "wristServoRight");
         wristServoLeft = hwMap.get(Servo.class, "wristServoLeft");
-        middlePos();
+        frontPos();
     }
 
-    public void middlePos() {
-        wristServoRight.setPosition(MIDDLE_POS);
-        wristServoLeft.setPosition(MIDDLE_POS);
+    public void frontPos() {
+        wristServoRight.setPosition(FRONT_POS);
+        wristServoLeft.setPosition(FRONT_POS);
     }
 
-    public void leftPos() {
-        wristServoRight.setPosition(LEFT_POS);
-        wristServoLeft.setPosition(LEFT_POS);
+    public void frontUpPos() {
+        wristServoRight.setPosition(FRONT_UP_POS);
+        wristServoLeft.setPosition(FRONT_UP_POS);
     }
 
-    public void rightPos() {
-        wristServoRight.setPosition(RIGHT_POS);
-        wristServoLeft.setPosition(RIGHT_POS);
+    public void upPos() {
+        wristServoRight.setPosition(UP_POS);
+        wristServoLeft.setPosition(UP_POS);
+    }
+
+    public void backPos() {
+        wristServoRight.setPosition(BACK_POS);
+        wristServoLeft.setPosition(BACK_POS);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.MIDDLE_WRIST)) {
-            middlePos();
-        }
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.LEFT_WRIST)) {
-            leftPos();
-        }
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.RIGHT_WRIST)) {
-            rightPos();
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
+            frontPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP_FRONT)) {
+            frontUpPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP)) {
+            upPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BACK)) {
+            backPos();
         }
     }
 }
