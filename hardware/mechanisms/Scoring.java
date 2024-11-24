@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 import java.lang.Thread.State;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -15,7 +16,7 @@ import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 public class Scoring extends Mechanism{
-    private String color;
+    private Color color;
     private Drivetrain drivetrain = new Drivetrain(opMode);
     private Intake intake = new Intake(opMode, color);
     private Pivot pivot = new Pivot(opMode);
@@ -31,7 +32,7 @@ public class Scoring extends Mechanism{
         BACK,
     }
 
-    public Scoring(LinearOpMode opMode, String color) {
+    public Scoring(LinearOpMode opMode, Color color) {
         this.opMode = opMode;
         this.color = color;
     }

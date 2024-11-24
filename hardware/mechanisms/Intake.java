@@ -8,7 +8,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
+import org.firstinspires.ftc.robotcore.external.Telemetry;import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
+import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Intake extends Mechanism {
@@ -16,11 +18,11 @@ public class Intake extends Mechanism {
     public static int THRESHOLD = 11;
 
     private ColorRangeSensor sensor;
-    private String color;
+    private Color color;
     private CRServo intakeServoRight;
     private CRServo intakeServoLeft;
 
-    public Intake(LinearOpMode opMode, String color) {
+    public Intake(LinearOpMode opMode, Color color) {
         this.opMode = opMode;
         this.color = color;
     }
@@ -29,16 +31,33 @@ public class Intake extends Mechanism {
         intakeServoRight.setPower(POWER);
         intakeServoLeft.setPower(-POWER);
     }
-    public void outtakeBack() {
-        intakeFront();
-    }
 
     public void outtakeFront() {
         intakeServoRight.setPower(-POWER);
         intakeServoLeft.setPower(POWER);
     }
+
+    public void intakeWall() {
+        intakeFront();
+    }
+
+    public void outtakeWall() {
+        outtakeFront();
+    }
+
+    public void outtakeBasket() {
+        outtakeFront();
+    }
+
+    public void outtakeClip() {
+        intakeFront();
+    }
+
     public void intakeBack() {
         outtakeFront();
+    }
+    public void outtakeBack() {
+        intakeFront();
     }
 
     public void stop() {

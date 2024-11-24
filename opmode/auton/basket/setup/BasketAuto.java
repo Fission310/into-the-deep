@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.basket.setup;
 
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
@@ -31,6 +29,7 @@ public class BasketAuto extends LinearOpMode{
         this.color = color;
         this.basketConstants = basketConstants;
     }
+
     private TrajectorySequence chamberTraj;
     private TrajectorySequence farTraj;
     private TrajectorySequence basket1Traj;
@@ -40,11 +39,7 @@ public class BasketAuto extends LinearOpMode{
     private TrajectorySequence basket3Traj;
 
     private SampleMecanumDrive drive;
-    private Intake intake;
-    private Pivot pivot;
-    private Scoring scoring;
-    private Telescope telescope;
-    private Wrist wrist;
+
     private Command chamberCommand = () -> drive.followTrajectorySequenceAsync(chamberTraj);
     private Command farSampleCommand = () -> drive.followTrajectorySequenceAsync(farTraj);
     private Command basket1Command = () -> drive.followTrajectorySequenceAsync(basket1Traj);
@@ -53,26 +48,85 @@ public class BasketAuto extends LinearOpMode{
     private Command wallSampleCommand = () -> drive.followTrajectorySequenceAsync(wallTraj);
     private Command basket3Command = () -> drive.followTrajectorySequenceAsync(basket3Traj);
 
+
+    private Intake intake;
+    private Pivot pivot;
+    private Scoring scoring;
+    private Telescope telescope;
+    private Wrist wrist;
+
+    private Command pivotClip = () -> pivot.clipPos();
+    private Command telescopeClip = () -> telescope.clipPos();
+    private Command outtakeClip = () -> intake.outtakeClip();
+    private Command pivotBack = () -> pivot.backPos();
+    private Command telescopeBack = () -> telescope.backPos();
+    private Command intakeBack = () -> intake.intakeBack();
+    private Command pivotBasket = () -> pivot.basketPos();
+    private Command telescopeBasket = () -> telescope.basketPos();
+    private Command outtakeBasket = () -> intake.outtakeBasket();
+    private Command intakeStop = () -> intake.stop();
+
     private CommandSequence chamberSequence = new CommandSequence()
             .addCommand(chamberCommand)
+            .addCommand(pivotClip)
+            .addCommand(telescopeClip)
+            .addWaitCommand(0.5)
+            .addCommand(outtakeClip)
+            .addWaitCommand(1)
+            .addCommand(intakeStop)
             .build();
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(farSampleCommand)
+            .addCommand(pivotBack)
+            .addCommand(telescopeBack)
+            .addCommand(intakeBack)
+            .addWaitCommand(1)
+            .addCommand(intakeStop)
             .build();
     private CommandSequence basket1Sequence = new CommandSequence()
             .addCommand(basket1Command)
+            .addCommand(pivotBasket)
+            .addCommand(telescopeBasket)
+            .addWaitCommand(0.5)
+            .addCommand(outtakeBasket)
+            .addWaitCommand(1)
+            .addCommand(intakeStop)
             .build();
     private CommandSequence centerSampleSequence = new CommandSequence()
             .addCommand(centerSampleCommand)
+            .addCommand(pivotBack)
+            .addCommand(telescopeBack)
+            .addCommand(intakeBack)
+            .addWaitCommand(1)
+            .addCommand(intakeStop)
             .build();
     private CommandSequence basket2Sequence = new CommandSequence()
             .addCommand(basket2Command)
+            .addCommand(pivotBasket)
+            .addCommand(telescopeBasket)
+            .addWaitCommand(0.5)
+            .addCommand(outtakeBasket)
+            .addWaitCommand(1)
+            .addCommand(intakeStop)
             .build();
     private CommandSequence wallSampleSequence = new CommandSequence()
             .addCommand(wallSampleCommand)
+            .addCommand(pivotBack)
+            .addCommand(telescopeBack)
+            .addCommand(intakeBack)
+            .addWaitCommand(1)
+            .addCommand(intakeStop)
             .build();
     private CommandSequence basket3Sequence = new CommandSequence()
             .addCommand(basket3Command)
+            .addCommand(pivotBasket)
+            .addCommand(telescopeBasket)
+            .addWaitCommand(0.5)
+            .addCommand(outtakeBasket)
+            .addWaitCommand(1)
+            .addCommand(intakeStop)
+            .addCommand(pivotBack)
+            .addCommand(telescopeBack)
             .build();
     private AutoCommandMachine commandMachine = new AutoCommandMachine()
             .addCommandSequence(chamberSequence)
@@ -88,10 +142,10 @@ public class BasketAuto extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         reflect = color == Color.RED;
-        intake = new Intake(this);
+        intake = new Intake(this, color);
         drive = new SampleMecanumDrive(hardwareMap);
         pivot = new Pivot(this);
-        scoring = new Scoring(this);
+        scoring = new Scoring(this, color);
         wrist = new Wrist(this);
 
         intake.init(hardwareMap);
@@ -139,7 +193,8 @@ public class BasketAuto extends LinearOpMode{
 
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
             drive.update();
-//            slides.update();
+            telescope.update();
+            pivot.update();
             commandMachine.run(drive.isBusy() || busy);
             telemetry.update();
         }
