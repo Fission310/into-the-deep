@@ -12,6 +12,4 @@ public class ClipConstants{
     public Constant OBSERVATION_1;
     public Constant OBSERVATION_2;
     public Constant OBSERVATION_3;
-
-    public Constant PARK;
 }

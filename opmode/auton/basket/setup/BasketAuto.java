@@ -145,14 +145,9 @@ public class BasketAuto extends LinearOpMode{
         }
     }
 
-    public Pose2d vecToPose(Constant constant){
-        Vector2d vec = reflect(constant.getV());
-        return new Pose2d(vec.getX(), vec.getY(), reflect(constant.getH()));
-    }
-
     public Pose2d reflect(Pose2d pose) {
         if (reflect) {
-            return new Pose2d(pose.getX() * -1, pose.getY() * -1, -pose.getHeading());
+            return new Pose2d(pose.getX() * -1, pose.getY() * -1, reflect(pose.getHeading()));
         }
         return pose;
     }
@@ -169,5 +164,10 @@ public class BasketAuto extends LinearOpMode{
             return Math.toRadians(180) + theta;
         }
         return theta;
+    }
+
+    public Pose2d vecToPose(Constant constant){
+        Vector2d vec = reflect(constant.getV());
+        return new Pose2d(vec.getX(), vec.getY(), reflect(constant.getH()));
     }
 }

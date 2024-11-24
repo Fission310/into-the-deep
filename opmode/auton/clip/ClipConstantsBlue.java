@@ -37,9 +37,5 @@ public class ClipConstantsBlue extends ClipConstants {
         OBSERVATION_3 = new Constant(
                 TILE_LENGTH * -2.5, TILE_LENGTH * 2.5, Math.toRadians(135)
         );
-
-        PARK = new Constant(
-                TILE_LENGTH * -.5, TILE_LENGTH * 3, UP
-        );
     }
 }
