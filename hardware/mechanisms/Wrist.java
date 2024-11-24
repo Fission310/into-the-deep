@@ -19,6 +19,7 @@ public class Wrist extends Mechanism {
     public static double WALL_POS = 0.5;
     public static double BASKET_POS = 0.4;
     public static double CLIP_POS = 0; // FIGURE OUT
+    public static double CLIP_SCORE_POS = 0;
     public static double BACK_POS = 1;
 
     public Wrist(LinearOpMode opMode) {
@@ -47,6 +48,10 @@ public class Wrist extends Mechanism {
     public void clipPos() {
         wristServoRight.setPosition(CLIP_POS);
         wristServoRight.setPosition(CLIP_POS);
+    }
+    public void clipScorePos() {
+        wristServoRight.setPosition(CLIP_SCORE_POS);
+        wristServoRight.setPosition(CLIP_SCORE_POS);
     }
     public void backPos() {
         wristServoRight.setPosition(BACK_POS);

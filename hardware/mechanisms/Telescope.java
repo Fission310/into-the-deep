@@ -19,16 +19,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Telescope extends Mechanism {
     public static int ABIT = 180;
 
-    public static int FRONT_RETRACTION = -10;
-    public static int FRONT_EXTENSION = -50;
-    public static int WALL_RETRACTION = -60;
-    public static int WALL_EXTENSION = 1000;
-    public static int BASKET_RETRACTION = -10;
-    public static int BASKET_EXTENSION = 350;
-    public static int CLIP_RETRACTION = 0;
-    public static int CLIP_EXTENSION = 0;
-    public static int BACK_RETRACTION = -10;
-    public static int BACK_EXTENSION = 300;
+    public static int UP_RETRACTION = -60;
+    public static int FRONT_POS = -50;
+    public static int WALL_POS = 100;
+    public static int BASKET_POS = 350;
+    public static int CLIP_POS = 200;
+    public static int CLIP_EXTENSION = 250;
+    public static int BACK_POS = 300;
 
     public static double KP = 0.003;
     public static double KI = 0;
@@ -75,20 +72,26 @@ public class Telescope extends Mechanism {
         telemetry.update();
     }
 
+    public void upPos() {
+        setTarget(UP_RETRACTION);
+    }
     public void frontPos() {
-        setTarget(FRONT_EXTENSION);
+        setTarget(FRONT_POS);
     }
     public void wallPos() {
-        setTarget(WALL_EXTENSION);
+        setTarget(WALL_POS);
     }
     public void basketPos() {
-        setTarget(BASKET_EXTENSION);
+        setTarget(BASKET_POS);
     }
     public void clipPos() {
+        setTarget(CLIP_POS);
+    }
+    public void clipExtensionPos() {
         setTarget(CLIP_EXTENSION);
     }
     public void backPos() {
-        setTarget(BACK_EXTENSION);
+        setTarget(BACK_POS);
     }
 
     public void setTarget(double target) {

@@ -6,6 +6,7 @@ import java.nio.file.LinkPermission;
 public class Controls {
     public static final Input INTAKE = Input.RIGHT_TRIGGER;
     public static final Input OUTTAKE = Input.LEFT_TRIGGER;
+    public static final Input SCORE = Input.LEFT_BUMPER;
     public static final Input PIVOT_FRONT = Input.DPAD_DOWN;
     public static final Input PIVOT_WALL = Input.A;
     public static final Input PIVOT_BASKET = Input.X;

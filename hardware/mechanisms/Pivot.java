@@ -21,6 +21,7 @@ public class Pivot extends Mechanism {
     public static int BASKET_POS = 2000; // FIGURE OUT POSITION
     public static int CLIP_POS = 2800;
     public static int BACK_POS = 3950;
+    public static int UP_POS = 2100;
 
     public static double KP = 0.003;
     public static double KI = 0;
@@ -82,6 +83,9 @@ public class Pivot extends Mechanism {
     }
     public void backPos() {
         setTarget(BACK_POS);
+    }
+    public void upPos() {
+        setTarget(UP_POS);
     }
 
     public void setTarget(double target) {
