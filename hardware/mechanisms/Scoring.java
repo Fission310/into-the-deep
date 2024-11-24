@@ -14,7 +14,7 @@ import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 @Config
-public class Scoring extends Mechanism{
+public class Scoring extends Mechanism {
     private Color color;
     private Drivetrain drivetrain = new Drivetrain(opMode);
     private Intake intake = new Intake(opMode, color);
@@ -23,6 +23,7 @@ public class Scoring extends Mechanism{
     private Wrist wrist = new Wrist(opMode);
 
     private State state = State.FRONT;
+
     private enum State {
         FRONT,
         WALL,
@@ -80,24 +81,28 @@ public class Scoring extends Mechanism{
         telescope.frontPos();
         wrist.frontPos();
     }
+
     public void goWall() {
         state = State.WALL;
         pivot.wallPos();
         telescope.wallPos();
         wrist.wallPos();
     }
+
     public void goBasket() {
         state = State.BASKET;
         pivot.basketPos();
         telescope.basketPos();
         wrist.basketPos();
     }
+
     public void goClip() {
         state = State.CLIP;
         pivot.clipPos();
         telescope.clipPos();
         wrist.clipPos();
     }
+
     public void goBack() {
         state = State.BACK;
         pivot.backPos();
@@ -123,7 +128,6 @@ public class Scoring extends Mechanism{
         drivetrain.loop(gamepad);
         pivot.update();
         telescope.update();
-        intake.loop(gamepad);
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT) && state != State.FRONT) {
             goFront();
@@ -138,17 +142,20 @@ public class Scoring extends Mechanism{
         }
 
         switch (state) {
+            case UP:
+                break;
             case FRONT:
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) && !intake.isSample()) {
                     intake.intakeFront();
                 } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtakeFront();
                 } else {
                     intake.stop();
                 }
+                intake.loop(gamepad);
                 break;
             case WALL:
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) && !intake.isSample()) {
                     intake.intakeWall();
                 } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtakeWall();
@@ -166,11 +173,12 @@ public class Scoring extends Mechanism{
                 }
                 break;
             case BACK:
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) && !intake.isSample()) {
+                    intake.intakeBack();
+                } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtakeBack();
-                }
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
-                    intake.outtakeBack();
+                } else {
+                    intake.stop();
                 }
                 break;
         }

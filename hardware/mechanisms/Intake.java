@@ -1,14 +1,19 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
-import com.acmerobotics.dashboard.FtcDashboard;import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
+import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Intake extends Mechanism {
@@ -56,6 +61,7 @@ public class Intake extends Mechanism {
     public void intakeBack() {
         outtakeFront();
     }
+
     public void outtakeBack() {
         intakeFront();
     }
@@ -72,20 +78,25 @@ public class Intake extends Mechanism {
         sensor = hwMap.get(ColorRangeSensor.class, "intakeSensor");
     }
 
-    @Override
-    public void loop(Gamepad gamepad) {
-        if (sensor.getDistance(DistanceUnit.MM) < DISTANCE_THRESHOLD) {
-            if (color == Color.BLUE && sensor.red() < RED_THRESHOLD) {
-                stop();
-            }
-            if (color == Color.RED && sensor.blue() < BLUE_THRESHOLD) {
-                stop();
-            }
-        }
+    public boolean isSample() {
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("distance", sensor.getDistance(DistanceUnit.MM));
         t.addData("blue", sensor.blue());
         t.addData("red", sensor.red());
         t.update();
+        return (sensor.getDistance(DistanceUnit.MM) < DISTANCE_THRESHOLD)
+                && ((color == Color.BLUE && sensor.red() < RED_THRESHOLD)
+                        || (color == Color.RED && sensor.blue() < BLUE_THRESHOLD));
+    }
+
+    @Override
+    public void loop(Gamepad gamepad) {
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+            intakeFront();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+            outtakeFront();
+        } else {
+            stop();
+        }
     }
 }

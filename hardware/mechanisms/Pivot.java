@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
-import com.acmerobotics.dashboard.FtcDashboard;import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,27 +13,25 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
-import org.firstinspires.ftc.teamcode.util.PIDController;
+import org.firstinspires.ftc.teamcode.util.Controller;
 
 @Config
 public class Pivot extends Mechanism {
-    public static int FRONT_POS = 180;
+    public static int FRONT_POS = 150;
     public static int WALL_POS = 1950;
     public static int BASKET_POS = 2000; // FIGURE OUT POSITION
     public static int CLIP_POS = 2800;
     public static int BACK_POS = 3950;
     public static int UP_POS = 2100;
 
-    public static double KP = 0.003;
+    public static double KP = 0.005;
     public static double KI = 0;
     public static double KD = 0;
 
     public static double target = 0;
     public static double power = 0;
-    public static double BASE_MULTIPLIER = 0.1;
-    public static double GRAVITY_MULTIPLIER = 0.15;
 
-    private final PIDController controller = new PIDController(KP, KI, KD);
+    private Controller controller;
 
     private final DcMotorEx[] motors = new DcMotorEx[2];
 
@@ -44,6 +43,9 @@ public class Pivot extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
+        voltage = hwMap.voltageSensor.iterator().next();
+        controller = new Controller(KP, KI, KD, voltage);
+
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");
 
@@ -72,18 +74,23 @@ public class Pivot extends Mechanism {
     public void frontPos() {
         setTarget(FRONT_POS);
     }
+
     public void wallPos() {
         setTarget(WALL_POS);
     }
+
     public void basketPos() {
         setTarget(BASKET_POS);
     }
+
     public void clipPos() {
         setTarget(CLIP_POS);
     }
+
     public void backPos() {
         setTarget(BACK_POS);
     }
+
     public void upPos() {
         setTarget(UP_POS);
     }
@@ -97,16 +104,19 @@ public class Pivot extends Mechanism {
     }
 
     public void update() {
-        double multiplier = Math.abs(getPosition() - WALL_POS) / WALL_POS * GRAVITY_MULTIPLIER + BASE_MULTIPLIER; //FLINT WHAT TO DO HERE WALL USED TO BE UPFRONT
-        controller.setTarget(target);
-        power = controller.calculate(getPosition()) * multiplier;
+        controller.setTargetPosition(target);
+        power = controller.getPower(getPosition());
+        Telemetry t = FtcDashboard.getInstance().getTelemetry();
+        t.addData("power real", power);
+        t.addData("pivot position", getPosition());
+        t.addData("target position", target);
+        t.update();
         motors[0].setPower(power);
         motors[1].setPower(power);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
-        controller.setkP(KP);
         update();
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
             frontPos();
