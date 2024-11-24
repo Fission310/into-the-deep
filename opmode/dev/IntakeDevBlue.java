@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 
-@TeleOp(name = "Intake Dev Red", group = "dev")
+@TeleOp(name = "Intake Dev Blue", group = "dev")
 public class IntakeDevBlue extends LinearOpMode {
 
     private Intake intake = new Intake(this, Color.BLUE);

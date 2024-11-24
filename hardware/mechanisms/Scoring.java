@@ -116,6 +116,8 @@ public class Scoring extends Mechanism{
 
     @Override
     public void telemetry(Telemetry telemetry) {
+        telemetry.addData("state", state);
+        telemetry.update();
     }
 
     @Override
@@ -123,7 +125,6 @@ public class Scoring extends Mechanism{
         drivetrain.loop(gamepad);
         pivot.update();
         telescope.update();
-        intake.loop(gamepad);
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT) && state != State.FRONT) {
             goFront();
@@ -139,6 +140,7 @@ public class Scoring extends Mechanism{
 
         switch (state) {
             case FRONT:
+                intake.loop(gamepad);
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     intake.intakeFront();
                 } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
@@ -148,6 +150,7 @@ public class Scoring extends Mechanism{
                 }
                 break;
             case WALL:
+                intake.loop(gamepad);
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     intake.intakeWall();
                 } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
@@ -166,6 +169,7 @@ public class Scoring extends Mechanism{
                 }
                 break;
             case BACK:
+                intake.loop(gamepad);
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     intake.outtakeBack();
                 }
