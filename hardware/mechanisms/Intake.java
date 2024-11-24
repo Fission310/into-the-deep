@@ -16,21 +16,29 @@ public class Intake extends Mechanism {
     public static int THRESHOLD = 11;
 
     private ColorRangeSensor sensor;
+    private String color;
     private CRServo intakeServoRight;
     private CRServo intakeServoLeft;
 
-    public Intake(LinearOpMode opMode) {
+    public Intake(LinearOpMode opMode, String color) {
         this.opMode = opMode;
+        this.color = color;
     }
 
-    public void intake() {
+    public void intakeFront() {
         intakeServoRight.setPower(POWER);
         intakeServoLeft.setPower(-POWER);
     }
+    public void outtakeBack() {
+        intakeFront();
+    }
 
-    public void outtake() {
+    public void outtakeFront() {
         intakeServoRight.setPower(-POWER);
         intakeServoLeft.setPower(POWER);
+    }
+    public void intakeBack() {
+        outtakeFront();
     }
 
     public void stop() {
@@ -49,9 +57,9 @@ public class Intake extends Mechanism {
     public void loop(Gamepad gamepad) {
         if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)
                 && sensor.getDistance(DistanceUnit.MM) > THRESHOLD) {
-            intake();
+            intakeFront();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
-            outtake();
+            outtakeFront();
         } else {
             stop();
         }

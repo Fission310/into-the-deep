@@ -17,18 +17,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class Telescope extends Mechanism {
-    public static int FRONT_POS = -50;
-    public static int UP_FRONT_POS = 160;
-    public static int UP_POS = 480;
-    public static int BACK_POS = 400;
     public static int ABIT = 180;
 
     public static int FRONT_RETRACTION = -10;
     public static int FRONT_EXTENSION = -50;
-    public static int FRONT_UP_RETRACTION = -60;
-    public static int FRONT_UP_EXTENSION = 1000;
-    public static int UP_RETRACTION = -10;
-    public static int UP_EXTENSION = 350;
+    public static int WALL_RETRACTION = -60;
+    public static int WALL_EXTENSION = 1000;
+    public static int BASKET_RETRACTION = -10;
+    public static int BASKET_EXTENSION = 350;
+    public static int CLIP_RETRACTION = 0;
+    public static int CLIP_EXTENSION = 0;
     public static int BACK_RETRACTION = -10;
     public static int BACK_EXTENSION = 300;
 
@@ -80,11 +78,14 @@ public class Telescope extends Mechanism {
     public void frontPos() {
         setTarget(FRONT_EXTENSION);
     }
-    public void frontUpPos() {
-        setTarget(FRONT_UP_EXTENSION);
+    public void wallPos() {
+        setTarget(WALL_EXTENSION);
     }
-    public void upPos() {
-        setTarget(UP_EXTENSION);
+    public void basketPos() {
+        setTarget(BASKET_EXTENSION);
+    }
+    public void clipPos() {
+        setTarget(CLIP_EXTENSION);
     }
     public void backPos() {
         setTarget(BACK_EXTENSION);
@@ -121,10 +122,12 @@ public class Telescope extends Mechanism {
         update();
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
             frontPos();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP_FRONT)) {
-            frontUpPos();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP)) {
-            upPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL)) {
+            wallPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET)) {
+            basketPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP)) {
+            clipPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BACK)) {
             backPos();
         }

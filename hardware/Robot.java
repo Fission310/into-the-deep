@@ -9,11 +9,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 public class Robot extends Mechanism {
+    private String color;
+    private Scoring scoring = new Scoring(opMode, color);
 
-    private Scoring scoring = new Scoring(opMode);
-
-    public Robot(LinearOpMode opMode) {
+    public Robot(LinearOpMode opMode, String color) {
         this.opMode = opMode;
+        this.color = color;
     }
 
     @Override
