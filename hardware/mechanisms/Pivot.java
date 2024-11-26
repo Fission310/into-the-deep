@@ -23,12 +23,17 @@ public class Pivot extends Mechanism {
     public static int CLIP_POS = 2800;
     public static int BACK_POS = 3950;
     public static int UP_POS = 2100;
+    public static int HIGHEST = 2100;
 
-    public static double KP = 0.005;
-    public static double KI = 0;
-    public static double KD = 0;
+    public static double UKP = 0.000711;
+    public static double UKI = 0;
+    public static double UKD = 0;
+    public static double DKP = 0.000311;
+    public static double DKI = 0;
+    public static double DKD = 0;
 
     public static double target = 0;
+    public static double actualTarget = 0;
     public static double power = 0;
 
     private Controller controller;
@@ -44,7 +49,7 @@ public class Pivot extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         voltage = hwMap.voltageSensor.iterator().next();
-        controller = new Controller(KP, KI, KD, voltage);
+        controller = new Controller(UKP, UKI, UKD, DKP, DKI, DKD, voltage, HIGHEST);
 
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");
@@ -65,9 +70,9 @@ public class Pivot extends Mechanism {
     }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addData("Current Position", getPosition());
-        telemetry.addData("Target", target);
-        telemetry.addData("Power", power);
+        //telemetry.addData("Current Position", getPosition());
+        //telemetry.addData("Target", target);
+        //telemetry.addData("Power", power);
         telemetry.update();
     }
 
@@ -97,6 +102,7 @@ public class Pivot extends Mechanism {
 
     public void setTarget(double target) {
         Pivot.target = target;
+        Pivot.actualTarget = target;
     }
 
     public double getPosition() {
@@ -107,7 +113,7 @@ public class Pivot extends Mechanism {
         controller.setTargetPosition(target);
         power = controller.getPower(getPosition());
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.addData("power real", power);
+        t.addData("pivot power", power);
         t.addData("pivot position", getPosition());
         t.addData("target position", target);
         t.update();

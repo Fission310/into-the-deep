@@ -117,7 +117,7 @@ public class Telescope extends Mechanism {
         motors[1].setPower(power);
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.update();
-        t.addData("Power", power);
+        t.addData("Telescope Power", power);
     }
 
     @Override
