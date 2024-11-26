@@ -17,9 +17,11 @@ import org.firstinspires.ftc.teamcode.util.Controller;
 
 @Config
 public class Pivot extends Mechanism {
-    public static int FRONT_POS = 150;
+    public static int FRONT_POS = 500;
+    public static int INTAKE_UP_POS = 650;
+    public static int INTAKE_DOWN_POS = 275;
     public static int WALL_POS = 1950;
-    public static int BASKET_POS = 2000; // FIGURE OUT POSITION
+    public static int BASKET_POS = 2250; // FIGURE OUT POSITION
     public static int CLIP_POS = 2800;
     public static int BACK_POS = 3950;
     public static int UP_POS = 2100;
@@ -28,7 +30,7 @@ public class Pivot extends Mechanism {
     public static double UKP = 0.000711;
     public static double UKI = 0;
     public static double UKD = 0;
-    public static double DKP = 0.000311;
+    public static double DKP = 0.0002811;
     public static double DKI = 0;
     public static double DKD = 0;
 
@@ -78,6 +80,12 @@ public class Pivot extends Mechanism {
 
     public void frontPos() {
         setTarget(FRONT_POS);
+    }
+    public void intakeUpPos() {
+        setTarget(INTAKE_UP_POS);
+    }
+    public void intakeDownPos() {
+        setTarget(INTAKE_DOWN_POS);
     }
 
     public void wallPos() {

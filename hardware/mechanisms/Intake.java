@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 @Config
 public class Intake extends Mechanism {
     public static double POWER = 1;
-    public static int DISTANCE_THRESHOLD = 11;
-    public static int BLUE_THRESHOLD = 10;
-    public static int RED_THRESHOLD = 10;
+    public static int DISTANCE_THRESHOLD = 40;
+    public static int BLUE_THRESHOLD = 80;
+    public static int RED_THRESHOLD = 300;
 
     private ColorRangeSensor sensor;
     private Color color;
@@ -51,7 +51,7 @@ public class Intake extends Mechanism {
     }
 
     public void outtakeBasket() {
-        outtakeFront();
+        intakeFront();
     }
 
     public void outtakeClip() {
@@ -83,6 +83,9 @@ public class Intake extends Mechanism {
         t.addData("distance", sensor.getDistance(DistanceUnit.MM));
         t.addData("blue", sensor.blue());
         t.addData("red", sensor.red());
+        t.addData("distance check", sensor.getDistance(DistanceUnit.MM) < DISTANCE_THRESHOLD);
+        t.addData("color check blue", (color == Color.BLUE && sensor.red() < RED_THRESHOLD));
+        t.addData("color check reb", (color == Color.RED && sensor.blue() < BLUE_THRESHOLD));
         t.update();
         return (sensor.getDistance(DistanceUnit.MM) < DISTANCE_THRESHOLD)
                 && ((color == Color.BLUE && sensor.red() < RED_THRESHOLD)
@@ -91,10 +94,10 @@ public class Intake extends Mechanism {
 
     @Override
     public void loop(Gamepad gamepad) {
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
-            intakeFront();
+        if (!isSample() && GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+            intakeBack();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
-            outtakeFront();
+            outtakeBack();
         } else {
             stop();
         }

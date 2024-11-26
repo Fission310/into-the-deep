@@ -21,8 +21,9 @@ public class Telescope extends Mechanism {
 
     public static int UP_RETRACTION = -60;
     public static int FRONT_POS = -50;
+    public static int FRONT_INTAKE_POS = 550;
     public static int WALL_POS = 100;
-    public static int BASKET_POS = 350;
+    public static int BASKET_POS = 900;
     public static int CLIP_POS = 200;
     public static int CLIP_EXTENSION = 250;
     public static int BACK_POS = 300;
@@ -77,6 +78,9 @@ public class Telescope extends Mechanism {
     }
     public void frontPos() {
         setTarget(FRONT_POS);
+    }
+    public void frontIntakePos() {
+        setTarget(FRONT_INTAKE_POS);
     }
     public void wallPos() {
         setTarget(WALL_POS);

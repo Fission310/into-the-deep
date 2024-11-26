@@ -16,10 +16,11 @@ public class Wrist extends Mechanism {
     private Servo wristServoLeft;
 
     public static double FRONT_POS = 0;
+    public static double FRONT_INTAKE_POS = 1;
     public static double WALL_POS = 0.5;
-    public static double BASKET_POS = 0.4;
+    public static double BASKET_POS = 0.5;
     public static double CLIP_POS = 0; // FIGURE OUT
-    public static double CLIP_SCORE_POS = 0;
+    public static double CLIP_SCORE_POS = 1;
     public static double BACK_POS = 1;
 
     public Wrist(LinearOpMode opMode) {
@@ -36,6 +37,10 @@ public class Wrist extends Mechanism {
     public void frontPos() {
         wristServoRight.setPosition(FRONT_POS);
         wristServoLeft.setPosition(FRONT_POS);
+    }
+    public void frontIntakePos() {
+        wristServoRight.setPosition(FRONT_INTAKE_POS);
+        wristServoLeft.setPosition(FRONT_INTAKE_POS);
     }
     public void wallPos() {
         wristServoRight.setPosition(WALL_POS);

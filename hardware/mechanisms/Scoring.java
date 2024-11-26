@@ -33,8 +33,12 @@ public class Scoring extends Mechanism {
         BACK,
     }
 
-    public static double BASKET_OUTTAKE_WAIT = 0.10;
-    public static double BASKET_RETRACT_WAIT = 0.10;
+    public static boolean intaked = false;
+    public static double BASKET_OUTTAKE_WAIT = 2.5;
+    public static double BASKET_RETRACT_WAIT = 1;
+    public static double TELESCOPE_RETRACT_WAIT = 0.10;
+    public static double WRIST_RETRACT_WAIT = 0.10;
+    public static double PIVOT_DOWN_WAIT = 0.4;
     public static double CLIP_WRIST_WAIT = 0.10;
     public static double CLIP_CLIP_WAIT = 0.10;
     public static double CLIP_OUTTAKE_WAIT = 0.10;
@@ -46,10 +50,16 @@ public class Scoring extends Mechanism {
 
     private Command outtakeBasket = () -> intake.outtakeBasket();
     private Command intakeStop = () -> intake.stop();
-    private Command pivotUp = () -> pivot.upPos();
-    private Command telescopeUp = () -> telescope.upPos();
-    private Command setStateUp = () -> state = State.UP;
+    private Command pivotFront = () -> pivot.frontPos();
+    private Command pivotUpIntake = () -> pivot.intakeUpPos();
+    private Command pivotDownIntake = () -> pivot.intakeDownPos();
+    private Command telescopeFront = () -> telescope.frontPos();
+    private Command telescopeIntake = () -> telescope.frontIntakePos();
+    private Command setStateFront = () -> state = State.FRONT;
     private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
+    private Command telescopeRetract = () -> telescope.frontPos();
+    private Command wristIntakeScore = () -> wrist.frontIntakePos();
+    private Command wristRetract = () -> wrist.frontPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command outtakeClip = () -> intake.outtakeClip();
 
@@ -57,24 +67,40 @@ public class Scoring extends Mechanism {
             .addCommand(outtakeBasket)
             .addWaitCommand(BASKET_OUTTAKE_WAIT)
             .addCommand(intakeStop)
-            .addCommand(pivotUp)
+            .addCommand(pivotFront)
             .addWaitCommand(BASKET_RETRACT_WAIT)
-            .addCommand(telescopeUp)
-            .addCommand(setStateUp)
+            .addCommand(telescopeFront)
+            .addCommand(setStateFront)
             .build();
     private CommandSequence scoreClip = new CommandSequence()
             .addCommand(telescopeExtendClip)
             .addWaitCommand(CLIP_WRIST_WAIT)
             .addCommand(wristClipScore)
-            .addCommand(telescopeUp)
+            .addCommand(telescopeFront)
             .addWaitCommand(CLIP_CLIP_WAIT)
             .addCommand(outtakeClip)
             .addWaitCommand(CLIP_OUTTAKE_WAIT)
             .addCommand(intakeStop)
-            .addCommand(pivotUp)
-            .addCommand(setStateUp)
+            .addCommand(pivotFront)
+            .addCommand(setStateFront)
             .build();
 
+    public CommandSequence frontIntake = new CommandSequence()
+            .addCommand(pivotUpIntake)
+            .addCommand(telescopeIntake)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(pivotDownIntake)
+            .addCommand(wristIntakeScore)
+            .build();
+
+    public CommandSequence retractTele = new CommandSequence()
+            .addCommand(pivotUpIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(TELESCOPE_RETRACT_WAIT)
+            .addCommand(telescopeRetract)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(pivotDownIntake)
+            .build();
     public void goFront() {
         state = State.FRONT;
         pivot.frontPos();
@@ -147,7 +173,14 @@ public class Scoring extends Mechanism {
             case UP:
                 break;
             case FRONT:
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) && !intake.isSample()) {
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.RETRACT)){
+                    retractTele.trigger();
+                    intaked = false;
+                } if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE) && !intake.isSample()) {
+                    if(!intaked){
+                        frontIntake.trigger();
+                        intaked = true;
+                    }
                     intake.intakeFront();
                 } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtakeFront();
