@@ -14,12 +14,13 @@ import com.stuyfission.fissionlib.util.Mechanism;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 import org.firstinspires.ftc.teamcode.util.Controller;
+import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 @Config
 public class Pivot extends Mechanism {
     public static int FRONT_POS = 500;
     public static int INTAKE_UP_POS = 650;
-    public static int INTAKE_DOWN_POS = 275;
+    public static int INTAKE_DOWN_POS = 350;
     public static int WALL_POS = 1950;
     public static int BASKET_POS = 2250; // FIGURE OUT POSITION
     public static int CLIP_POS = 2800;
@@ -27,12 +28,10 @@ public class Pivot extends Mechanism {
     public static int UP_POS = 2100;
     public static int HIGHEST = 2100;
 
-    public static double UKP = 0.000711;
-    public static double UKI = 0;
-    public static double UKD = 0;
-    public static double DKP = 0.0002811;
-    public static double DKI = 0;
-    public static double DKD = 0;
+    public static double UP_BOTTOM_KP = 0.000711;
+    public static double DOWN_TOP_KP = 0.0002;
+    public static double UP_TOP_KP = 0.0006;
+    public static double DOWN_BOTTOM_KP = 0.0001;
 
     public static double target = 0;
     public static double actualTarget = 0;
@@ -51,7 +50,11 @@ public class Pivot extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         voltage = hwMap.voltageSensor.iterator().next();
-        controller = new Controller(UKP, UKI, UKD, DKP, DKI, DKD, voltage, HIGHEST);
+        PIDFController upBottom = new PIDFController(UP_BOTTOM_KP, 0, 0, 0);
+        PIDFController downTop = new PIDFController(DOWN_TOP_KP, 0, 0, 0);
+        PIDFController upTop = new PIDFController(UP_TOP_KP, 0, 0, 0);
+        PIDFController downBottom = new PIDFController(                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         DOWN_BOTTOM_KP, 0, 0, 0);
+        controller = new Controller(upBottom, downTop, upTop, downBottom, voltage, HIGHEST);
 
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");

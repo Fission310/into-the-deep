@@ -15,12 +15,16 @@ public class Controller {
     public static double GRAVITY_MULTIPLIER = 0.00005;
     public static double OFFSET = 150;
 
-    private PIDFController upController;
-    private PIDFController downController;
+    private PIDFController upBottomController;
+    private PIDFController downTopController;
+    private PIDFController upTopController;
+    private PIDFController downBottomController;
 
-    public Controller(double ukP, double ukI, double ukD, double dkP, double dkI, double dkD, VoltageSensor voltage, int highest) {
-        upController = new PIDFController(ukP, ukI, ukD, 0);
-        downController = new PIDFController(dkP, dkI, dkD, 0);
+    public Controller(PIDFController uB, PIDFController dT, PIDFController uT, PIDFController dB, VoltageSensor voltage, int highest) {
+        upBottomController = uB;
+        downTopController = dT;
+        upTopController = uT;
+        downBottomController = dB;
         this.voltage = voltage;
         highestPosition = highest;
     }
@@ -39,13 +43,19 @@ public class Controller {
         Telemetry te = FtcDashboard.getInstance().getTelemetry();
         te.addData("real position", t);
         te.update();
-        PIDFController controller = upController;
+        PIDFController controller = upBottomController;
         if ((position > highestPosition) == (position > t)) {
-            controller = upController;
-            te.addData("controller", "up");
+            if (Math.abs(position - highestPosition) > highestPosition / 2) {
+                controller = upBottomController;
+            } else {
+                controller = upTopController;
+            }
         } else {
-            controller = downController;
-            te.addData("controller", "down");
+            if (Math.abs(position - highestPosition) > highestPosition / 2) {
+                controller = downBottomController;
+            } else {
+                controller = downTopController;
+            }
         }
         double power = controller.calculate(position, t);
         power += currentFeedforward;

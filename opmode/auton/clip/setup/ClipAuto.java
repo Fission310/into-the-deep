@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.clip.setup;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
@@ -50,7 +50,7 @@ public class ClipAuto extends LinearOpMode{
     private Command observation3Command = () -> drive.followTrajectorySequenceAsync(observation3Traj);
     private Command wallIntakeCommand = () -> drive.followTrajectorySequenceAsync(wallIntakeTraj);
 
-    private Intake intake;
+    private Claw claw;
     private Pivot pivot;
     private Scoring scoring;
     private Telescope telescope;
@@ -58,74 +58,58 @@ public class ClipAuto extends LinearOpMode{
 
     private Command pivotClip = () -> pivot.clipPos();
     private Command telescopeClip = () -> telescope.clipPos();
-    private Command outtakeClip = () -> intake.outtakeClip();
+    private Command release = () -> claw.release();
     private Command pivotBack = () -> pivot.backPos();
     private Command telescopeBack = () -> telescope.backPos();
-    private Command intakeBack = () -> intake.intakeBack();
+    private Command grab = () -> claw.grab();
     private Command pivotBasket = () -> pivot.basketPos();
     private Command telescopeBasket = () -> telescope.basketPos();
-    private Command outtakeBasket = () -> intake.outtakeBasket();
-    private Command intakeStop = () -> intake.stop();
 
     private CommandSequence chamberSequence = new CommandSequence()
             .addCommand(chamberCommand)
             .addCommand(pivotClip)
             .addCommand(telescopeClip)
             .addWaitCommand(0.5)
-            .addCommand(outtakeClip)
-            .addWaitCommand(1)
-            .addCommand(intakeStop)
+            .addCommand(release)
             .build();
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(farSampleCommand)
             .addCommand(pivotBack)
             .addCommand(telescopeBack)
-            .addCommand(intakeBack)
-            .addWaitCommand(1)
-            .addCommand(intakeStop)
+            .addCommand(grab)
             .build();
     private CommandSequence observation1Sequence = new CommandSequence()
             .addCommand(observation1Command)
             .addCommand(pivotBasket)
             .addCommand(telescopeBasket)
             .addWaitCommand(0.5)
-            .addCommand(outtakeBasket)
-            .addWaitCommand(1)
-            .addCommand(intakeStop)
+            .addCommand(release)
             .build();
     private CommandSequence centerSampleSequence = new CommandSequence()
             .addCommand(centerSampleCommand)
             .addCommand(pivotBack)
             .addCommand(telescopeBack)
-            .addCommand(intakeBack)
-            .addWaitCommand(1)
-            .addCommand(intakeStop)
+            .addCommand(grab)
             .build();
     private CommandSequence observation2Sequence = new CommandSequence()
             .addCommand(observation2Command)
             .addCommand(pivotBasket)
             .addCommand(telescopeBasket)
             .addWaitCommand(0.5)
-            .addCommand(outtakeBasket)
-            .addWaitCommand(1)
-            .addCommand(intakeStop)
+            .addCommand(release)
             .build();
     private CommandSequence wallSampleSequence = new CommandSequence()
             .addCommand(wallSampleCommand)
             .addCommand(pivotBack)
             .addCommand(telescopeBack)
-            .addCommand(intakeBack)
-            .addWaitCommand(1)
-            .addCommand(intakeStop)
+            .addCommand(grab)
             .build();
     private CommandSequence observation3Sequence = new CommandSequence()
             .addCommand(observation3Command)
             .addCommand(pivotBasket)
             .addCommand(telescopeBasket)
             .addWaitCommand(0.5)
-            .addCommand(outtakeBasket)
-            .addWaitCommand(1)
-            .addCommand(intakeStop)
+            .addCommand(release)
             .addCommand(pivotBack)
             .addCommand(telescopeBack)
             .build();
@@ -150,13 +134,13 @@ public class ClipAuto extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         reflect = color == Color.RED;
-        intake = new Intake(this, color);
+        claw = new Claw(this);
         drive = new SampleMecanumDrive(hardwareMap);
         pivot = new Pivot(this);
-        scoring = new Scoring(this, color);
+        scoring = new Scoring(this);
         wrist = new Wrist(this);
 
-        intake.init(hardwareMap);
+        claw.init(hardwareMap);
         pivot.init(hardwareMap);
         scoring.init(hardwareMap);
         wrist.init(hardwareMap);
