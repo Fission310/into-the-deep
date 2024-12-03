@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Claw extends Mechanism {
-    public static double GRAB_POS = 0.6;
-    public static double RELEASE_POS = 0.29;
+    public static double GRAB_POS = 0.18;
+    public static double RELEASE_POS = 0;
 
     private Servo clawServo;
 
@@ -37,9 +37,9 @@ public class Claw extends Mechanism {
 
     @Override
     public void loop(Gamepad gamepad) {
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
             grab();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
             release();
         }
     }

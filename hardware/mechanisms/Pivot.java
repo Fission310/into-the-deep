@@ -19,13 +19,15 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 @Config
 public class Pivot extends Mechanism {
     public static int FRONT_POS = 500;
-    public static int INTAKE_UP_POS = 650;
-    public static int INTAKE_DOWN_POS = 350;
+    public static int INTAKE_UP_POS = 750;
+    public static int INTAKE_DOWN_POS = 500;
+    public static int INTAKE_GRAB_POS = 300;
     public static int WALL_POS = 1950;
     public static int BASKET_POS = 2250; // FIGURE OUT POSITION
     public static int CLIP_POS = 2800;
+    public static int CLIP_DOWN_POS = 2600;
     public static int BACK_POS = 3950;
-    public static int UP_POS = 2100;
+    public static int UP_POS = 2000;
     public static int HIGHEST = 2100;
 
     public static double UP_BOTTOM_KP = 0.000711;
@@ -90,7 +92,9 @@ public class Pivot extends Mechanism {
     public void intakeDownPos() {
         setTarget(INTAKE_DOWN_POS);
     }
-
+    public void intakeGrabPos() {
+        setTarget(INTAKE_GRAB_POS);
+    }
     public void wallPos() {
         setTarget(WALL_POS);
     }
@@ -101,6 +105,10 @@ public class Pivot extends Mechanism {
 
     public void clipPos() {
         setTarget(CLIP_POS);
+    }
+
+    public void clipDownPos() {
+        setTarget(CLIP_DOWN_POS);
     }
 
     public void backPos() {
@@ -143,8 +151,6 @@ public class Pivot extends Mechanism {
             basketPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP)) {
             clipPos();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BACK)) {
-            backPos();
         }
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("pivot encoder reading", getPosition());
