@@ -55,62 +55,40 @@ public class BasketAuto extends LinearOpMode{
     private Telescope telescope;
     private Wrist wrist;
 
-    private Command pivotClip = () -> pivot.clipPos();
-    private Command telescopeClip = () -> telescope.clipPos();
     private Command release = () -> claw.release();
-    private Command pivotBack = () -> pivot.backPos();
-    private Command telescopeBack = () -> telescope.backPos();
-    private Command grab = () -> claw.grab();
-    private Command pivotBasket = () -> pivot.basketPos();
-    private Command telescopeBasket = () -> telescope.basketPos();
+    private Command pivotFront = () -> pivot.frontPos();
+    private Command pivotClip = () -> pivot.clipPos();
+    private Command pivotUpIntake = () -> pivot.intakeUpPos();
+    private Command pivotDownIntake = () -> pivot.intakeDownPos();
+    private Command telescopeFront = () -> telescope.frontPos();
+    private Command telescopeIntake = () -> telescope.frontIntakePos();
+    private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
+    private Command telescopeRetract = () -> telescope.frontPos();
+    private Command wristIntakeScore = () -> wrist.frontIntakePos();
+    private Command wristRetract = () -> wrist.frontPos();
+    private Command wristClipScore = () -> wrist.clipScorePos();
+    private Command pivotUp = () -> pivot.upPos();
 
     private CommandSequence chamberSequence = new CommandSequence()
             .addCommand(chamberCommand)
-            .addCommand(pivotClip)
-            .addCommand(telescopeClip)
-            .addWaitCommand(0.5)
-            .addCommand(release)
             .build();
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(farSampleCommand)
-            .addCommand(pivotBack)
-            .addCommand(telescopeBack)
-            .addCommand(grab)
             .build();
     private CommandSequence basket1Sequence = new CommandSequence()
             .addCommand(basket1Command)
-            .addCommand(pivotBasket)
-            .addCommand(telescopeBasket)
-            .addWaitCommand(0.5)
-            .addCommand(release)
             .build();
     private CommandSequence centerSampleSequence = new CommandSequence()
             .addCommand(centerSampleCommand)
-            .addCommand(pivotBack)
-            .addCommand(telescopeBack)
-            .addCommand(grab)
             .build();
     private CommandSequence basket2Sequence = new CommandSequence()
             .addCommand(basket2Command)
-            .addCommand(pivotBasket)
-            .addCommand(telescopeBasket)
-            .addWaitCommand(0.5)
-            .addCommand(release)
             .build();
     private CommandSequence wallSampleSequence = new CommandSequence()
             .addCommand(wallSampleCommand)
-            .addCommand(pivotBack)
-            .addCommand(telescopeBack)
-            .addCommand(grab)
             .build();
     private CommandSequence basket3Sequence = new CommandSequence()
             .addCommand(basket3Command)
-            .addCommand(pivotBasket)
-            .addCommand(telescopeBasket)
-            .addWaitCommand(0.5)
-            .addCommand(release)
-            .addCommand(pivotBack)
-            .addCommand(telescopeBack)
             .build();
     private AutoCommandMachine commandMachine = new AutoCommandMachine()
             .addCommandSequence(chamberSequence)
@@ -125,7 +103,7 @@ public class BasketAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        reflect = color == Color.RED;
+        reflect = color == Color.BLUE;
         claw = new Claw(this);
         drive = new SampleMecanumDrive(hardwareMap);
         pivot = new Pivot(this);
@@ -145,8 +123,7 @@ public class BasketAuto extends LinearOpMode{
                 .build();
         farTraj = drive
                 .trajectorySequenceBuilder(reflect(chamberTraj.end()))
-                .back(5)
-                .splineTo(reflect(basketConstants.FAR_SAMPLE.getV()), reflect(basketConstants.FAR_SAMPLE.getH()))
+                .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), reflect(basketConstants.FAR_SAMPLE.getH()))
                 .setReversed(false)
                 .build();
         basket1Traj = drive

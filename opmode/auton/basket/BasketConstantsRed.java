@@ -12,19 +12,19 @@ public class BasketConstantsRed extends BasketConstants {
              -TILE_LENGTH,
              UP
      );
-     WALL_SAMPLE = new Constant(
-             -TILE_LENGTH * 2.5,
-             -TILE_LENGTH * 3 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(0)
+     FAR_SAMPLE = new Constant(
+             -TILE_LENGTH * 2,
+             -TILE_LENGTH,
+             Math.toRadians(180)
      );
      CENTER_SAMPLE = new Constant(
              -TILE_LENGTH * 5 / 2,
              -TILE_LENGTH * 3 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(135)
+             Math.toRadians(90)
      );
-     FAR_SAMPLE = new Constant(
-             -TILE_LENGTH * 2,
-             -TILE_LENGTH,
+     WALL_SAMPLE = new Constant(
+             -TILE_LENGTH * 2.5,
+             -TILE_LENGTH * 3 / 2 + BOT_LENGTH / 2,
              Math.toRadians(180)
      );
      BASKET_1 = new Constant(
