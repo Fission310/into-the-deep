@@ -31,16 +31,18 @@ public class Scoring extends Mechanism {
         CLIP,
     }
 
-    public static double BASKET_OUTTAKE_WAIT = 0.5;
-    public static double BASKET_RETRACT_WAIT = 0.4;
+    public static double BASKET_OUTTAKE_WAIT = 0.4;
+    public static double BASKET_RELEASE_WAIT = 0.2;
+    public static double BASKET_RETRACT_WAIT = 0.1;
     public static double TELESCOPE_RETRACT_WAIT = 0.10;
     public static double WRIST_RETRACT_WAIT = 0.10;
     public static double PIVOT_DOWN_WAIT = 0.4;
     public static double PIVOT_GRAB_WAIT = 0.5;
     public static double PIVOT_UP_WAIT = 0.5;
     public static double CLIP_EXTEND_WAIT = 1;
-    public static double CLIP_CLIP_WAIT = 0.10;
-    public static double CLIP_PIVOT_WAIT = 0.10;
+    public static double CLIP_CLIP_WAIT = 1;
+    public static double CLIP_RELEASE_WAIT = 1;
+    public static double CLIP_PIVOT_WAIT = 1;
 
     public Scoring(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -67,9 +69,10 @@ public class Scoring extends Mechanism {
 
     private CommandSequence scoreBasket = new CommandSequence()
             .addCommand(release)
+            .addWaitCommand(BASKET_RELEASE_WAIT)
             .addCommand(pivotUp)
             .addCommand(wristIntakeScore)
-            .addWaitCommand(BASKET_RETRACT_WAIT)
+            .addWaitCommand(BASKET_OUTTAKE_WAIT)
             .addCommand(telescopeFront)
             .addWaitCommand(BASKET_RETRACT_WAIT)
             .addCommand(wristRetract)
@@ -85,7 +88,9 @@ public class Scoring extends Mechanism {
             .addCommand(telescopeScoreClip)
             .addWaitCommand(CLIP_CLIP_WAIT)
             .addCommand(release)
+            .addWaitCommand(CLIP_RELEASE_WAIT)
             .addCommand(pivotFront)
+            .addCommand(wristRetract)
             .addCommand(telescopeFront)
             .addCommand(setStateFront)
             .build();
@@ -105,7 +110,7 @@ public class Scoring extends Mechanism {
             .addWaitCommand(PIVOT_GRAB_WAIT)
             .addCommand(grab)
             .addWaitCommand(PIVOT_UP_WAIT)
-            .addCommand(pivotUpIntake)
+            .addCommand(pivotDownIntake)
             .build();
 
     public CommandSequence retractTele = new CommandSequence()
@@ -123,6 +128,7 @@ public class Scoring extends Mechanism {
         pivot.frontPos();
         telescope.frontPos();
         wrist.frontPos();
+        wrist.defaultPos();
     }
 
     public void goWall() {
@@ -195,13 +201,15 @@ public class Scoring extends Mechanism {
                 }
                 break;
             case INTAKE:
-                claw.loop(gamepad);
                 wrist.loop(gamepad);
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     retractTele.trigger();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
                     grabIntake.trigger();
+                }
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
+                    claw.release();
                 }
                 break;
             case WALL:

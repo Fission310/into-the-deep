@@ -21,7 +21,7 @@ public class WristDev extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             wrist.loop(gamepad1);
             if (GamepadStatic.isButtonPressed(gamepad1, Controls.PIVOT_FRONT)) {
-                wrist.frontPos();
+                wrist.intakePos();
             } else if (GamepadStatic.isButtonPressed(gamepad1, Controls.PIVOT_WALL)) {
                 wrist.wallPos();
             } else if (GamepadStatic.isButtonPressed(gamepad1, Controls.PIVOT_CLIP)) {

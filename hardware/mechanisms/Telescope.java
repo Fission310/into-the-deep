@@ -17,27 +17,29 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class Telescope extends Mechanism {
-    public static int ABIT = 60;
+    public static int ABIT = 20;
 
     public static int UP_RETRACTION = -60;
     public static int FRONT_POS = -50;
-    public static int FRONT_INTAKE_POS = 350;
+    public static int INTAKE_POS = 550;
     public static int WALL_POS = 100;
     public static int BASKET_POS = 1100;
-    public static int CLIP_POS = 200;
-    public static int CLIP_SCORE = 220;
-    public static int CLIP_EXTENSION = 250;
+    public static int CLIP_POS = 510;
+    public static int CLIP_SCORE = 510;
+    public static int CLIP_EXTENSION = 290;
     public static int BACK_POS = 300;
+    public static double DOWN_MULTIPLIER = 0.5;
 
-    public static double KP = 0.003;
-    public static double KI = 0;
-    public static double KD = 0;
+    public static double VERTICAL_KP = 0.005;
+    public static double HORIZONTAL_KP = 0.003;
 
     public static double target = 0;
     public static double power = 0;
     public static double POWER_MULTIPLIER = 1;
 
-    private final PIDController controller = new PIDController(KP, KI, KD);
+    private final PIDController verticalController = new PIDController(VERTICAL_KP, 0, 0);
+    private final PIDController horizontalController = new PIDController(HORIZONTAL_KP, 0, 0);
+    private PIDController controller;
 
     private final DcMotorEx[] motors = new DcMotorEx[2];
 
@@ -75,38 +77,47 @@ public class Telescope extends Mechanism {
     }
 
     public void upPos() {
+        controller = verticalController;
         setTarget(UP_RETRACTION);
     }
 
     public void frontPos() {
+        controller = horizontalController;
         setTarget(FRONT_POS);
     }
 
     public void frontIntakePos() {
-        setTarget(FRONT_INTAKE_POS);
+        controller = horizontalController;
+        setTarget(INTAKE_POS);
     }
 
     public void wallPos() {
+        controller = horizontalController;
         setTarget(WALL_POS);
     }
 
     public void basketPos() {
+        controller = verticalController;
         setTarget(BASKET_POS);
     }
 
     public void clipPos() {
+        controller = verticalController;
         setTarget(CLIP_POS);
     }
 
     public void clipExtensionPos() {
+        controller = verticalController;
         setTarget(CLIP_EXTENSION);
     }
 
     public void clipScorePos() {
+        controller = verticalController;
         setTarget(CLIP_SCORE);
     }
 
     public void backPos() {
+        controller = horizontalController;
         setTarget(BACK_POS);
     }
 
@@ -129,11 +140,16 @@ public class Telescope extends Mechanism {
     public void update() {
         controller.setTarget(target);
         power = controller.calculate(getPosition()) * POWER_MULTIPLIER;
+        if (target < getPosition() && controller == verticalController) {
+            power *= DOWN_MULTIPLIER;
+        }
         motors[0].setPower(power);
         motors[1].setPower(power);
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.update();
         t.addData("Telescope Power", power);
+        t.addData("Telescope position", getPosition());
+        t.addData("Telescope target", target);
+        t.update();
     }
 
     @Override

@@ -22,10 +22,10 @@ public class Pivot extends Mechanism {
     public static int INTAKE_UP_POS = 750;
     public static int INTAKE_DOWN_POS = 500;
     public static int INTAKE_GRAB_POS = 300;
-    public static int WALL_POS = 1950;
-    public static int BASKET_POS = 2250; // FIGURE OUT POSITION
-    public static int CLIP_POS = 2800;
-    public static int CLIP_DOWN_POS = 2600;
+    public static int WALL_POS = 950;
+    public static int BASKET_POS = 2300;
+    public static int CLIP_POS = 1550;
+    public static int CLIP_DOWN_POS = 1300;
     public static int BACK_POS = 3950;
     public static int UP_POS = 2000;
     public static int HIGHEST = 2100;
@@ -55,7 +55,7 @@ public class Pivot extends Mechanism {
         PIDFController upBottom = new PIDFController(UP_BOTTOM_KP, 0, 0, 0);
         PIDFController downTop = new PIDFController(DOWN_TOP_KP, 0, 0, 0);
         PIDFController upTop = new PIDFController(UP_TOP_KP, 0, 0, 0);
-        PIDFController downBottom = new PIDFController(                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         DOWN_BOTTOM_KP, 0, 0, 0);
+        PIDFController downBottom = new PIDFController(DOWN_BOTTOM_KP, 0, 0, 0);
         controller = new Controller(upBottom, downTop, upTop, downBottom, voltage, HIGHEST);
 
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
@@ -77,24 +77,28 @@ public class Pivot extends Mechanism {
     }
 
     public void telemetry(Telemetry telemetry) {
-        //telemetry.addData("Current Position", getPosition());
-        //telemetry.addData("Target", target);
-        //telemetry.addData("Power", power);
+        // telemetry.addData("Current Position", getPosition());
+        // telemetry.addData("Target", target);
+        // telemetry.addData("Power", power);
         telemetry.update();
     }
 
     public void frontPos() {
         setTarget(FRONT_POS);
     }
+
     public void intakeUpPos() {
         setTarget(INTAKE_UP_POS);
     }
+
     public void intakeDownPos() {
         setTarget(INTAKE_DOWN_POS);
     }
+
     public void intakeGrabPos() {
         setTarget(INTAKE_GRAB_POS);
     }
+
     public void wallPos() {
         setTarget(WALL_POS);
     }

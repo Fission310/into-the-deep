@@ -16,16 +16,17 @@ public class Wrist extends Mechanism {
     private Servo wristServoRight;
     private Servo wristServoLeft;
 
-    public static double[][] INTAKE_POS = { { 0.61, 0.99 }, { 0.65, 0.95 }, { 0.71, 0.88 }, { 0.76, 0.83 } };
-    public static double[][] FRONT_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
-    public static double[][] WALL_POS = { { 0.57, 0.57 }, { 0.57, 0.57 }, { 0.57, 0.57 }, { 0.57, 0.57 } };
-    public static double[][] BASKET_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
-    public static double[][] CLIP_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
-    public static double[][] CLIP_SCORE_POS = { { 0.05, 0.05 }, { 0.05, 0.05 }, { 0.05, 0.05 }, { 0.05, 0.05 } };
-    public static double[][] BACK_POS = { { 0.05, 0.05 }, { 0.05, 0.05 }, { 0.05, 0.05 }, { 0.05, 0.05 } };
+    public static double[][] INTAKE_POS = { { 0.7, 0.7 }, { 0.66, 0.74 }, { 0.61, 0.79 }, { 0.56, 0.84 } };
+    public static double[][] FRONT_POS = { { 0.13, 0.13 }, { 0.13, 0.13 }, { 0.13, 0.13 }, { 0.13, 0.13 } };
+    public static double[][] WALL_POS = { { 0.51, 0.49 }, { 0.51, 0.49 }, { 0.51, 0.49 }, { 0.51, 0.49 } };
+    public static double[][] BASKET_POS = { { 0.3, 0.3 }, { 0.3, 0.3 }, { 0.3, 0.3 }, { 0.3, 0.3 } };
+    public static double[][] CLIP_POS = { { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 } };
+    public static double[][] CLIP_SCORE_POS = { { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 } };
+    public static double[][] BACK_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] currPos;
 
     private int wristPos = 0;
+    private boolean pressed = false;
 
     public Wrist(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -39,66 +40,75 @@ public class Wrist extends Mechanism {
         frontPos();
     }
 
-    public void rotateLeft() {
-        wristPos = (wristPos + 1) % 4;
+    private void setPosition() {
         wristServoRight.setPosition(currPos[wristPos][0]);
         wristServoLeft.setPosition(currPos[wristPos][1]);
+    }
+
+    public void rotateLeft() {
+        wristPos = (wristPos + 1) % 4;
+        setPosition();
     }
 
     public void rotateRight() {
         wristPos = (wristPos + 3) % 4;
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        setPosition();
+    }
+
+    public void defaultPos() {
+        wristPos = 0;
+        setPosition();
     }
 
     public void frontPos() {
         currPos = FRONT_POS;
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        setPosition();
     }
 
     public void intakePos() {
-        currPos = INTAKE_POS; 
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        currPos = INTAKE_POS;
+        setPosition();
     }
 
     public void wallPos() {
         currPos = WALL_POS;
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        setPosition();
     }
 
     public void basketPos() {
         currPos = BASKET_POS;
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        setPosition();
     }
 
     public void clipPos() {
         currPos = CLIP_POS;
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        setPosition();
     }
 
     public void clipScorePos() {
         currPos = CLIP_SCORE_POS;
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        setPosition();
     }
 
     public void backPos() {
         currPos = BACK_POS;
-        wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        setPosition();
     }
 
     @Override
     public void loop(Gamepad gamepad) {
         if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_LEFT)) {
-            rotateLeft();
+            if (!pressed) {
+                rotateLeft();
+            }
+            pressed = true;
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
-            rotateRight();
+            if (!pressed) {
+                rotateRight();
+            }
+            pressed = true;
+        } else {
+            pressed = false;
         }
     }
 }
