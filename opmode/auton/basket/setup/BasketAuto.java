@@ -64,7 +64,6 @@ public class BasketAuto extends LinearOpMode{
     private Command telescopeIntake = () -> telescope.frontIntakePos();
     private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
     private Command telescopeRetract = () -> telescope.frontPos();
-    private Command wristIntakeScore = () -> wrist.frontIntakePos();
     private Command wristRetract = () -> wrist.frontPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command pivotUp = () -> pivot.upPos();
