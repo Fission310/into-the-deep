@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.clip.setup;
 
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_CLIP_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_EXTEND_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_PIVOT_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_RELEASE_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.PIVOT_DOWN_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.TELESCOPE_RETRACT_WAIT;
+
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
@@ -65,19 +72,59 @@ public class ClipAuto extends LinearOpMode{
     private Wrist wrist;
 
     private Command pivotClip = () -> pivot.clipPos();
+    private Command pivotClipDown = () -> pivot.clipDownPos();
     private Command telescopeClip = () -> telescope.clipPos();
+    private Command telescopeFront = () -> telescope.frontPos();
+    private Command telescopeScoreClip = () -> telescope.clipScorePos();
+    private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
     private Command release = () -> claw.release();
     private Command pivotBack = () -> pivot.backPos();
+    private Command pivotDownIntake = () -> pivot.intakeDownPos();
+    private Command pivotFront = () -> pivot.frontPos();
+    private Command pivotUpIntake = () -> pivot.intakeUpPos();
     private Command telescopeBack = () -> telescope.backPos();
-    private Command grab = () -> claw.grab();
-    private Command pivotBasket = () -> pivot.basketPos();
-    private Command telescopeBasket = () -> telescope.basketPos();
+    private Command telescopeIntake = () -> telescope.frontIntakePos();
+    private Command telescopeRetract = () -> telescope.frontPos();
+    private Command wristRetract = () -> wrist.frontPos();
+    private Command wristIntakeScore = () -> wrist.intakePos();
 
     private CommandSequence startChamberSequence = new CommandSequence()
             .addCommand(startChamberCommand)
             .build();
+    private CommandSequence pivotToClip = new CommandSequence()
+            .addCommand(pivotClip)
+            .build();
+    private CommandSequence scoreClip = new CommandSequence()
+            .addCommand(telescopeExtendClip)
+            .addWaitCommand(CLIP_EXTEND_WAIT)
+            .addCommand(pivotClipDown)
+            .addWaitCommand(CLIP_PIVOT_WAIT)
+            .addCommand(telescopeScoreClip)
+            .addWaitCommand(CLIP_CLIP_WAIT)
+            .addCommand(release)
+            .addWaitCommand(CLIP_RELEASE_WAIT)
+            .addCommand(pivotFront)
+            .addCommand(wristRetract)
+            .addCommand(telescopeFront)
+            .build();
+    private CommandSequence retractTele = new CommandSequence()
+            .addCommand(pivotUpIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(TELESCOPE_RETRACT_WAIT)
+            .addCommand(telescopeRetract)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(pivotDownIntake)
+            .build();
     private CommandSequence farTrajSequence = new CommandSequence()
             .addCommand(farTrajCommand)
+            .build();
+    public CommandSequence frontIntake = new CommandSequence()
+            .addCommand(pivotUpIntake)
+            .addCommand(telescopeIntake)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(pivotDownIntake)
+            .addCommand(wristIntakeScore)
+            .addCommand(release)
             .build();
     private CommandSequence sampleDrop1Sequence = new CommandSequence()
             .addCommand(sampleDrop1Command)
@@ -112,20 +159,38 @@ public class ClipAuto extends LinearOpMode{
     private CommandSequence chamber3Sequence = new CommandSequence()
             .addCommand(chamber3Command)
             .build();
-    private AutoCommandMachine commandMachine = new AutoCommandMachine()
+    private AutoCommandMachine commandMachine = new AutoCommandMachine() //need to do release and pick ups
             .addCommandSequence(startChamberSequence)
+            .addCommandSequence(pivotToClip) //
+            .addCommandSequence(scoreClip) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(farTrajSequence)
+            .addCommandSequence(frontIntake) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(sampleDrop1Sequence)
             .addCommandSequence(centerTrajSequence)
+            .addCommandSequence(frontIntake) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(sampleDrop2Sequence)
             .addCommandSequence(wallTrajSequence)
+            .addCommandSequence(frontIntake) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(sampleDrop3Sequence)
             .addCommandSequence(wallIntake1Sequence)
             .addCommandSequence(chamber1Sequence)
+            .addCommandSequence(pivotToClip) //
+            .addCommandSequence(scoreClip) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(wallIntake2Sequence)
             .addCommandSequence(chamber2Sequence)
+            .addCommandSequence(pivotToClip) //
+            .addCommandSequence(scoreClip) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(wallIntake3Sequence)
             .addCommandSequence(chamber3Sequence)
+            .addCommandSequence(pivotToClip) //
+            .addCommandSequence(scoreClip) //
+            .addCommandSequence(retractTele) //
             .build();
 
     @Override
