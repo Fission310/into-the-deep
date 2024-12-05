@@ -19,21 +19,21 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 @Config
 public class Pivot extends Mechanism {
     public static int FRONT_POS = 500;
-    public static int INTAKE_UP_POS = 750;
+    public static int INTAKE_UP_POS = 580;
     public static int INTAKE_DOWN_POS = 500;
     public static int INTAKE_GRAB_POS = 300;
     public static int WALL_POS = 950;
     public static int BASKET_POS = 2300;
-    public static int CLIP_POS = 1550;
-    public static int CLIP_DOWN_POS = 1300;
+    public static int CLIP_POS = 1800;
+    public static int CLIP_DOWN_POS = 1650;
     public static int BACK_POS = 3950;
     public static int UP_POS = 2000;
     public static int HIGHEST = 2100;
 
     public static double UP_BOTTOM_KP = 0.000711;
-    public static double DOWN_TOP_KP = 0.0002;
+    public static double DOWN_TOP_KP = 0.0001;
     public static double UP_TOP_KP = 0.0006;
-    public static double DOWN_BOTTOM_KP = 0.0001;
+    public static double DOWN_BOTTOM_KP = 0.00008;
 
     public static double target = 0;
     public static double actualTarget = 0;

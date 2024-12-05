@@ -18,10 +18,10 @@ public class Wrist extends Mechanism {
 
     public static double[][] INTAKE_POS = { { 0.7, 0.7 }, { 0.66, 0.74 }, { 0.61, 0.79 }, { 0.56, 0.84 } };
     public static double[][] FRONT_POS = { { 0.13, 0.13 }, { 0.13, 0.13 }, { 0.13, 0.13 }, { 0.13, 0.13 } };
-    public static double[][] WALL_POS = { { 0.51, 0.49 }, { 0.51, 0.49 }, { 0.51, 0.49 }, { 0.51, 0.49 } };
+    public static double[][] WALL_POS = { { 0.4, 0.42 }, { 0.4, 0.42 }, { 0.4, 0.42 }, { 0.4, 0.42 } };
     public static double[][] BASKET_POS = { { 0.3, 0.3 }, { 0.3, 0.3 }, { 0.3, 0.3 }, { 0.3, 0.3 } };
-    public static double[][] CLIP_POS = { { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 } };
-    public static double[][] CLIP_SCORE_POS = { { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 } };
+    public static double[][] CLIP_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
+    public static double[][] CLIP_SCORE_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] BACK_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] currPos;
 
@@ -93,6 +93,11 @@ public class Wrist extends Mechanism {
     public void backPos() {
         currPos = BACK_POS;
         setPosition();
+    }
+
+    public void updatePos(double left, double right) {
+        wristServoRight.setPosition(right);
+        wristServoLeft.setPosition(left);
     }
 
     @Override

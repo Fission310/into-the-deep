@@ -37,12 +37,14 @@ public class Scoring extends Mechanism {
     public static double TELESCOPE_RETRACT_WAIT = 0.10;
     public static double WRIST_RETRACT_WAIT = 0.10;
     public static double PIVOT_DOWN_WAIT = 0.4;
-    public static double PIVOT_GRAB_WAIT = 0.5;
+    public static double PIVOT_GRAB_WAIT = 0.3;
     public static double PIVOT_UP_WAIT = 0.5;
     public static double CLIP_EXTEND_WAIT = 1;
-    public static double CLIP_CLIP_WAIT = 1;
-    public static double CLIP_RELEASE_WAIT = 1;
-    public static double CLIP_PIVOT_WAIT = 1;
+    public static double CLIP_CLIP_WAIT = 0.3;
+    public static double CLIP_RELEASE_WAIT = 0.1;
+    public static double CLIP_PIVOT_WAIT = 0.1;
+
+    private boolean frontClicked = false;
 
     public Scoring(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -58,14 +60,14 @@ public class Scoring extends Mechanism {
     private Command telescopeIntake = () -> telescope.frontIntakePos();
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
-    private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
+    private Command setStateUp = () -> state = State.UP;
     private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristIntakeScore = () -> wrist.intakePos();
+    private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristRetract = () -> wrist.frontPos();
     private Command pivotUp = () -> pivot.upPos();
     private Command pivotClipDown = () -> pivot.clipDownPos();
     private Command telescopeScoreClip = () -> telescope.clipScorePos();
-
 
     private CommandSequence scoreBasket = new CommandSequence()
             .addCommand(release)
@@ -81,11 +83,10 @@ public class Scoring extends Mechanism {
             .build();
 
     private CommandSequence scoreClip = new CommandSequence()
-            .addCommand(telescopeExtendClip)
-            .addWaitCommand(CLIP_EXTEND_WAIT)
             .addCommand(pivotClipDown)
-            .addWaitCommand(CLIP_PIVOT_WAIT)
             .addCommand(telescopeScoreClip)
+            .addWaitCommand(CLIP_PIVOT_WAIT)
+            .addCommand(wristClipScore)
             .addWaitCommand(CLIP_CLIP_WAIT)
             .addCommand(release)
             .addWaitCommand(CLIP_RELEASE_WAIT)
@@ -96,10 +97,9 @@ public class Scoring extends Mechanism {
             .build();
 
     public CommandSequence frontIntake = new CommandSequence()
-            .addCommand(pivotUpIntake)
+            .addCommand(pivotDownIntake)
             .addCommand(telescopeIntake)
             .addWaitCommand(PIVOT_DOWN_WAIT)
-            .addCommand(pivotDownIntake)
             .addCommand(wristIntakeScore)
             .addCommand(setStateIntake)
             .addCommand(release)
@@ -109,8 +109,6 @@ public class Scoring extends Mechanism {
             .addCommand(pivotGrabIntake)
             .addWaitCommand(PIVOT_GRAB_WAIT)
             .addCommand(grab)
-            .addWaitCommand(PIVOT_UP_WAIT)
-            .addCommand(pivotDownIntake)
             .build();
 
     public CommandSequence retractTele = new CommandSequence()
@@ -119,8 +117,8 @@ public class Scoring extends Mechanism {
             .addWaitCommand(TELESCOPE_RETRACT_WAIT)
             .addCommand(telescopeRetract)
             .addWaitCommand(PIVOT_DOWN_WAIT)
-            .addCommand(pivotDownIntake)
-            .addCommand(setStateFront)
+            .addCommand(pivotUp)
+            .addCommand(setStateUp)
             .build();
 
     public void goFront() {
@@ -181,10 +179,13 @@ public class Scoring extends Mechanism {
             telescope.downABit();
         }
 
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT) && state != State.FRONT && state != State.INTAKE) {
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT) && state != State.FRONT
+                && state != State.INTAKE) {
             goFront();
+            frontClicked = true;
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL) && state != State.WALL) {
             goWall();
+            claw.release();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET) && state != State.BASKET) {
             goBasket();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP) && state != State.CLIP) {
@@ -197,7 +198,12 @@ public class Scoring extends Mechanism {
             case FRONT:
                 claw.loop(gamepad);
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
-                    frontIntake.trigger();
+                    if (!frontClicked) {
+                        frontIntake.trigger();
+                    }
+                    frontClicked = true;
+                } else {
+                    frontClicked = false;
                 }
                 break;
             case INTAKE:
@@ -210,6 +216,7 @@ public class Scoring extends Mechanism {
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
                     claw.release();
+                    pivot.intakeUpPos();
                 }
                 break;
             case WALL:
