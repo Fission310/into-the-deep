@@ -34,9 +34,10 @@ public class Scoring extends Mechanism {
     public static double BASKET_OUTTAKE_WAIT = 0.4;
     public static double BASKET_RELEASE_WAIT = 0.2;
     public static double BASKET_RETRACT_WAIT = 0.1;
+    public static double UP_POS_WAIT = 0.1;
     public static double TELESCOPE_RETRACT_WAIT = 0.10;
     public static double WRIST_RETRACT_WAIT = 0.10;
-    public static double PIVOT_DOWN_WAIT = 0.4;
+    public static double PIVOT_DOWN_WAIT = 0.1;
     public static double PIVOT_GRAB_WAIT = 0.3;
     public static double PIVOT_UP_WAIT = 0.5;
     public static double CLIP_EXTEND_WAIT = 1;
@@ -72,12 +73,12 @@ public class Scoring extends Mechanism {
     private CommandSequence scoreBasket = new CommandSequence()
             .addCommand(release)
             .addWaitCommand(BASKET_RELEASE_WAIT)
-            .addCommand(pivotUp)
             .addCommand(wristIntakeScore)
             .addWaitCommand(BASKET_OUTTAKE_WAIT)
             .addCommand(telescopeFront)
             .addWaitCommand(BASKET_RETRACT_WAIT)
             .addCommand(wristRetract)
+            .addWaitCommand(UP_POS_WAIT)
             .addCommand(pivotFront)
             .addCommand(setStateFront)
             .build();
@@ -116,7 +117,7 @@ public class Scoring extends Mechanism {
             .addCommand(wristRetract)
             .addWaitCommand(TELESCOPE_RETRACT_WAIT)
             .addCommand(telescopeRetract)
-            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addWaitCommand(PIVOT_UP_WAIT)
             .addCommand(pivotUp)
             .addCommand(setStateUp)
             .build();
@@ -209,7 +210,12 @@ public class Scoring extends Mechanism {
             case INTAKE:
                 wrist.loop(gamepad);
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
-                    retractTele.trigger();
+                    if (!frontClicked) {
+                        retractTele.trigger();
+                    }
+                    frontClicked = true;
+                } else {
+                    frontClicked = false;
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
                     grabIntake.trigger();

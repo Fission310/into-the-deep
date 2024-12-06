@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Claw extends Mechanism {
-    public static double GRAB_POS = 0.32;
-    public static double RELEASE_POS = 0.48;
+    public static double GRAB_POS = 0.275;
+    public static double RELEASE_POS = 0.14;
 
     private Servo clawServo;
 
