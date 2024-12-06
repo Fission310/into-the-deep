@@ -32,9 +32,9 @@ public class Telescope extends Mechanism {
     public static int CLIP_SCORE = 100;
     public static int CLIP_EXTENSION = 330;
     public static int BACK_POS = 300;
-    public static double DOWN_MULTIPLIER = 0.2;
+    public static double DOWN_MULTIPLIER = 0.15;
 
-    public static double VERTICAL_KP = 0.004;
+    public static double VERTICAL_KP = 0.007;
     public static double HORIZONTAL_KP = 0.002;
 
     public static double target = 0;
