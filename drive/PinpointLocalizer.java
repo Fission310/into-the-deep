@@ -6,8 +6,10 @@ import androidx.annotation.Nullable;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.Localizer;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
 
@@ -21,7 +23,9 @@ public class PinpointLocalizer implements Localizer {
     @NonNull
     @Override
     public Pose2d getPoseEstimate() {
-        return new Pose2d(odo.getPosX(), odo.getPosY(), odo.getHeading());
+        Pose2D pose = odo.getPosition();
+        return new Pose2d(pose.getY(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH),
+                pose.getHeading(AngleUnit.RADIANS));
     }
 
     @Override
@@ -32,7 +36,9 @@ public class PinpointLocalizer implements Localizer {
     @Nullable
     @Override
     public Pose2d getPoseVelocity() {
-        return new Pose2d(odo.getVelX(), odo.getVelY(), odo.getHeadingVelocity());
+        Pose2D pose = odo.getVelocity();
+        return new Pose2d(pose.getY(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH),
+                pose.getHeading(AngleUnit.RADIANS));
     }
 
     @Override
