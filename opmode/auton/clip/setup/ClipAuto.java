@@ -65,54 +65,161 @@ public class ClipAuto extends LinearOpMode{
     private Wrist wrist;
 
     private Command pivotClip = () -> pivot.clipPos();
+    private Command pivotClipDown = () -> pivot.clipDownPos();
     private Command telescopeClip = () -> telescope.clipPos();
+    private Command telescopeScoreClip = () -> telescope.clipScorePos();
+    private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
+    private Command telescopeFar = () -> telescope.autoFarPos();
+    private Command telescopeCenter = () -> telescope.autoCenterPos();
+    private Command telescopeWall = () -> telescope.autoWallPos();
+    private Command telescopeSampleDrop = () -> telescope.autoSampleDropPos();
     private Command release = () -> claw.release();
-    private Command pivotBack = () -> pivot.backPos();
-    private Command telescopeBack = () -> telescope.backPos();
     private Command grab = () -> claw.grab();
-    private Command pivotBasket = () -> pivot.basketPos();
-    private Command telescopeBasket = () -> telescope.basketPos();
+    private Command pivotBack = () -> pivot.backPos();
+    private Command pivotDownIntake = () -> pivot.intakeDownPos();
+    private Command pivotFront = () -> pivot.frontPos();
+    private Command pivotBackClip = () -> pivot.clipBackPos();
+    private Command pivotBackClipDown = () -> pivot.clipBackDownPos();
+    private Command pivotUpIntake = () -> pivot.intakeUpPos();
+    private Command pivotWallIntake = () -> pivot.wallPos();
+    private Command telescopeBack = () -> telescope.backPos();
+    private Command telescopeIntake = () -> telescope.frontIntakePos();
+    private Command telescopeRetract = () -> telescope.frontPos();
+    private Command wristRetract = () -> wrist.frontPos();
+    private Command wristIntakeScore = () -> wrist.intakePos();
+    private Command wristWallIntake = () -> wrist.wallPos();
 
     private CommandSequence startChamberSequence = new CommandSequence()
             .addCommand(startChamberCommand)
+            .addCommand(pivotClip)
+            .addCommand(telescopeExtendClip)
+            .addWaitCommand(0.6)
+            .addCommand(pivotClipDown)
+            .addWaitCommand(0.6)
+            .addCommand(telescopeScoreClip)
+            .addWaitCommand(0.6)
+            .addCommand(release)
+            .addWaitCommand(0.6)
+            .addCommand(pivotFront)
+            .addCommand(wristRetract)
+            .addCommand(telescopeRetract)
             .build();
     private CommandSequence farTrajSequence = new CommandSequence()
             .addCommand(farTrajCommand)
+            .addCommand(pivotFront)
+            .addCommand(telescopeFar)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.6)
+            .addCommand(pivotDownIntake)
+            .addWaitCommand(0.6)
+            .addCommand(grab)
+            .addCommand(pivotFront)
             .build();
     private CommandSequence sampleDrop1Sequence = new CommandSequence()
             .addCommand(sampleDrop1Command)
+            .addCommand(telescopeSampleDrop)
+            .addWaitCommand(0.7)
+            .addCommand(release)
             .build();
     private CommandSequence centerTrajSequence = new CommandSequence()
             .addCommand(centerTrajCommand)
+            .addCommand(telescopeCenter)
+            .addWaitCommand(0.6)
+            .addCommand(pivotDownIntake)
+            .addWaitCommand(0.6)
+            .addCommand(grab)
+            .addCommand(pivotFront)
             .build();
     private CommandSequence sampleDrop2Sequence = new CommandSequence()
             .addCommand(sampleDrop2Command)
+            .addCommand(telescopeSampleDrop)
+            .addWaitCommand(0.7)
+            .addCommand(release)
             .build();
     private CommandSequence wallTrajSequence = new CommandSequence()
             .addCommand(wallTrajCommand)
+            .addCommand(telescopeWall)
+            .addWaitCommand(0.6)
+            .addCommand(pivotDownIntake)
+            .addWaitCommand(0.6)
+            .addCommand(grab)
+            .addCommand(pivotFront)
             .build();
     private CommandSequence sampleDrop3Sequence = new CommandSequence()
             .addCommand(sampleDrop3Command)
+            .addCommand(telescopeSampleDrop)
+            .addWaitCommand(0.7)
+            .addCommand(release)
+            .addWaitCommand(0.5)
+            .addCommand(telescopeRetract)
             .build();
     private CommandSequence wallIntake1Sequence = new CommandSequence()
             .addCommand(wallIntake1Command)
+            .addCommand(pivotWallIntake)
+            .addCommand(telescopeWall)
+            .addCommand(wristWallIntake)
+            .addWaitCommand(0.7)
+            .addCommand(grab)
+            .addWaitCommand(0.3)
+            .addCommand(pivotBackClip)
             .build();
     private CommandSequence chamber1Sequence = new CommandSequence()
             .addCommand(chamber1Command)
+            .addCommand(telescopeExtendClip)
+            .addWaitCommand(0.6)
+            .addCommand(pivotBackClipDown)
+            .addWaitCommand(0.6)
+            .addCommand(telescopeScoreClip)
+            .addWaitCommand(0.6)
+            .addCommand(release)
+            .addWaitCommand(0.6)
+            .addCommand(pivotWallIntake)
+            .addCommand(wristWallIntake)
+            .addCommand(telescopeWall)
             .build();
     private CommandSequence wallIntake2Sequence = new CommandSequence()
             .addCommand(wallIntake2Command)
+            .addWaitCommand(0.7)
+            .addCommand(grab)
+            .addWaitCommand(0.3)
+            .addCommand(pivotBackClip)
             .build();
     private CommandSequence chamber2Sequence = new CommandSequence()
             .addCommand(chamber2Command)
+            .addCommand(telescopeExtendClip)
+            .addWaitCommand(0.6)
+            .addCommand(pivotBackClipDown)
+            .addWaitCommand(0.6)
+            .addCommand(telescopeScoreClip)
+            .addWaitCommand(0.6)
+            .addCommand(release)
+            .addWaitCommand(0.6)
+            .addCommand(pivotWallIntake)
+            .addCommand(wristWallIntake)
+            .addCommand(telescopeWall)
             .build();
     private CommandSequence wallIntake3Sequence = new CommandSequence()
             .addCommand(wallIntake3Command)
+            .addWaitCommand(0.7)
+            .addCommand(grab)
+            .addWaitCommand(0.3)
+            .addCommand(pivotBackClip)
             .build();
     private CommandSequence chamber3Sequence = new CommandSequence()
             .addCommand(chamber3Command)
+            .addCommand(telescopeExtendClip)
+            .addWaitCommand(0.6)
+            .addCommand(pivotBackClipDown)
+            .addWaitCommand(0.6)
+            .addCommand(telescopeScoreClip)
+            .addWaitCommand(0.6)
+            .addCommand(release)
+            .addWaitCommand(0.6)
+            .addCommand(pivotFront)
+            .addCommand(wristRetract)
+            .addCommand(telescopeRetract)
             .build();
-    private AutoCommandMachine commandMachine = new AutoCommandMachine()
+    private AutoCommandMachine commandMachine = new AutoCommandMachine() //need to do release and pick ups
             .addCommandSequence(startChamberSequence)
             .addCommandSequence(farTrajSequence)
             .addCommandSequence(sampleDrop1Sequence)

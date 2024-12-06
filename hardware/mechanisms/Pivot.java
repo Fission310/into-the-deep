@@ -26,6 +26,8 @@ public class Pivot extends Mechanism {
     public static int BASKET_POS = 2220;
     public static int CLIP_POS = 1650;
     public static int CLIP_DOWN_POS = 1500;
+    public static int CLIP_BACK_POS = 2400;
+    public static int CLIP_BACK_DOWN_POS = 2450;
     public static int BACK_POS = 3800;
     public static int UP_POS = 1850;
     public static int HIGHEST = 1950;
@@ -113,6 +115,14 @@ public class Pivot extends Mechanism {
 
     public void clipDownPos() {
         setTarget(CLIP_DOWN_POS);
+    }
+
+    public void clipBackPos() {
+        setTarget(CLIP_BACK_POS);
+    }
+
+    public void clipBackDownPos() {
+        setTarget(CLIP_BACK_DOWN_POS);
     }
 
     public void backPos() {

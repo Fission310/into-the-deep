@@ -1,5 +1,17 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.basket.setup;
 
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.BASKET_OUTTAKE_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.BASKET_RELEASE_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.BASKET_RETRACT_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_CLIP_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_EXTEND_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_PIVOT_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.CLIP_RELEASE_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.PIVOT_DOWN_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.PIVOT_GRAB_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.PIVOT_UP_WAIT;
+import static org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring.TELESCOPE_RETRACT_WAIT;
+
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
@@ -58,24 +70,73 @@ public class BasketAuto extends LinearOpMode{
     private Command release = () -> claw.release();
     private Command pivotFront = () -> pivot.frontPos();
     private Command pivotClip = () -> pivot.clipPos();
+    private Command pivotClipDown = () -> pivot.clipDownPos();
+    private Command pivotUp = () -> pivot.upPos();
     private Command pivotUpIntake = () -> pivot.intakeUpPos();
     private Command pivotDownIntake = () -> pivot.intakeDownPos();
     private Command telescopeFront = () -> telescope.frontPos();
     private Command telescopeIntake = () -> telescope.frontIntakePos();
+    private Command telescopeScoreClip = () -> telescope.clipScorePos();
     private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
+    private Command telescopeBasket = () -> telescope.basketPos();
     private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristRetract = () -> wrist.frontPos();
-    private Command wristClipScore = () -> wrist.clipScorePos();
-    private Command pivotUp = () -> pivot.upPos();
+    private Command wristIntakeScore = () -> wrist.intakePos();
 
+    private CommandSequence retractTele = new CommandSequence()
+            .addCommand(pivotUpIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(TELESCOPE_RETRACT_WAIT)
+            .addCommand(telescopeRetract)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(pivotDownIntake)
+            .build();
     private CommandSequence chamberSequence = new CommandSequence()
             .addCommand(chamberCommand)
+            .build();
+    private CommandSequence pivotToClip = new CommandSequence()
+            .addCommand(pivotClip)
+            .build();
+    private CommandSequence scoreClip = new CommandSequence()
+            .addCommand(telescopeExtendClip)
+            .addWaitCommand(CLIP_EXTEND_WAIT)
+            .addCommand(pivotClipDown)
+            .addWaitCommand(CLIP_PIVOT_WAIT)
+            .addCommand(telescopeScoreClip)
+            .addWaitCommand(CLIP_CLIP_WAIT)
+            .addCommand(release)
+            .addWaitCommand(CLIP_RELEASE_WAIT)
+            .addCommand(pivotFront)
+            .addCommand(wristRetract)
+            .addCommand(telescopeFront)
             .build();
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(farSampleCommand)
             .build();
+    public CommandSequence frontIntake = new CommandSequence()
+            .addCommand(pivotUpIntake)
+            .addCommand(telescopeIntake)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(pivotDownIntake)
+            .addCommand(wristIntakeScore)
+            .addCommand(release)
+            .build();
     private CommandSequence basket1Sequence = new CommandSequence()
             .addCommand(basket1Command)
+            .build();
+    private CommandSequence telescopeToBasket = new CommandSequence()
+            .addCommand(telescopeBasket)
+            .build();
+    private CommandSequence scoreBasket = new CommandSequence()
+            .addCommand(release)
+            .addWaitCommand(BASKET_RELEASE_WAIT)
+            .addCommand(pivotUp)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(BASKET_OUTTAKE_WAIT)
+            .addCommand(telescopeFront)
+            .addWaitCommand(BASKET_RETRACT_WAIT)
+            .addCommand(wristRetract)
+            .addCommand(pivotFront)
             .build();
     private CommandSequence centerSampleSequence = new CommandSequence()
             .addCommand(centerSampleCommand)
@@ -91,12 +152,30 @@ public class BasketAuto extends LinearOpMode{
             .build();
     private AutoCommandMachine commandMachine = new AutoCommandMachine()
             .addCommandSequence(chamberSequence)
+            .addCommandSequence(pivotToClip) //
+            .addCommandSequence(scoreClip) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(farSampleSequence)
+            .addCommandSequence(frontIntake) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(basket1Sequence)
+            .addCommandSequence(telescopeToBasket) //
+            .addCommandSequence(scoreBasket) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(centerSampleSequence)
+            .addCommandSequence(frontIntake) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(basket2Sequence)
+            .addCommandSequence(telescopeToBasket) //
+            .addCommandSequence(scoreBasket) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(wallSampleSequence)
+            .addCommandSequence(frontIntake) //
+            .addCommandSequence(retractTele) //
             .addCommandSequence(basket3Sequence)
+            .addCommandSequence(telescopeToBasket) //
+            .addCommandSequence(scoreBasket) //
+            .addCommandSequence(retractTele) //
             .build();
 
     @Override
