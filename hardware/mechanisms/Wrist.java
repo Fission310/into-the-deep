@@ -18,7 +18,7 @@ public class Wrist extends Mechanism {
 
     public static double[][] INTAKE_POS = { { 0.67, 0.64 }, { 0.62, 0.69 }, { 0.57, 0.74 }, { 0.52, 0.8 } };
     public static double[][] FRONT_POS = { { 0.12, 0.1 }, { 0.12, 0.1 }, { 0.12, 0.1 }, { 0.12, 0.1 } };
-    public static double[][] WALL_POS = { { 0.4, 0.42 }, { 0.4, 0.42 }, { 0.4, 0.42 }, { 0.4, 0.42 } };
+    public static double[][] WALL_POS = { { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
     public static double[][] BASKET_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] CLIP_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] CLIP_SCORE_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };

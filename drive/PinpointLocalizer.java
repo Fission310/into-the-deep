@@ -24,7 +24,7 @@ public class PinpointLocalizer implements Localizer {
     @Override
     public Pose2d getPoseEstimate() {
         Pose2D pose = odo.getPosition();
-        return new Pose2d(pose.getY(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH),
+        return new Pose2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH),
                 pose.getHeading(AngleUnit.RADIANS));
     }
 
@@ -37,7 +37,7 @@ public class PinpointLocalizer implements Localizer {
     @Override
     public Pose2d getPoseVelocity() {
         Pose2D pose = odo.getVelocity();
-        return new Pose2d(pose.getY(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH),
+        return new Pose2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH),
                 pose.getHeading(AngleUnit.RADIANS));
     }
 
