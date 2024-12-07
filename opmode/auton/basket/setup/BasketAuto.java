@@ -30,6 +30,7 @@ public class BasketAuto extends LinearOpMode{
         this.basketConstants = basketConstants;
     }
 
+    private TrajectorySequence basketTraj;
     private TrajectorySequence chamberTraj;
     private TrajectorySequence farTraj;
     private TrajectorySequence basket1Traj;
@@ -40,6 +41,7 @@ public class BasketAuto extends LinearOpMode{
 
     private SampleMecanumDrive drive;
 
+    private Command basketCommand = () -> drive.followTrajectorySequenceAsync(basketTraj);
     private Command chamberCommand = () -> drive.followTrajectorySequenceAsync(chamberTraj);
     private Command farSampleCommand = () -> drive.followTrajectorySequenceAsync(farTraj);
     private Command basket1Command = () -> drive.followTrajectorySequenceAsync(basket1Traj);
@@ -51,10 +53,11 @@ public class BasketAuto extends LinearOpMode{
 
     private Claw claw;
     private Pivot pivot;
-    private Scoring scoring;
     private Telescope telescope;
     private Wrist wrist;
 
+    private Command busyTrue = () -> busy = true;
+    private Command busyFalse = () -> busy = false;
     private Command release = () -> claw.release();
     private Command grab = () -> claw.grab();
     private Command pivotFront = () -> pivot.frontPos();
@@ -64,6 +67,7 @@ public class BasketAuto extends LinearOpMode{
     private Command pivotUp = () -> pivot.upPos();
     private Command pivotUpIntake = () -> pivot.intakeUpPos();
     private Command pivotDownIntake = () -> pivot.intakeDownPos();
+    private Command pivotGrabIntake = () -> pivot.intakeGrabPos();
     private Command telescopeFront = () -> telescope.frontPos();
     private Command telescopeBasket = () -> telescope.basketPos();
     private Command telescopeIntake = () -> telescope.frontIntakePos();
@@ -74,35 +78,56 @@ public class BasketAuto extends LinearOpMode{
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristClipScore = () -> wrist.clipScorePos();
 
+    private CommandSequence basketSequence = new CommandSequence()
+            .addCommand(basketCommand)
+            .addCommand(busyTrue)
+            .addWaitCommand(3)
+            .addCommand(pivotBasket)
+            .addCommand(telescopeBasket)
+            .addWaitCommand(1.5)
+            .addCommand(release)
+            .addWaitCommand(0.2)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.4)
+            .addCommand(telescopeFront)
+            .addWaitCommand(0.1)
+            .addCommand(wristRetract)
+            .addWaitCommand(0.1)
+            .addCommand(pivotFront)
+            .addWaitCommand(2)
+            .addCommand(busyFalse)
+            .build();
     private CommandSequence chamberSequence = new CommandSequence()
             .addCommand(chamberCommand)
             .addCommand(pivotClip)
             .addCommand(telescopeExtendClip)
-            .addWaitCommand(0.3)
+            .addWaitCommand(1.5)
             .addCommand(pivotClipDown)
             .addCommand(telescopeScoreClip)
-            .addWaitCommand(0.1)
+            .addWaitCommand(1.5)
             .addCommand(wristClipScore)
-            .addWaitCommand(0.3)
+            .addWaitCommand(0.5)
             .addCommand(release)
-            .addWaitCommand(0.1)
+            .addWaitCommand(0.6)
             .addCommand(pivotFront)
             .addCommand(wristRetract)
             .addCommand(telescopeFront)
             .build();
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(farSampleCommand)
-            .addCommand(telescopeIntake)
-            .addCommand(wristIntakeScore)
-            .addWaitCommand(0.3)
+            .addWaitCommand(2)
             .addCommand(pivotDownIntake)
-            .addWaitCommand(0.2)
+            .addCommand(telescopeIntake)
+            .addWaitCommand(0.1)
+            .addCommand(wristIntakeScore)
+            .addCommand(pivotGrabIntake)
+            .addWaitCommand(0.3)
             .addCommand(grab)
             .addCommand(pivotUpIntake)
             .addCommand(wristRetract)
-            .addWaitCommand(0.6)
+            .addWaitCommand(0.1)
             .addCommand(telescopeRetract)
-            .addWaitCommand(0.6)
+            .addWaitCommand(0.5)
             .addCommand(pivotUp)
             .build();
     private CommandSequence basket1Sequence = new CommandSequence()
@@ -181,13 +206,15 @@ public class BasketAuto extends LinearOpMode{
             .addCommand(pivotFront)
             .build();
     private AutoCommandMachine commandMachine = new AutoCommandMachine()
-            .addCommandSequence(chamberSequence)
+//            .addCommandSequence(chamberSequence)
+            .addCommandSequence(basketSequence)
             .addCommandSequence(farSampleSequence)
-            .addCommandSequence(basket1Sequence)
-            .addCommandSequence(centerSampleSequence)
-            .addCommandSequence(basket2Sequence)
-            .addCommandSequence(wallSampleSequence)
-            .addCommandSequence(basket3Sequence)
+//            .addCommandSequence(basket1Sequence)
+//            .addCommandSequence(centerSampleSequence)
+//            .addCommandSequence(basket2Sequence)
+//            .addCommandSequence(wallSampleSequence)
+//            .addCommandSequence(basket3Sequence)
+            .addCommandSequence(farSampleSequence)
             .build();
 
     @Override
@@ -197,49 +224,60 @@ public class BasketAuto extends LinearOpMode{
         claw = new Claw(this);
         drive = new SampleMecanumDrive(hardwareMap);
         pivot = new Pivot(this);
-        scoring = new Scoring(this);
+        telescope = new Telescope(this);
         wrist = new Wrist(this);
 
         claw.init(hardwareMap);
         pivot.init(hardwareMap);
-        scoring.init(hardwareMap);
+        pivot.initPos();
         wrist.init(hardwareMap);
+        telescope.init(hardwareMap);
 
-        drive.setPoseEstimate(reflect(BasketConstantsDash.START_POSE));
-        chamberTraj = drive
-                .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
-                .lineTo(reflect(basketConstants.CHAMBER.getV()))
-                .setReversed(true)
-                .build();
+        basketTraj = drive
+                 .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
+                 .lineToConstantHeading(reflect(basketConstants.FORWARD.getV()))
+                 .lineToSplineHeading(vecToPose(basketConstants.BASKET))
+                 .build();
+//        chamberTraj = drive
+//                .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
+//                .lineTo(reflect(basketConstants.CHAMBER.getV()))
+//                .setReversed(true)
+//                .build();
         farTraj = drive
-                .trajectorySequenceBuilder(reflect(chamberTraj.end()))
+                .trajectorySequenceBuilder(reflect(basketTraj.end()))
                 .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), reflect(basketConstants.FAR_SAMPLE.getH()))
-                .setReversed(false)
                 .build();
         basket1Traj = drive
                 .trajectorySequenceBuilder(reflect(farTraj.end()))
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_1))
-                .setReversed(true)
                 .build();
         centerTraj = drive
                 .trajectorySequenceBuilder(reflect(basket1Traj.end()))
                 .lineToSplineHeading(vecToPose(basketConstants.CENTER_SAMPLE))
-                .setReversed(false)
                 .build();
         basket2Traj = drive
                 .trajectorySequenceBuilder(reflect(centerTraj.end()))
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_2))
-                .setReversed(true)
                 .build();
         wallTraj = drive
                 .trajectorySequenceBuilder(reflect(basket2Traj.end()))
                 .lineToSplineHeading(vecToPose(basketConstants.WALL_SAMPLE))
-                .setReversed(false)
                 .build();
         basket3Traj = drive
                 .trajectorySequenceBuilder(reflect(wallTraj.end()))
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_3))
                 .build();
+
+        drive.setPoseEstimate(reflect(BasketConstantsDash.START_POSE));
+
+        while(opModeInInit() && !isStopRequested()){
+            telemetry.addData("drive x", drive.getPoseEstimate().getX());
+            telemetry.addData("drive y", drive.getPoseEstimate().getY());
+            telemetry.update();
+            drive.update();
+            pivot.update();
+        }
+
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
@@ -247,6 +285,8 @@ public class BasketAuto extends LinearOpMode{
             telescope.update();
             pivot.update();
             commandMachine.run(drive.isBusy() || busy);
+            telemetry.addData("drive x", drive.getPoseEstimate().getX());
+            telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();
         }
     }

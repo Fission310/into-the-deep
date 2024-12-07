@@ -30,7 +30,14 @@ public class PinpointLocalizer implements Localizer {
 
     @Override
     public void setPoseEstimate(@NonNull Pose2d pose2d) {
-
+        odo.setPosition(new Pose2D(DistanceUnit.INCH, pose2d.getY(), pose2d.getX(), AngleUnit.RADIANS, pose2d.getHeading()));
+        Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+        odo.update();
+        telemetry.addData("set odo pos x", pose2d.getX());
+        telemetry.addData("set odo pos y", pose2d.getY());
+        telemetry.addData("odo pos x", odo.getPosition().getX(DistanceUnit.INCH));
+        telemetry.addData("odo pos y", odo.getPosition().getY(DistanceUnit.INCH));
+        telemetry.update();
     }
 
     @Nullable

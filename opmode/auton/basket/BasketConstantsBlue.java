@@ -7,6 +7,16 @@ import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 
 public class BasketConstantsBlue extends BasketConstants {
     public BasketConstantsBlue() {
+        FORWARD = new Constant(
+                -4,
+                5,
+                Math.toRadians(90)
+        );
+        BASKET = new Constant(
+            -TILE_LENGTH * 2.5 + BOT_LENGTH / 2,
+             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
+             Math.toRadians(225)
+        );
         CHAMBER = new Constant(
                 0,
                 -TILE_LENGTH,

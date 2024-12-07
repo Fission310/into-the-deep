@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmode.auton.basket.setup;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 
 public class BasketConstants{
+    public Constant FORWARD;
+    public Constant BASKET;
     public Constant CHAMBER;
     public Constant FAR_SAMPLE;
     public Constant WALL_SAMPLE;

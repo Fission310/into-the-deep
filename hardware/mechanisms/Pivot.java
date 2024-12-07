@@ -18,10 +18,11 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 @Config
 public class Pivot extends Mechanism {
+    public static int INIT_POS = 500;
     public static int FRONT_POS = 350;
-    public static int INTAKE_UP_POS = 450;
-    public static int INTAKE_DOWN_POS = 350;
-    public static int INTAKE_GRAB_POS = 200;
+    public static int INTAKE_UP_POS = 420;
+    public static int INTAKE_DOWN_POS = 330;
+    public static int INTAKE_GRAB_POS = 120;
     public static int WALL_POS = 800;
     public static int BASKET_POS = 2400;
     public static int CLIP_POS = 1650;
@@ -84,6 +85,8 @@ public class Pivot extends Mechanism {
         // telemetry.addData("Power", power);
         telemetry.update();
     }
+
+    public void initPos() {setTarget(INIT_POS);}
 
     public void frontPos() {
         setTarget(FRONT_POS);

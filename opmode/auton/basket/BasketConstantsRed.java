@@ -7,15 +7,25 @@ import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 
 public class BasketConstantsRed extends BasketConstants {
     public BasketConstantsRed() {
+    FORWARD = new Constant(
+            -TILE_LENGTH / 2.0 - 4,
+            -WALL_POS + BOT_LENGTH / 2.0 + 7,
+            Math.toRadians(90)
+    );
+    BASKET = new Constant(
+            -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 14,
+             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 8,
+             Math.toRadians(45)
+    );
      CHAMBER = new Constant(
              0,
              -TILE_LENGTH,
              UP
      );
      FAR_SAMPLE = new Constant(
-             -TILE_LENGTH * 2,
-             -TILE_LENGTH,
-             Math.toRadians(180)
+             -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 10,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 10,
+             Math.toRadians(90)
      );
      CENTER_SAMPLE = new Constant(
              -TILE_LENGTH * 5 / 2,
@@ -30,17 +40,17 @@ public class BasketConstantsRed extends BasketConstants {
      BASKET_1 = new Constant(
              -TILE_LENGTH * 2.5 + BOT_LENGTH / 2,
              - TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(225)
+             Math.toRadians(45)
      );
      BASKET_2 = new Constant(
              -TILE_LENGTH * 2.5 + BOT_LENGTH / 2,
              - TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(225)
+             Math.toRadians(45)
      );
      BASKET_3 = new Constant(
              -TILE_LENGTH * 2.5 + BOT_LENGTH/2,
              - TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(225)
+             Math.toRadians(45)
      );
     }
 }
