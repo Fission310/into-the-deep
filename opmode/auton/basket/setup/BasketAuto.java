@@ -137,7 +137,7 @@ public class BasketAuto extends LinearOpMode{
             .addCommand(wristRetract)
             .addWaitCommand(0.1)
             .addCommand(telescopeRetract)
-            .addWaitCommand(0.5)
+            .addWaitCommand(0.51)
             .addCommand(pivotUp)
             .addWaitCommand(1)
             .addCommand(busyFalse)

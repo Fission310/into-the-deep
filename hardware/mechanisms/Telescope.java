@@ -32,6 +32,7 @@ public class Telescope extends Mechanism {
     public static int CLIP_SCORE = 100;
     public static int CLIP_EXTENSION = 330;
     public static int BACK_POS = 300;
+    public static int MAX_EXTENSION = 670;
     public static double DOWN_MULTIPLIER = 0.15;
 
     public static double VERTICAL_KP = 0.007;
@@ -146,6 +147,9 @@ public class Telescope extends Mechanism {
     }
 
     public void setTarget(double target) {
+        if (target > MAX_EXTENSION && controller == horizontalController) {
+            target = MAX_EXTENSION;
+        }
         Telescope.target = target;
     }
 

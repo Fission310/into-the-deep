@@ -17,7 +17,7 @@ public class BasketConstantsRed extends BasketConstants {
              -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 2,
              Math.toRadians(45)
     );
-     CHAMBER = new Constant(
+    CHAMBER = new Constant(
              0,
              -TILE_LENGTH,
              UP

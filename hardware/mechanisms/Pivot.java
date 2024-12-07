@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import com.stuyfission.fissionlib.command.CommandSequence;
+import com.stuyfission.fissionlib.command.Command;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
@@ -18,6 +21,8 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 @Config
 public class Pivot extends Mechanism {
+    public static int RESET_POS = 200;
+    public static int RESET_WAIT = 1;
     public static int INIT_POS = 1200;
     public static int FRONT_POS = 350;
     public static int INTAKE_UP_POS = 420;
@@ -48,6 +53,18 @@ public class Pivot extends Mechanism {
 
     private VoltageSensor voltage;
 
+    private Command resetEncoders = () -> {
+        motors[0].setMode(RunMode.STOP_AND_RESET_ENCODER);
+        motors[1].setMode(RunMode.STOP_AND_RESET_ENCODER);
+        motors[0].setMode(RunMode.RUN_WITHOUT_ENCODER);
+        motors[1].setMode(RunMode.RUN_WITHOUT_ENCODER);
+    };
+
+    private CommandSequence waitToReset = new CommandSequence()
+            .addWaitCommand(RESET_WAIT)
+            .addCommand(resetEncoders)
+            .build();
+
     public Pivot(LinearOpMode opMode) {
         this.opMode = opMode;
     }
@@ -76,7 +93,7 @@ public class Pivot extends Mechanism {
         motors[0].setDirection(DcMotorEx.Direction.REVERSE);
         motors[1].setDirection(DcMotorEx.Direction.FORWARD);
 
-        frontPos();
+        initPos();
     }
 
     public void telemetry(Telemetry telemetry) {
@@ -86,7 +103,9 @@ public class Pivot extends Mechanism {
         telemetry.update();
     }
 
-    public void initPos() {setTarget(INIT_POS);}
+    public void initPos() {
+        setTarget(INIT_POS);
+    }
 
     public void frontPos() {
         setTarget(FRONT_POS);
@@ -98,6 +117,10 @@ public class Pivot extends Mechanism {
 
     public void intakeDownPos() {
         setTarget(INTAKE_DOWN_POS);
+    }
+
+    public void reset() {
+        setTarget(RESET_POS);
     }
 
     public void intakeGrabPos() {

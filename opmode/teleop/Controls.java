@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.stuyfission.fissionlib.input.GamepadStatic.Input;
 
 public class Controls {
+    public static final Input RESET_PIVOT = Input.DPAD_UP;
     public static final Input GRAB = Input.RIGHT_BUMPER;
     public static final Input RELEASE = Input.LEFT_BUMPER;
     public static final Input INTAKE = Input.A; // CROSS

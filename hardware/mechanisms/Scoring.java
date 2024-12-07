@@ -172,6 +172,10 @@ public class Scoring extends Mechanism {
         pivot.update();
         telescope.update();
 
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.RESET_PIVOT)) {
+            pivot.reset();
+        }
+
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
         }
