@@ -13,8 +13,8 @@ public class BasketConstantsRed extends BasketConstants {
             Math.toRadians(90)
     );
     BASKET = new Constant(
-            -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 14,
-             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 8,
+            -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 12,
+             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 2,
              Math.toRadians(45)
     );
      CHAMBER = new Constant(
@@ -23,24 +23,24 @@ public class BasketConstantsRed extends BasketConstants {
              UP
      );
      FAR_SAMPLE = new Constant(
-             -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 10,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 10,
-             Math.toRadians(90)
+             -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 3,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 0.5,
+             Math.toRadians(100)
      );
      CENTER_SAMPLE = new Constant(
-             -TILE_LENGTH * 5 / 2,
-             -TILE_LENGTH * 3 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(90)
+             -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 13,
+             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 6,
+             Math.toRadians(115)
      );
      WALL_SAMPLE = new Constant(
              -TILE_LENGTH * 2.5,
              -TILE_LENGTH * 3 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(180)
+             Math.toRadians(135)
      );
      BASKET_1 = new Constant(
-             -TILE_LENGTH * 2.5 + BOT_LENGTH / 2,
-             - TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
-             Math.toRadians(45)
+             -TILE_LENGTH * 2.5 + BOT_LENGTH / 2 - 12,
+             - TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 4,
+             Math.toRadians(32.5)
      );
      BASKET_2 = new Constant(
              -TILE_LENGTH * 2.5 + BOT_LENGTH / 2,

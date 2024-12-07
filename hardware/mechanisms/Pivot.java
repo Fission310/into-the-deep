@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 @Config
 public class Pivot extends Mechanism {
-    public static int INIT_POS = 500;
+    public static int INIT_POS = 1200;
     public static int FRONT_POS = 350;
     public static int INTAKE_UP_POS = 420;
     public static int INTAKE_DOWN_POS = 330;

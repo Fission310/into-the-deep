@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.basket.setup;
 
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
+
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
@@ -10,8 +13,12 @@ import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.stuyfission.fissionlib.command.AutoCommandMachine;
 import com.stuyfission.fissionlib.command.Command;
@@ -84,7 +91,7 @@ public class BasketAuto extends LinearOpMode{
             .addWaitCommand(3)
             .addCommand(pivotBasket)
             .addCommand(telescopeBasket)
-            .addWaitCommand(1.5)
+            .addWaitCommand(1)
             .addCommand(release)
             .addWaitCommand(0.2)
             .addCommand(wristIntakeScore)
@@ -94,7 +101,7 @@ public class BasketAuto extends LinearOpMode{
             .addCommand(wristRetract)
             .addWaitCommand(0.1)
             .addCommand(pivotFront)
-            .addWaitCommand(2)
+            .addWaitCommand(1)
             .addCommand(busyFalse)
             .build();
     private CommandSequence chamberSequence = new CommandSequence()
@@ -115,50 +122,65 @@ public class BasketAuto extends LinearOpMode{
             .build();
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(farSampleCommand)
+            .addCommand(busyTrue)
+            .addWaitCommand(1)
+            .addCommand(pivotDownIntake)
+            .addCommand(telescopeIntake)
+            .addWaitCommand(0.1)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.5)
+            .addCommand(pivotGrabIntake)
+            .addWaitCommand(0.5)
+            .addCommand(grab)
+            .addWaitCommand(0.5)
+            .addCommand(pivotUpIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(0.1)
+            .addCommand(telescopeRetract)
+            .addWaitCommand(0.5)
+            .addCommand(pivotUp)
+            .addWaitCommand(1)
+            .addCommand(busyFalse)
+            .build();
+    private CommandSequence basket1Sequence = new CommandSequence()
+            .addCommand(basket1Command)
+            .addCommand(busyTrue)
+            .addCommand(pivotBasket)
+            .addCommand(telescopeBasket)
+            .addWaitCommand(2)
+            .addCommand(release)
+            .addWaitCommand(0.2)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.4)
+            .addCommand(telescopeFront)
+            .addWaitCommand(0.1)
+            .addCommand(wristRetract)
+            .addWaitCommand(0.1)
+            .addCommand(pivotFront)
+            .addWaitCommand(1)
+            .addCommand(busyFalse)
+            .build();
+    private CommandSequence centerSampleSequence = new CommandSequence()
+            .addCommand(centerSampleCommand)
+            .addCommand(busyTrue)
             .addWaitCommand(2)
             .addCommand(pivotDownIntake)
             .addCommand(telescopeIntake)
             .addWaitCommand(0.1)
             .addCommand(wristIntakeScore)
+            .addWaitCommand(1)
             .addCommand(pivotGrabIntake)
             .addWaitCommand(0.3)
             .addCommand(grab)
+            .addWaitCommand(1)
             .addCommand(pivotUpIntake)
             .addCommand(wristRetract)
             .addWaitCommand(0.1)
             .addCommand(telescopeRetract)
             .addWaitCommand(0.5)
             .addCommand(pivotUp)
-            .build();
-    private CommandSequence basket1Sequence = new CommandSequence()
-            .addCommand(basket1Command)
-            .addCommand(pivotBasket)
-            .addCommand(telescopeBasket)
-            .addWaitCommand(0.5)
-            .addCommand(release)
-            .addWaitCommand(0.5)
-            .addCommand(wristIntakeScore)
-            .addWaitCommand(0.5)
-            .addCommand(telescopeFront)
-            .addWaitCommand(0.5)
-            .addCommand(wristRetract)
-            .addWaitCommand(0.5)
-            .addCommand(pivotFront)
-            .build();
-    private CommandSequence centerSampleSequence = new CommandSequence()
-            .addCommand(centerSampleCommand)
-            .addCommand(telescopeIntake)
-            .addCommand(wristIntakeScore)
-            .addWaitCommand(0.6)
-            .addCommand(pivotDownIntake)
-            .addWaitCommand(0.6)
-            .addCommand(grab)
-            .addCommand(pivotUpIntake)
-            .addCommand(wristRetract)
-            .addWaitCommand(0.6)
-            .addCommand(telescopeRetract)
-            .addWaitCommand(0.6)
-            .addCommand(pivotUp)
+            .addWaitCommand(1)
+            .addCommand(busyFalse)
             .build();
     private CommandSequence basket2Sequence = new CommandSequence()
             .addCommand(basket2Command)
@@ -209,7 +231,7 @@ public class BasketAuto extends LinearOpMode{
 //            .addCommandSequence(chamberSequence)
             .addCommandSequence(basketSequence)
             .addCommandSequence(farSampleSequence)
-//            .addCommandSequence(basket1Sequence)
+            .addCommandSequence(basket1Sequence)
 //            .addCommandSequence(centerSampleSequence)
 //            .addCommandSequence(basket2Sequence)
 //            .addCommandSequence(wallSampleSequence)
@@ -233,10 +255,13 @@ public class BasketAuto extends LinearOpMode{
         wrist.init(hardwareMap);
         telescope.init(hardwareMap);
 
+        TrajectoryVelocityConstraint velConstraint = SampleMecanumDrive.getVelocityConstraint(20, 1, DriveConstants.TRACK_WIDTH);
+        TrajectoryAccelerationConstraint accelConstraint = SampleMecanumDrive.getAccelerationConstraint(30);
+
         basketTraj = drive
                  .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
                  .lineToConstantHeading(reflect(basketConstants.FORWARD.getV()))
-                 .lineToSplineHeading(vecToPose(basketConstants.BASKET))
+                 .lineToLinearHeading(vecToPose(basketConstants.BASKET))
                  .build();
 //        chamberTraj = drive
 //                .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
@@ -245,11 +270,11 @@ public class BasketAuto extends LinearOpMode{
 //                .build();
         farTraj = drive
                 .trajectorySequenceBuilder(reflect(basketTraj.end()))
-                .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), reflect(basketConstants.FAR_SAMPLE.getH()))
+                .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), reflect(basketConstants.FAR_SAMPLE.getH()), velConstraint, accelConstraint)
                 .build();
         basket1Traj = drive
                 .trajectorySequenceBuilder(reflect(farTraj.end()))
-                .lineToSplineHeading(vecToPose(basketConstants.BASKET_1))
+                .lineToSplineHeading(vecToPose(basketConstants.BASKET_1), velConstraint, accelConstraint)
                 .build();
         centerTraj = drive
                 .trajectorySequenceBuilder(reflect(basket1Traj.end()))
@@ -289,6 +314,8 @@ public class BasketAuto extends LinearOpMode{
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();
         }
+
+        Thread.sleep(500);
     }
 
     public Pose2d reflect(Pose2d pose) {
