@@ -21,15 +21,17 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 @Config
 public class Pivot extends Mechanism {
+    public static int ABIT = 20;
     public static int RESET_POS = 200;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 1200;
     public static int FRONT_POS = 350;
-    public static int INTAKE_UP_POS = 420;
-    public static int INTAKE_DOWN_POS = 330;
+    public static int INTAKE_UP_POS = 470;
+    public static int INTAKE_DOWN_POS = 400;
     public static int INTAKE_GRAB_POS = 120;
     public static int WALL_POS = 800;
     public static int BASKET_POS = 2400;
+    public static int AUTO_BASKET_POS = 2400;
     public static int CLIP_POS = 1650;
     public static int CLIP_DOWN_POS = 1500;
     public static int CLIP_BACK_POS = 2400;
@@ -93,7 +95,7 @@ public class Pivot extends Mechanism {
         motors[0].setDirection(DcMotorEx.Direction.REVERSE);
         motors[1].setDirection(DcMotorEx.Direction.FORWARD);
 
-        initPos();
+        frontPos();
     }
 
     public void telemetry(Telemetry telemetry) {
@@ -101,6 +103,16 @@ public class Pivot extends Mechanism {
         // telemetry.addData("Target", target);
         // telemetry.addData("Power", power);
         telemetry.update();
+    }
+
+    public void moveIntakeUp() {
+        INTAKE_DOWN_POS += ABIT;
+        INTAKE_UP_POS += ABIT;
+    }
+
+    public void moveIntakeDown() {
+        INTAKE_DOWN_POS -= ABIT;
+        INTAKE_UP_POS -= ABIT;
     }
 
     public void initPos() {
@@ -134,6 +146,9 @@ public class Pivot extends Mechanism {
     public void basketPos() {
         setTarget(BASKET_POS);
     }
+    public void autoBasketPos() {
+            setTarget(AUTO_BASKET_POS);
+        }
 
     public void clipPos() {
         setTarget(CLIP_POS);

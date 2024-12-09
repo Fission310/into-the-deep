@@ -16,11 +16,11 @@ import com.stuyfission.fissionlib.util.Mechanism;
 public class Scoring extends Mechanism {
     private Drivetrain drivetrain = new Drivetrain(opMode); // OPMODE NULL HERE
     private Claw claw = new Claw(opMode);
-    private Pivot pivot = new Pivot(opMode);
+    public Pivot pivot = new Pivot(opMode);
     private Telescope telescope = new Telescope(opMode);
     private Wrist wrist = new Wrist(opMode);
 
-    private State state = State.FRONT;
+    private State state = State.UP;
 
     private enum State {
         FRONT,
@@ -46,6 +46,7 @@ public class Scoring extends Mechanism {
     public static double CLIP_PIVOT_WAIT = 0.1;
 
     private boolean frontClicked = false;
+    private boolean dpadClicked = false;
 
     public Scoring(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -172,8 +173,22 @@ public class Scoring extends Mechanism {
         pivot.update();
         telescope.update();
 
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.RESET_PIVOT)) {
-            pivot.reset();
+        //if (GamepadStatic.isButtonPressed(gamepad, Controls.RESET_PIVOT)) {
+        //    pivot.reset();
+        //}
+
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP)) {
+            if (!dpadClicked) {
+                pivot.moveIntakeUp();
+            }
+            dpadClicked = true;
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_DOWN)) {
+            if (!dpadClicked) {
+                pivot.moveIntakeDown();
+            }
+            dpadClicked = true;
+        } else {
+            dpadClicked = false;
         }
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
