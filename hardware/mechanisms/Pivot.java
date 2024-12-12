@@ -38,13 +38,14 @@ public class Pivot extends Mechanism {
     public static int CLIP_BACK_DOWN_POS = 2450;
     public static int BACK_POS = 3800;
     public static int UP_POS = 1850;
-    public static int HIGHEST = 1950;
-    public static int TICKS_PER_REV = 0;
+    public static int HIGHEST = 2230;
+    public static int TICKS_PER_REV = 8192;
+    public static double GRAVITY_MULTIPLIER = 1.5;
 
-    public static double KP = 0.0006;
-    public static double KI = 0;
-    public static double KD = 0;
-    public static double KF = 0;
+    public static double KP = 0.0012;
+    public static double KI = 0.08;
+    public static double KD = 0.00008;
+    public static double KF = 0.07;
 
     public static double target = 0;
     public static double actualTarget = 0;
@@ -77,7 +78,7 @@ public class Pivot extends Mechanism {
         voltage = hwMap.voltageSensor.iterator().next();
         controller = new PIDFController(KP, KI, KD, KF);
         controller.setFeedForward(FeedForward.ROTATIONAL);
-        controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
+        controller.setRotationConstants(HIGHEST, TICKS_PER_REV, GRAVITY_MULTIPLIER);
 
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");
@@ -196,6 +197,8 @@ public class Pivot extends Mechanism {
     @Override
     public void loop(Gamepad gamepad) {
         update();
+        controller.setPIDF(KP, KI, KD, KF);
+        controller.setRotationConstants(HIGHEST, TICKS_PER_REV, GRAVITY_MULTIPLIER);
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
             frontPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL)) {

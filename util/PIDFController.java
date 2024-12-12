@@ -34,6 +34,7 @@ public class PIDFController {
     private FeedForward feedForward = FeedForward.NONE;
     private double highestPos;
     private double ticksPerRev;
+    private double gravityMultiplier;
 
     public enum FeedForward {
         NONE, LINEAR, ROTATIONAL
@@ -117,12 +118,14 @@ public class PIDFController {
     /**
      * Sets the bounds for the rotational feedforward mode.
      *
-     * @param highest     The highest point of the rotation.
-     * @param ticksPerRev The number of ticks per revolution.
+     * @param highest           The highest point of the rotation.
+     * @param ticksPerRev       The number of ticks per revolution.
+     * @param gravityMultiplier The power multiplier for downwards motion.
      */
-    public void setRotationConstants(double highest, double ticksPerRev) {
+    public void setRotationConstants(double highest, double ticksPerRev, double gravityMultiplier) {
         highestPos = highest;
         this.ticksPerRev = ticksPerRev;
+        this.gravityMultiplier = gravityMultiplier;
     }
 
     /**
@@ -254,7 +257,7 @@ public class PIDFController {
                 feedForward = kF * Math.sin(theta);
                 double setTheta = (highestPos - setPoint) * 2 * Math.PI / ticksPerRev;
                 if (Math.cos(theta) > Math.cos(setTheta)) {
-                    feedForward = -feedForward;
+                    feedForward = -feedForward * gravityMultiplier;
                 }
                 break;
             default:
