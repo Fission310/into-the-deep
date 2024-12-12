@@ -16,8 +16,8 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
-import org.firstinspires.ftc.teamcode.util.Controller;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
+import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 
 @Config
 public class Pivot extends Mechanism {
@@ -39,17 +39,18 @@ public class Pivot extends Mechanism {
     public static int BACK_POS = 3800;
     public static int UP_POS = 1850;
     public static int HIGHEST = 1950;
+    public static int TICKS_PER_REV = 0;
 
-    public static double UP_BOTTOM_KP = 0.0009;
-    public static double DOWN_TOP_KP = 0.0001;
-    public static double UP_TOP_KP = 0.0006;
-    public static double DOWN_BOTTOM_KP = 0.00004;
+    public static double KP = 0.0006;
+    public static double KI = 0;
+    public static double KD = 0;
+    public static double KF = 0;
 
     public static double target = 0;
     public static double actualTarget = 0;
     public static double power = 0;
 
-    private Controller controller;
+    private PIDFController controller;
 
     private final DcMotorEx[] motors = new DcMotorEx[2];
 
@@ -74,11 +75,9 @@ public class Pivot extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         voltage = hwMap.voltageSensor.iterator().next();
-        PIDFController upBottom = new PIDFController(UP_BOTTOM_KP, 0, 0, 0);
-        PIDFController downTop = new PIDFController(DOWN_TOP_KP, 0, 0, 0);
-        PIDFController upTop = new PIDFController(UP_TOP_KP, 0, 0, 0);
-        PIDFController downBottom = new PIDFController(DOWN_BOTTOM_KP, 0, 0, 0);
-        controller = new Controller(upBottom, downTop, upTop, downBottom, voltage, HIGHEST);
+        controller = new PIDFController(KP, KI, KD, KF);
+        controller.setFeedForward(FeedForward.ROTATIONAL);
+        controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
 
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");
@@ -184,8 +183,7 @@ public class Pivot extends Mechanism {
     }
 
     public void update() {
-        controller.setTargetPosition(target);
-        power = controller.getPower(getPosition());
+        power = controller.calculate(getPosition(), target);
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("pivot power", power);
         t.addData("pivot position", getPosition());

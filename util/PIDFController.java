@@ -31,6 +31,14 @@ public class PIDFController {
     private double lastTimeStamp;
     private double period;
 
+    private FeedForward feedForward = FeedForward.NONE;
+    private double highestPos;
+    private double ticksPerRev;
+
+    public enum FeedForward {
+        NONE, LINEAR, ROTATIONAL
+    }
+
     /**
      * The base constructor for the PIDF controller
      */
@@ -95,6 +103,26 @@ public class PIDFController {
     public void setTolerance(double positionTolerance, double velocityTolerance) {
         errorTolerance_p = positionTolerance;
         errorTolerance_v = velocityTolerance;
+    }
+
+    /**
+     * Sets the feedfoward mode of the PIDFController.
+     *
+     * @param ff The {@link FeedForward} mode.
+     */
+    public void setFeedForward(FeedForward ff) {
+        feedForward = ff;
+    }
+
+    /**
+     * Sets the bounds for the rotational feedforward mode.
+     *
+     * @param highest     The highest point of the rotation.
+     * @param ticksPerRev The number of ticks per revolution.
+     */
+    public void setRotationConstants(double highest, double ticksPerRev) {
+        highestPos = highest;
+        this.ticksPerRev = ticksPerRev;
     }
 
     /**
@@ -216,8 +244,25 @@ public class PIDFController {
         totalError += period * (setPoint - measuredValue);
         totalError = totalError < minIntegral ? minIntegral : Math.min(maxIntegral, totalError);
 
+        double feedForward = 0;
+        switch (this.feedForward) {
+            case LINEAR:
+                feedForward = kF * setPoint;
+                break;
+            case ROTATIONAL:
+                double theta = (highestPos - measuredValue) * 2 * Math.PI / ticksPerRev;
+                feedForward = kF * Math.sin(theta);
+                double setTheta = (highestPos - setPoint) * 2 * Math.PI / ticksPerRev;
+                if (Math.cos(theta) > Math.cos(setTheta)) {
+                    feedForward = -feedForward;
+                }
+                break;
+            default:
+                break;
+        }
+
         // returns u(t)
-        return kP * errorVal_p + kI * totalError + kD * errorVal_v + kF * setPoint;
+        return kP * errorVal_p + kI * totalError + kD * errorVal_v + feedForward;
     }
 
     public void setPIDF(double kp, double ki, double kd, double kf) {
