@@ -5,8 +5,7 @@ import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
-import org.firstinspires.ftc.teamcode.opmode.auton.basket.BasketConstantsBlue;
-import org.firstinspires.ftc.teamcode.opmode.auton.basket.BasketConstantsRed;
+import org.firstinspires.ftc.teamcode.opmode.auton.basket.BasketConstants;
 
 @Config
 public class BasketConstantsDash {
@@ -18,6 +17,6 @@ public class BasketConstantsDash {
 
     public static Pose2d START_POSE = new Pose2d(START_X, START_Y, START_HEADING);
 
-    public static BasketConstants basketRed = new BasketConstantsRed();
-    public static BasketConstants basketBlue = new BasketConstantsBlue();
+    public static org.firstinspires.ftc.teamcode.opmode.auton.basket.setup.BasketConstants basketRed = new BasketConstants();
+    public static org.firstinspires.ftc.teamcode.opmode.auton.basket.setup.BasketConstants basketBlue = new BasketConstants();
 }

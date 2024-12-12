@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.opmode.auton.basket;
 
 import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
 
-import org.firstinspires.ftc.teamcode.opmode.auton.basket.setup.BasketConstants;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 
-public class BasketConstantsRed extends BasketConstants {
-    public BasketConstantsRed() {
+public class BasketConstants extends org.firstinspires.ftc.teamcode.opmode.auton.basket.setup.BasketConstants {
+    public BasketConstants() {
     FORWARD = new Constant(
             -TILE_LENGTH / 2.0 - 4,
             -WALL_POS + BOT_LENGTH / 2.0 + 7,
