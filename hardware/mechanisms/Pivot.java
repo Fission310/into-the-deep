@@ -30,7 +30,7 @@ public class Pivot extends Mechanism {
     public static int INTAKE_DOWN_POS = 400;
     public static int INTAKE_GRAB_POS = 120;
     public static int WALL_POS = 800;
-    public static int BASKET_POS = 2400;
+    public static int BASKET_POS = 2450;
     public static int AUTO_BASKET_POS = 2400;
     public static int CLIP_POS = 1650;
     public static int CLIP_DOWN_POS = 1500;

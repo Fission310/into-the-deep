@@ -16,7 +16,7 @@ public class Claw extends Mechanism {
     public static double GRAB_POS = 0.275;
     public static double RELEASE_POS = 0.14;
     public static double GRAB_POWER = 1;
-    public static double RELEASE_POWER = -1;
+    public static double RELEASE_POWER = -0.3;
 
     private CRServo clawServo;
 

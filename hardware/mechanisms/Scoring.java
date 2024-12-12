@@ -71,6 +71,10 @@ public class Scoring extends Mechanism {
     private Command pivotClipDown = () -> pivot.clipDownPos();
     private Command telescopeScoreClip = () -> telescope.clipScorePos();
 
+    private CommandSequence intakeGrab = new CommandSequence()
+            .addCommand(grab)
+            .build();
+
     private CommandSequence scoreBasket = new CommandSequence()
             .addCommand(release)
             .addWaitCommand(BASKET_RELEASE_WAIT)
