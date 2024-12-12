@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -52,10 +54,10 @@ public class Scoring extends Mechanism {
         this.opMode = opMode;
     }
 
-    private Command release = () -> claw.release();
-    private Command grab = () -> claw.grab();
-    private Command pivotFront = () -> pivot.frontPos();
-    private Command pivotUpIntake = () -> pivot.intakeUpPos();
+    public Command release = () -> claw.release();
+    public Command grab = () -> claw.grab();
+    public Command pivotFront = () -> pivot.frontPos();
+    public Command pivotUpIntake = () -> pivot.intakeUpPos();
     private Command pivotDownIntake = () -> pivot.intakeDownPos();
     private Command pivotGrabIntake = () -> pivot.intakeGrabPos();
     private Command telescopeFront = () -> telescope.frontPos();
@@ -67,9 +69,13 @@ public class Scoring extends Mechanism {
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristRetract = () -> wrist.frontPos();
-    private Command pivotUp = () -> pivot.upPos();
-    private Command pivotClipDown = () -> pivot.clipDownPos();
+    public Command pivotUp = () -> pivot.upPos();
+    public Command pivotClipDown = () -> pivot.clipDownPos();
     private Command telescopeScoreClip = () -> telescope.clipScorePos();
+
+    //BASKET AUTO-SPECIFIC COMMANDS
+    public Command pivotClip = () -> pivot.clipPos();
+    public Command pivotBasket = () -> pivot.autoBasketPos();
 
     private CommandSequence intakeGrab = new CommandSequence()
             .addCommand(grab)

@@ -57,22 +57,11 @@ public class BasketAuto extends LinearOpMode{
     private Command wallSampleCommand = () -> drive.followTrajectorySequenceAsync(wallTraj);
     private Command basket3Command = () -> drive.followTrajectorySequenceAsync(basket3Traj);
 
-
-    private Claw claw;
-    private Pivot pivot;
-    private Telescope telescope;
-    private Wrist wrist;
+    private Scoring s;
 
     private Command busyTrue = () -> busy = true;
     private Command busyFalse = () -> busy = false;
-    private Command release = () -> claw.release();
-    private Command grab = () -> claw.grab();
-    private Command pivotFront = () -> pivot.frontPos();
-    private Command pivotClip = () -> pivot.clipPos();
-    private Command pivotClipDown = () -> pivot.clipDownPos();
-    private Command pivotBasket = () -> pivot.autoBasketPos();
-    private Command pivotUp = () -> pivot.upPos();
-    private Command pivotUpIntake = () -> pivot.intakeUpPos();
+
     private Command pivotDownIntake = () -> pivot.intakeDownPos();
     private Command pivotGrabIntake = () -> pivot.intakeGrabPos();
     private Command telescopeFront = () -> telescope.frontPos();
@@ -89,12 +78,12 @@ public class BasketAuto extends LinearOpMode{
             .addCommand(busyTrue)
             .addWaitCommand(5)
             .addCommand(basketCommand)
-            .addCommand(pivotUp)
+            .addCommand(s.pivotUp)
             .addWaitCommand(7)
-            .addCommand(pivotBasket)
+            .addCommand(s.pivotBasket)
             .addCommand(telescopeBasket)
             .addWaitCommand(2)
-            .addCommand(release)
+            .addCommand(s.release)
             .addWaitCommand(0.2)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.4)
@@ -102,23 +91,23 @@ public class BasketAuto extends LinearOpMode{
             .addWaitCommand(0.7)
             .addCommand(wristRetract)
             .addWaitCommand(0.1)
-            .addCommand(pivotFront)
+            .addCommand(s.pivotFront)
             .addWaitCommand(0.3)
             .addCommand(busyFalse)
             .build();
     private CommandSequence chamberSequence = new CommandSequence()
             .addCommand(chamberCommand)
-            .addCommand(pivotClip)
+            .addCommand(s.pivotClip)
             .addCommand(telescopeExtendClip)
             .addWaitCommand(1.5)
-            .addCommand(pivotClipDown)
+            .addCommand(s.pivotClipDown)
             .addCommand(telescopeScoreClip)
             .addWaitCommand(1.5)
             .addCommand(wristClipScore)
             .addWaitCommand(0.5)
-            .addCommand(release)
+            .addCommand(s.release)
             .addWaitCommand(0.6)
-            .addCommand(pivotFront)
+            .addCommand(s.pivotFront)
             .addCommand(wristRetract)
             .addCommand(telescopeFront)
             .build();
@@ -126,21 +115,21 @@ public class BasketAuto extends LinearOpMode{
             .addCommand(farSampleCommand)
             .addCommand(busyTrue)
             .addWaitCommand(0.3)
-            .addCommand(pivotUpIntake)
+            .addCommand(s.pivotUpIntake)
             .addCommand(telescopeIntake)
             .addWaitCommand(1)
             .addCommand(wristIntakeScore)
             .addWaitCommand(1)
             .addCommand(pivotGrabIntake)
             .addWaitCommand(0.3)
-            .addCommand(grab)
+            .addCommand(s.grab)
             .addWaitCommand(1)
-            .addCommand(pivotUpIntake)
+            .addCommand(s.pivotUpIntake)
             .addCommand(wristRetract)
             .addWaitCommand(0.1)
             .addCommand(telescopeRetract)
             .addWaitCommand(0.51)
-            .addCommand(pivotUp)
+            .addCommand(s.pivotUp)
             .addWaitCommand(1)
             .addCommand(busyFalse)
             .build();
@@ -148,10 +137,10 @@ public class BasketAuto extends LinearOpMode{
             .addCommand(basket1Command)
             .addCommand(busyTrue)
             .addWaitCommand(0.2)
-            .addCommand(pivotBasket)
+            .addCommand(s.pivotBasket)
             .addCommand(telescopeBasket)
             .addWaitCommand(3)
-            .addCommand(release)
+            .addCommand(s.release)
             .addWaitCommand(0.2)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.4)
@@ -159,9 +148,9 @@ public class BasketAuto extends LinearOpMode{
             .addWaitCommand(0.7)
             .addCommand(wristRetract)
             .addWaitCommand(0.1)
-            .addCommand(pivotFront)
+            .addCommand(s.pivotFront)
             .addWaitCommand(0.1)
-            .addCommand(grab)
+            .addCommand(s.grab)
             .addWaitCommand(0.2)
             .addCommand(busyFalse)
             .build();
@@ -176,23 +165,23 @@ public class BasketAuto extends LinearOpMode{
             .addWaitCommand(1)
             .addCommand(pivotGrabIntake)
             .addWaitCommand(0.3)
-            .addCommand(grab)
+            .addCommand(s.grab)
             .addWaitCommand(1)
-            .addCommand(pivotUpIntake)
+            .addCommand(s.pivotUpIntake)
             .addCommand(wristRetract)
             .addWaitCommand(0.1)
             .addCommand(telescopeRetract)
             .addWaitCommand(0.5)
-            .addCommand(pivotUp)
+            .addCommand(s.pivotUp)
             .addWaitCommand(1)
             .addCommand(busyFalse)
             .build();
     private CommandSequence basket2Sequence = new CommandSequence()
             .addCommand(basket2Command)
-            .addCommand(pivotBasket)
+            .addCommand(s.pivotBasket)
             .addCommand(telescopeBasket)
             .addWaitCommand(0.5)
-            .addCommand(release)
+            .addCommand(s.release)
             .addWaitCommand(0.5)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.5)
@@ -200,7 +189,7 @@ public class BasketAuto extends LinearOpMode{
             .addWaitCommand(0.5)
             .addCommand(wristRetract)
             .addWaitCommand(0.5)
-            .addCommand(pivotFront)
+            .addCommand(s.pivotFront)
             .build();
     private CommandSequence wallSampleSequence = new CommandSequence()
             .addCommand(wallSampleCommand)
@@ -209,20 +198,20 @@ public class BasketAuto extends LinearOpMode{
             .addWaitCommand(0.6)
             .addCommand(pivotDownIntake)
             .addWaitCommand(0.6)
-            .addCommand(grab)
-            .addCommand(pivotUpIntake)
+            .addCommand(s.grab)
+            .addCommand(s.pivotUpIntake)
             .addCommand(wristRetract)
             .addWaitCommand(0.6)
             .addCommand(telescopeRetract)
             .addWaitCommand(0.6)
-            .addCommand(pivotUp)
+            .addCommand(s.pivotUp)
             .build();
     private CommandSequence basket3Sequence = new CommandSequence()
             .addCommand(basket3Command)
-            .addCommand(pivotBasket)
+            .addCommand(s.pivotBasket)
             .addCommand(telescopeBasket)
             .addWaitCommand(0.5)
-            .addCommand(release)
+            .addCommand(s.release)
             .addWaitCommand(0.5)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.5)
@@ -230,7 +219,7 @@ public class BasketAuto extends LinearOpMode{
             .addWaitCommand(0.5)
             .addCommand(wristRetract)
             .addWaitCommand(0.5)
-            .addCommand(pivotFront)
+            .addCommand(s.pivotFront)
             .build();
     private AutoCommandMachine commandMachine = new AutoCommandMachine()
 //            .addCommandSequence(chamberSequence)
@@ -247,18 +236,9 @@ public class BasketAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        reflect = color == Color.BLUE;
-        claw = new Claw(this);
+        reflect = color == Color.BLUE; // do we need?
         drive = new SampleMecanumDrive(hardwareMap);
-        pivot = new Pivot(this);
-        telescope = new Telescope(this);
-        wrist = new Wrist(this);
-
-        claw.init(hardwareMap);
-        pivot.init(hardwareMap);
-        pivot.initPos();
-        wrist.init(hardwareMap);
-        telescope.init(hardwareMap);
+        s.init(hardwareMap);
 
         TrajectoryVelocityConstraint velConstraint = SampleMecanumDrive.getVelocityConstraint(20, 1, DriveConstants.TRACK_WIDTH);
         TrajectoryAccelerationConstraint accelConstraint = SampleMecanumDrive.getAccelerationConstraint(30);
