@@ -40,18 +40,19 @@ public class Pivot extends Mechanism {
     public static int UP_POS = 1850;
     public static int HIGHEST = 2230;
     public static int TICKS_PER_REV = 8192;
-    public static double GRAVITY_MULTIPLIER = 1.5;
 
-    public static double KP = 0.0012;
-    public static double KI = 0.08;
-    public static double KD = 0.00008;
-    public static double KF = 0.07;
+    public static double KP = 0.0007;
+    public static double KI = 0.04;
+    public static double KD = 0.00006;
+    public static double KF = 0.2;
 
     public static double target = 0;
     public static double actualTarget = 0;
     public static double power = 0;
 
     private PIDFController controller;
+
+    private Telescope telescope;
 
     private final DcMotorEx[] motors = new DcMotorEx[2];
 
@@ -69,8 +70,9 @@ public class Pivot extends Mechanism {
             .addCommand(resetEncoders)
             .build();
 
-    public Pivot(LinearOpMode opMode) {
+    public Pivot(LinearOpMode opMode, Telescope telescope) {
         this.opMode = opMode;
+        this.telescope = telescope;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class Pivot extends Mechanism {
         voltage = hwMap.voltageSensor.iterator().next();
         controller = new PIDFController(KP, KI, KD, KF);
         controller.setFeedForward(FeedForward.ROTATIONAL);
-        controller.setRotationConstants(HIGHEST, TICKS_PER_REV, GRAVITY_MULTIPLIER);
+        controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
 
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");
@@ -146,9 +148,10 @@ public class Pivot extends Mechanism {
     public void basketPos() {
         setTarget(BASKET_POS);
     }
+
     public void autoBasketPos() {
-            setTarget(AUTO_BASKET_POS);
-        }
+        setTarget(AUTO_BASKET_POS);
+    }
 
     public void clipPos() {
         setTarget(CLIP_POS);
@@ -184,7 +187,8 @@ public class Pivot extends Mechanism {
     }
 
     public void update() {
-        power = controller.calculate(getPosition(), target);
+        controller.setLength(telescope.getLength());
+        power = controller.calculate(getPosition(), target) / voltage.getVoltage() * 12.0;
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("pivot power", power);
         t.addData("pivot position", getPosition());
@@ -196,9 +200,9 @@ public class Pivot extends Mechanism {
 
     @Override
     public void loop(Gamepad gamepad) {
-        update();
         controller.setPIDF(KP, KI, KD, KF);
-        controller.setRotationConstants(HIGHEST, TICKS_PER_REV, GRAVITY_MULTIPLIER);
+        controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
+        update();
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
             frontPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL)) {

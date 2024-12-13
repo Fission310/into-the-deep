@@ -16,8 +16,8 @@ import com.stuyfission.fissionlib.util.Mechanism;
 public class Scoring extends Mechanism {
     private Drivetrain drivetrain = new Drivetrain(opMode); // OPMODE NULL HERE
     private Claw claw = new Claw(opMode);
-    public Pivot pivot = new Pivot(opMode);
     private Telescope telescope = new Telescope(opMode);
+    public Pivot pivot = new Pivot(opMode, telescope);
     private Wrist wrist = new Wrist(opMode);
 
     private State state = State.UP;
@@ -220,7 +220,7 @@ public class Scoring extends Mechanism {
             case UP:
                 break;
             case FRONT:
-                claw.loop(gamepad);
+                claw.grab();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     if (!frontClicked) {
                         frontIntake.trigger();

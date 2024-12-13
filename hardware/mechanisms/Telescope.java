@@ -152,6 +152,10 @@ public class Telescope extends Mechanism {
         setTarget(BACK_POS);
     }
 
+    public double getLength() {
+        return getPosition();
+    }
+
     public void setTarget(double target) {
         if (target > MAX_EXTENSION && controller == horizontalController) {
             target = MAX_EXTENSION;
