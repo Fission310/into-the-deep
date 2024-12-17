@@ -241,7 +241,7 @@ public class ClipAuto extends LinearOpMode{
         reflect = color == Color.BLUE;
         claw = new Claw(this);
         drive = new SampleMecanumDrive(hardwareMap);
-        pivot = new Pivot(this);
+        pivot = new Pivot(this, new Telescope(this));
         scoring = new Scoring(this);
         wrist = new Wrist(this);
 

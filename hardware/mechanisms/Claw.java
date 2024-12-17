@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,12 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Claw extends Mechanism {
-    public static double GRAB_POS = 0.275;
-    public static double RELEASE_POS = 0.14;
     public static double GRAB_POWER = 1;
     public static double RELEASE_POWER = -0.3;
 
@@ -25,18 +25,25 @@ public class Claw extends Mechanism {
     }
 
     public void grab() {
+        stop();
         clawServo.setPower(GRAB_POWER);
+        Telemetry t = FtcDashboard.getInstance().getTelemetry();
+        t.addData("claw power", clawServo.getPower());
+        t.update();
     }
 
     public void release() {
         clawServo.setPower(RELEASE_POWER);
     }
 
+    public void stop() {
+        clawServo.setPower(0);
+    }
+
     @Override
     public void init(HardwareMap hwMap) {
         clawServo = hwMap.get(CRServo.class, "clawServo");
         clawServo.setDirection(Direction.REVERSE);
-        grab();
     }
 
     @Override

@@ -177,24 +177,6 @@ public class Scoring extends Mechanism {
         pivot.update();
         telescope.update();
 
-        //if (GamepadStatic.isButtonPressed(gamepad, Controls.RESET_PIVOT)) {
-        //    pivot.reset();
-        //}
-
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_UP)) {
-            if (!dpadClicked) {
-                pivot.moveIntakeUp();
-            }
-            dpadClicked = true;
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_DOWN)) {
-            if (!dpadClicked) {
-                pivot.moveIntakeDown();
-            }
-            dpadClicked = true;
-        } else {
-            dpadClicked = false;
-        }
-
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
         }
@@ -218,9 +200,12 @@ public class Scoring extends Mechanism {
 
         switch (state) {
             case UP:
+                drivetrain.setNormal();
+                claw.stop();
                 break;
             case FRONT:
-                claw.grab();
+                drivetrain.setNormal();
+                claw.stop();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     if (!frontClicked) {
                         frontIntake.trigger();
@@ -231,6 +216,7 @@ public class Scoring extends Mechanism {
                 }
                 break;
             case INTAKE:
+                drivetrain.setIntake();
                 wrist.loop(gamepad);
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
@@ -242,21 +228,31 @@ public class Scoring extends Mechanism {
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
                     grabIntake.trigger();
+                    claw.grab();
                 }
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
-                    claw.release();
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_DOWN)) {
+                    wrist.down();
                     pivot.intakeUpPos();
+                    claw.grab();
+                }
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_UP)) {
+                    wrist.intakePos();
+                    pivot.intakeGrabPos();
+                    claw.grab();
                 }
                 break;
             case WALL:
+                drivetrain.setIntake();
                 claw.loop(gamepad);
                 break;
             case BASKET:
+                drivetrain.setScore();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
                     scoreBasket.trigger();
                 }
                 break;
             case CLIP:
+                drivetrain.setScore();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
                     scoreClip.trigger();
                 }

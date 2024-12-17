@@ -28,13 +28,15 @@ public class Telescope extends Mechanism {
     public static int FRONT_POS = -50;
     public static int INTAKE_POS = 550;
     public static int WALL_POS = 100;
-    public static int BASKET_POS = 830;
+    public static int BASKET_POS = 750;
     public static int CLIP_POS = 330;
     public static int CLIP_SCORE = 100;
     public static int CLIP_EXTENSION = 330;
     public static int BACK_POS = 300;
     public static int MAX_EXTENSION = 670;
+    public static int MIN_LENGTH = 15;
     public static double DOWN_MULTIPLIER = 0.15;
+    public static double INCH_PER_TICK = 0.0369;
 
     public static double VERTICAL_KP = 0.007;
     public static double HORIZONTAL_KP = 0.002;
@@ -153,7 +155,7 @@ public class Telescope extends Mechanism {
     }
 
     public double getLength() {
-        return getPosition();
+        return MIN_LENGTH + getPosition() * INCH_PER_TICK;
     }
 
     public void setTarget(double target) {
@@ -187,6 +189,7 @@ public class Telescope extends Mechanism {
         t.addData("Telescope Power", power);
         t.addData("Telescope position", getPosition());
         t.addData("Telescope target", target);
+        t.addData("Telescope length", getLength());
         t.update();
     }
 

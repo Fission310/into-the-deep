@@ -25,12 +25,12 @@ public class Pivot extends Mechanism {
     public static int RESET_POS = 200;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 1200;
-    public static int FRONT_POS = 350;
-    public static int INTAKE_UP_POS = 470;
-    public static int INTAKE_DOWN_POS = 400;
-    public static int INTAKE_GRAB_POS = 120;
+    public static int FRONT_POS = 100;
+    public static int INTAKE_UP_POS = 50;
+    public static int INTAKE_DOWN_POS = 50;
+    public static int INTAKE_GRAB_POS = -200;
     public static int WALL_POS = 800;
-    public static int BASKET_POS = 2450;
+    public static int BASKET_POS = 2130;
     public static int AUTO_BASKET_POS = 2400;
     public static int CLIP_POS = 1650;
     public static int CLIP_DOWN_POS = 1500;
@@ -41,10 +41,10 @@ public class Pivot extends Mechanism {
     public static int HIGHEST = 2230;
     public static int TICKS_PER_REV = 8192;
 
-    public static double KP = 0.0007;
-    public static double KI = 0.04;
-    public static double KD = 0.00006;
-    public static double KF = 0.2;
+    public static double KP = 0.00065;
+    public static double KI = 0.05;
+    public static double KD = 0.00005;
+    public static double KF = 0.005;
 
     public static double target = 0;
     public static double actualTarget = 0;
@@ -187,6 +187,8 @@ public class Pivot extends Mechanism {
     }
 
     public void update() {
+        controller.setPIDF(KP, KI, KD, KF);
+        controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
         controller.setLength(telescope.getLength());
         power = controller.calculate(getPosition(), target) / voltage.getVoltage() * 12.0;
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
@@ -200,8 +202,6 @@ public class Pivot extends Mechanism {
 
     @Override
     public void loop(Gamepad gamepad) {
-        controller.setPIDF(KP, KI, KD, KF);
-        controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
         update();
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
             frontPos();

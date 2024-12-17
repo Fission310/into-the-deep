@@ -250,8 +250,8 @@ public class BasketAuto extends LinearOpMode{
         reflect = color == Color.BLUE;
         claw = new Claw(this);
         drive = new SampleMecanumDrive(hardwareMap);
-        pivot = new Pivot(this);
         telescope = new Telescope(this);
+        pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
 
         claw.init(hardwareMap);

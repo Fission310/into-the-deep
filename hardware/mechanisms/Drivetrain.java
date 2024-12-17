@@ -13,10 +13,31 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Config
 public class Drivetrain extends Mechanism {
 
+    public static double SLOW_SPEED = 0.4;
+    public static double SLOW_TURN = 0.6;
+    public static double NORMAL_SPEED = 1;
+    private double speed = NORMAL_SPEED;
+    private double turnSpeed = NORMAL_SPEED;
+
     private SampleMecanumDrive drivetrain;
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
+    }
+
+    public void setIntake() {
+        turnSpeed = SLOW_TURN;
+        speed = NORMAL_SPEED;
+    }
+
+    public void setScore() {
+        turnSpeed = SLOW_TURN;
+        speed = SLOW_SPEED;
+    }
+
+    public void setNormal() {
+        turnSpeed = NORMAL_SPEED;
+        speed = NORMAL_SPEED;
     }
 
     @Override
@@ -29,11 +50,9 @@ public class Drivetrain extends Mechanism {
     public void loop(Gamepad gamepad) {
         drivetrain.setWeightedDrivePower(
                 new Pose2d(
-                        -gamepad.left_stick_y,
-                        -gamepad.left_stick_x,
-                        -gamepad.right_stick_x
-                )
-        );
+                        -gamepad.left_stick_y * speed,
+                        -gamepad.left_stick_x * speed,
+                        -gamepad.right_stick_x * turnSpeed));
 
         drivetrain.update();
 
