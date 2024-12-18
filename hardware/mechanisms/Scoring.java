@@ -19,6 +19,7 @@ public class Scoring extends Mechanism {
     private Telescope telescope = new Telescope(opMode);
     public Pivot pivot = new Pivot(opMode, telescope);
     private Wrist wrist = new Wrist(opMode);
+    private Sweeper sweeper = new Sweeper(opMode);
 
     private State state = State.UP;
 
@@ -47,6 +48,7 @@ public class Scoring extends Mechanism {
 
     private boolean frontClicked = false;
     private boolean dpadClicked = false;
+    private boolean rightStickClicked = false;
 
     public Scoring(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -163,6 +165,7 @@ public class Scoring extends Mechanism {
         pivot.init(hwMap);
         telescope.init(hwMap);
         wrist.init(hwMap);
+        sweeper.init(hwMap);
     }
 
     @Override
@@ -197,6 +200,15 @@ public class Scoring extends Mechanism {
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP) && state != State.CLIP) {
             goClip();
         }
+
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP) && !rightStickClicked) {
+            sweeper.upPos();
+            rightStickClicked = true;
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP) && rightStickClicked){
+            sweeper.lowPos();
+            rightStickClicked = false;
+        }
+
 
         switch (state) {
             case UP:
@@ -257,6 +269,7 @@ public class Scoring extends Mechanism {
                     scoreClip.trigger();
                 }
                 break;
+
         }
     }
 

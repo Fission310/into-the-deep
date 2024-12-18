@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.stuyfission.fissionlib.input.GamepadStatic.Input;
 
 public class Controls {
+    public static final Input SWEEP = Input.RIGHT_STICK_BUTTON;
     public static final Input WRIST_DOWN = Input.DPAD_DOWN;
     public static final Input WRIST_UP = Input.DPAD_UP;
     public static final Input GRAB = Input.RIGHT_BUMPER;
