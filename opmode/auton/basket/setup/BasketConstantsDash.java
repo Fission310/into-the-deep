@@ -17,6 +17,5 @@ public class BasketConstantsDash {
 
     public static Pose2d START_POSE = new Pose2d(START_X, START_Y, START_HEADING);
 
-    public static org.firstinspires.ftc.teamcode.opmode.auton.basket.setup.BasketConstants basketRed = new BasketConstants();
-    public static org.firstinspires.ftc.teamcode.opmode.auton.basket.setup.BasketConstants basketBlue = new BasketConstants();
+    public static BasketConstants basket = new BasketConstants();
 }
