@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.localization.Localizer;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Time;
+import com.acmerobotics.roadrunner.Twist2dDual;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,27 +23,24 @@ public class PinpointLocalizer implements Localizer {
     }
 
     @NonNull
-    @Override
     public Pose2d getPoseEstimate() {
         Pose2D pose = odo.getPosition();
         return new Pose2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH),
                 pose.getHeading(AngleUnit.RADIANS));
     }
 
-    @Override
     public void setPoseEstimate(@NonNull Pose2d pose2d) {
-        odo.setPosition(new Pose2D(DistanceUnit.INCH, pose2d.getY(), pose2d.getX(), AngleUnit.RADIANS, pose2d.getHeading()));
+        odo.setPosition(new Pose2D(DistanceUnit.INCH, pose2d.component1().y, pose2d.component1().x, AngleUnit.RADIANS, pose2d.heading.component1()));
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
         odo.update();
-        telemetry.addData("set odo pos x", pose2d.getX());
-        telemetry.addData("set odo pos y", pose2d.getY());
+        telemetry.addData("set odo pos x", pose2d.component1().x);
+        telemetry.addData("set odo pos y", pose2d.component1().y);
         telemetry.addData("odo pos x", odo.getPosition().getX(DistanceUnit.INCH));
         telemetry.addData("odo pos y", odo.getPosition().getY(DistanceUnit.INCH));
         telemetry.update();
     }
 
     @Nullable
-    @Override
     public Pose2d getPoseVelocity() {
         Pose2D pose = odo.getVelocity();
         return new Pose2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH),
@@ -49,10 +48,11 @@ public class PinpointLocalizer implements Localizer {
     }
 
     @Override
-    public void update() {
+    public Twist2dDual<Time> update() {
         odo.update();
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("status", odo.getDeviceStatus());
         t.update();
+        return null;
     }
 }

@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 @TeleOp(name = "PivotTelescope Dev", group = "dev")
 public class PivotTelescopeDev extends LinearOpMode {
 
-    private Pivot pivot = new Pivot(this);
     private Telescope telescope = new Telescope(this);
+    private Pivot pivot = new Pivot(this, telescope);
 
     @Override
     public void runOpMode() throws InterruptedException {

@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auton.basket.setup;
 import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-
+import com.acmerobotics.roadrunner.Pose2d;
 import org.firstinspires.ftc.teamcode.opmode.auton.basket.BasketConstants;
 
 @Config

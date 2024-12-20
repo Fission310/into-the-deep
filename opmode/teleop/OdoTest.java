@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
 
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
  */
 @TeleOp(name = "ltest")
 public class OdoTest extends LinearOpMode {
+    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0.0, 0.0, 0.0));
     @Override
     public void runOpMode() throws InterruptedException {
         GoBildaPinpointDriver odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
@@ -31,9 +33,9 @@ public class OdoTest extends LinearOpMode {
             l.update();
 
             Pose2d poseEstimate = l.getPoseEstimate();
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("x", drive.pose.position.x);
+            telemetry.addData("y", drive.pose.position.y);
+            telemetry.addData("heading", drive.pose.heading);
             telemetry.update();
         }
     }
