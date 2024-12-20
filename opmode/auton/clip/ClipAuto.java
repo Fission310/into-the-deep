@@ -1,4 +1,14 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.clip.setup;
+package org.firstinspires.ftc.teamcode.opmode.auton.clip;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.stuyfission.fissionlib.command.AutoCommandMachine;
+import com.stuyfission.fissionlib.command.Command;
+import com.stuyfission.fissionlib.command.CommandSequence;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
@@ -6,27 +16,13 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
-
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.stuyfission.fissionlib.command.AutoCommandMachine;
-import com.stuyfission.fissionlib.command.Command;
-import com.stuyfission.fissionlib.command.CommandSequence;
-
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Autonomous(name = "ClipAuto", preselectTeleOp = "Main")
 public class ClipAuto extends LinearOpMode{
     private boolean busy = false;
-    private ClipConstants clipConstants;
-    public ClipAuto(ClipConstants clipConstants){
-        this.clipConstants = clipConstants;
-    }
-
+    private ClipConstants clipConstants = ClipConstantsDash.clipConstants;
     private TrajectorySequence startChamberTraj;
     private TrajectorySequence farTraj;
     private TrajectorySequence sampleDrop1Traj;
