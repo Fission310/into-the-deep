@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Time;
 import com.acmerobotics.roadrunner.Twist2dDual;
+import com.acmerobotics.roadrunner.Vector2d;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -15,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
 
-public class PinpointLocalizer implements Localizer {
+public class PinpointLocalizer {//implements Localizer {
     private GoBildaPinpointDriver odo;
 
     public PinpointLocalizer(GoBildaPinpointDriver odo) {
@@ -30,29 +32,28 @@ public class PinpointLocalizer implements Localizer {
     }
 
     public void setPoseEstimate(@NonNull Pose2d pose2d) {
-        odo.setPosition(new Pose2D(DistanceUnit.INCH, pose2d.component1().y, pose2d.component1().x, AngleUnit.RADIANS, pose2d.heading.component1()));
+        odo.setPosition(new Pose2D(DistanceUnit.INCH, pose2d.position.y, pose2d.position.x, AngleUnit.RADIANS, pose2d.heading.toDouble()));
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
         odo.update();
-        telemetry.addData("set odo pos x", pose2d.component1().x);
-        telemetry.addData("set odo pos y", pose2d.component1().y);
+        telemetry.addData("set odo pos x", pose2d.position.x);
+        telemetry.addData("set odo pos y", pose2d.position.y);
         telemetry.addData("odo pos x", odo.getPosition().getX(DistanceUnit.INCH));
         telemetry.addData("odo pos y", odo.getPosition().getY(DistanceUnit.INCH));
         telemetry.update();
     }
 
     @Nullable
-    public Pose2d getPoseVelocity() {
+    public PoseVelocity2d getPoseVelocity() {
         Pose2D pose = odo.getVelocity();
-        return new Pose2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH),
+        return new PoseVelocity2d(new Vector2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH)),
                 pose.getHeading(AngleUnit.RADIANS));
     }
 
-    @Override
-    public Twist2dDual<Time> update() {
+    //@Override
+    public void update() {
         odo.update();
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("status", odo.getDeviceStatus());
         t.update();
-        return null;
     }
 }

@@ -116,7 +116,7 @@ public final class TankDrive {
 
     public final VoltageSensor voltageSensor;
 
-    public final Localizer localizer;
+    public final DriveLocalizer localizer;
     public Pose2d pose;
 
     private final LinkedList<Pose2d> poseHistory = new LinkedList<>();
