@@ -1,4 +1,14 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.clip.setup;
+package org.firstinspires.ftc.teamcode.opmode.auton.clip;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.stuyfission.fissionlib.command.AutoCommandMachine;
+import com.stuyfission.fissionlib.command.Command;
+import com.stuyfission.fissionlib.command.CommandSequence;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
@@ -6,30 +16,13 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
-import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.stuyfission.fissionlib.command.AutoCommandMachine;
-import com.stuyfission.fissionlib.command.Command;
-import com.stuyfission.fissionlib.command.CommandSequence;
-
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Autonomous(name = "ClipAuto", preselectTeleOp = "Main")
 public class ClipAuto extends LinearOpMode{
-    private boolean reflect;
     private boolean busy = false;
-    private Color color;
-    private ClipConstants clipConstants;
-    public ClipAuto(Color color, ClipConstants clipConstants){
-        this.color = color;
-        this.clipConstants = clipConstants;
-    }
-
+    private ClipConstants clipConstants = ClipConstantsDash.clipConstants;
     private TrajectorySequence startChamberTraj;
     private TrajectorySequence farTraj;
     private TrajectorySequence sampleDrop1Traj;
@@ -238,7 +231,6 @@ public class ClipAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        reflect = color == Color.BLUE;
         claw = new Claw(this);
         drive = new SampleMecanumDrive(hardwareMap);
         pivot = new Pivot(this, new Telescope(this));
@@ -250,65 +242,65 @@ public class ClipAuto extends LinearOpMode{
         scoring.init(hardwareMap);
         wrist.init(hardwareMap);
 
-        drive.setPoseEstimate(reflect(ClipConstantsDash.START_POSE));
+        drive.setPoseEstimate(ClipConstantsDash.START_POSE);
         startChamberTraj = drive
-                .trajectorySequenceBuilder(reflect(ClipConstantsDash.START_POSE))
-                .lineTo(reflect(clipConstants.START_CHAMBER.getV()))
+                .trajectorySequenceBuilder(ClipConstantsDash.START_POSE)
+                .lineTo(clipConstants.START_CHAMBER.getV())
                 .setReversed(true)
                 .build();
         farTraj = drive
-                .trajectorySequenceBuilder(reflect(startChamberTraj.end()))
-                .splineToLinearHeading(vecToPose(clipConstants.FAR_SAMPLE), reflect(clipConstants.FAR_SAMPLE.getH()))
+                .trajectorySequenceBuilder(startChamberTraj.end())
+                .splineToLinearHeading(vecToPose(clipConstants.FAR_SAMPLE), clipConstants.FAR_SAMPLE.getH())
                 .build();
         sampleDrop1Traj = drive
-                .trajectorySequenceBuilder(reflect(farTraj.end()))
+                .trajectorySequenceBuilder(farTraj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.SAMPLE_DROP_1))
                 .build();
         centerTraj = drive
-                .trajectorySequenceBuilder(reflect(sampleDrop1Traj.end()))
+                .trajectorySequenceBuilder(sampleDrop1Traj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.CENTER_SAMPLE))
                 .build();
         sampleDrop2Traj = drive
-                .trajectorySequenceBuilder(reflect(centerTraj.end()))
+                .trajectorySequenceBuilder(centerTraj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.SAMPLE_DROP_2))
                 .build();
         wallTraj = drive
-                .trajectorySequenceBuilder(reflect(sampleDrop2Traj.end()))
+                .trajectorySequenceBuilder(sampleDrop2Traj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.WALL_SAMPLE))
                 .build();
         sampleDrop3Traj = drive
-                .trajectorySequenceBuilder(reflect(wallTraj.end()))
+                .trajectorySequenceBuilder(wallTraj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.SAMPLE_DROP_3))
                 .build();
         wallIntake1Traj = drive
-                .trajectorySequenceBuilder(reflect(sampleDrop3Traj.end()))
+                .trajectorySequenceBuilder(sampleDrop3Traj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.WALL_INTAKE_1))
                 .setReversed(true)
-                .setTangent(reflect(Math.toRadians(135)))
+                .setTangent(Math.toRadians(135))
                 .build();
         chamber1Traj = drive
-                .trajectorySequenceBuilder(reflect(wallIntake1Traj.end()))
-                .splineTo(reflect(clipConstants.CHAMBER_1.getV()), reflect(clipConstants.CHAMBER_1.getH()))
+                .trajectorySequenceBuilder(wallIntake1Traj.end())
+                .splineTo(clipConstants.CHAMBER_1.getV(), clipConstants.CHAMBER_1.getH())
                 .setReversed(false)
                 .build();
         wallIntake2Traj = drive
-                .trajectorySequenceBuilder(reflect(chamber1Traj.end()))
+                .trajectorySequenceBuilder(chamber1Traj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.WALL_INTAKE_2))
                 .setReversed(true)
                 .build();
         chamber2Traj = drive
-                .trajectorySequenceBuilder(reflect(wallIntake2Traj.end()))
-                .splineTo(reflect(clipConstants.CHAMBER_2.getV()), reflect(clipConstants.CHAMBER_2.getH()))
+                .trajectorySequenceBuilder(wallIntake2Traj.end())
+                .splineTo(clipConstants.CHAMBER_2.getV(), clipConstants.CHAMBER_2.getH())
                 .setReversed(false)
                 .build();
         wallIntake3Traj = drive
-                .trajectorySequenceBuilder(reflect(chamber2Traj.end()))
+                .trajectorySequenceBuilder(chamber2Traj.end())
                 .lineToSplineHeading(vecToPose(clipConstants.WALL_INTAKE_3))
                 .setReversed(true)
                 .build();
         chamber3Traj = drive
-                .trajectorySequenceBuilder(reflect(wallIntake3Traj.end()))
-                .splineTo(reflect(clipConstants.CHAMBER_3.getV()), reflect(clipConstants.CHAMBER_3.getH()))
+                .trajectorySequenceBuilder(wallIntake3Traj.end())
+                .splineTo(clipConstants.CHAMBER_3.getV(), clipConstants.CHAMBER_3.getH())
                 .setReversed(false)
                 .build();
 
@@ -323,29 +315,8 @@ public class ClipAuto extends LinearOpMode{
         }
     }
 
-    public Pose2d reflect(Pose2d pose) {
-        if (reflect) {
-            return new Pose2d(pose.getX() * -1, pose.getY() * -1, reflect(pose.getHeading()));
-        }
-        return pose;
-    }
-
-    public Vector2d reflect(Vector2d vector) {
-        if (reflect) {
-            return new Vector2d(vector.getX() * -1, vector.getY() * -1);
-        }
-        return vector;
-    }
-
-    public double reflect(double theta) {
-        if (reflect) {
-            return Math.toRadians(180) + theta;
-        }
-        return theta;
-    }
-
     public Pose2d vecToPose(Constant constant){
-        Vector2d vec = reflect(constant.getV());
-        return new Pose2d(vec.getX(), vec.getY(), reflect(constant.getH()));
+        Vector2d vec = constant.getV();
+        return new Pose2d(vec.getX(), vec.getY(), constant.getH());
     }
 }
