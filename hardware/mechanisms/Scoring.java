@@ -21,7 +21,7 @@ public class Scoring extends Mechanism {
     private Wrist wrist = new Wrist(opMode);
     private Sweeper sweeper = new Sweeper(opMode);
 
-    private State state = State.UP;
+    private State state = State.FRONT;
 
     private enum State {
         FRONT,
@@ -201,17 +201,18 @@ public class Scoring extends Mechanism {
             goClip();
         }
 
-        if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP) && !rightStickClicked) {
-            sweeper.upPos();
+        if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP)) {
+            if (!rightStickClicked) {
+                sweeper.toggle();
+            }
             rightStickClicked = true;
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP) && rightStickClicked){
-            sweeper.lowPos();
+        } else {
             rightStickClicked = false;
         }
 
-
         switch (state) {
             case UP:
+                sweeper.retractPos();
                 drivetrain.setNormal();
                 claw.stop();
                 break;
@@ -272,5 +273,4 @@ public class Scoring extends Mechanism {
 
         }
     }
-
 }
