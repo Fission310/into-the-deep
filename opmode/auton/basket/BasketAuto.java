@@ -2,46 +2,45 @@ package org.firstinspires.ftc.teamcode.opmode.auton.basket;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.stuyfission.fissionlib.command.AutoCommandMachine;
 import com.stuyfission.fissionlib.command.Command;
 import com.stuyfission.fissionlib.command.CommandSequence;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+
 @Autonomous(name = "BasketAuto", preselectTeleOp = "Main")
 public class BasketAuto extends LinearOpMode{
     private boolean busy = false;
     private BasketConstants basketConstants = BasketConstantsDash.basketConstants;
-    private TrajectorySequence basketTraj;
-    private TrajectorySequence chamberTraj;
-    private TrajectorySequence farTraj;
-    private TrajectorySequence basket1Traj;
-    private TrajectorySequence centerTraj;
-    private TrajectorySequence basket2Traj;
-    private TrajectorySequence wallTraj;
-    private TrajectorySequence basket3Traj;
+    private Trajectory basketTraj;
+    private Trajectory chamberTraj;
+    private Trajectory farTraj;
+    private Trajectory basket1Traj;
+    private Trajectory centerTraj;
+    private Trajectory basket2Traj;
+    private Trajectory wallAction;
+    private Trajectory basket3Traj;
 
-    private SampleMecanumDrive drive;
+    private MecanumDrive drive;
 
-    private Command basketCommand = () -> drive.followTrajectorySequenceAsync(basketTraj);
+    private Command basketCommand = () -> new ParallelAction(drive.followTrajectory(basketTraj);
     private Command chamberCommand = () -> drive.followTrajectorySequenceAsync(chamberTraj);
     private Command farSampleCommand = () -> drive.followTrajectorySequenceAsync(farTraj);
     private Command basket1Command = () -> drive.followTrajectorySequenceAsync(basket1Traj);
     private Command centerSampleCommand = () -> drive.followTrajectorySequenceAsync(centerTraj);
     private Command basket2Command = () -> drive.followTrajectorySequenceAsync(basket2Traj);
-    private Command wallSampleCommand = () -> drive.followTrajectorySequenceAsync(wallTraj);
+    private Command wallSampleCommand = () -> drive.followTrajectorySequenceAsync(wallAction);
     private Command basket3Command = () -> drive.followTrajectorySequenceAsync(basket3Traj);
 
 
@@ -73,25 +72,25 @@ public class BasketAuto extends LinearOpMode{
     private Command wristClipScore = () -> wrist.clipScorePos();
 
     private CommandSequence basketSequence = new CommandSequence()
-            .addCommand(busyTrue)
-            .addWaitCommand(5)
+//            .addCommand(busyTrue)
+//            .addWaitCommand(5)
             .addCommand(basketCommand)
-            .addCommand(pivotUp)
-            .addWaitCommand(7)
-            .addCommand(pivotBasket)
-            .addCommand(telescopeBasket)
-            .addWaitCommand(2)
-            .addCommand(release)
-            .addWaitCommand(0.2)
-            .addCommand(wristIntakeScore)
-            .addWaitCommand(0.4)
-            .addCommand(telescopeFront)
-            .addWaitCommand(0.7)
-            .addCommand(wristRetract)
-            .addWaitCommand(0.1)
-            .addCommand(pivotFront)
-            .addWaitCommand(0.3)
-            .addCommand(busyFalse)
+//            .addCommand(pivotUp)
+//            .addWaitCommand(7)
+//            .addCommand(pivotBasket)
+//            .addCommand(telescopeBasket)
+//            .addWaitCommand(2)
+//            .addCommand(release)
+//            .addWaitCommand(0.2)
+//            .addCommand(wristIntakeScore)
+//            .addWaitCommand(0.4)
+//            .addCommand(telescopeFront)
+//            .addWaitCommand(0.7)
+//            .addCommand(wristRetract)
+//            .addWaitCommand(0.1)
+//            .addCommand(pivotFront)
+//            .addWaitCommand(0.3)
+//            .addCommand(busyFalse)
             .build();
     private CommandSequence chamberSequence = new CommandSequence()
             .addCommand(chamberCommand)
@@ -220,8 +219,8 @@ public class BasketAuto extends LinearOpMode{
             .addCommand(pivotFront)
             .build();
     private AutoCommandMachine commandMachine = new AutoCommandMachine()
-//            .addCommandSequence(chamberSequence)
-            .addCommandSequence(basketSequence)
+            .addCommandSequence(chamberSequence)
+//            .addCommandSequence(basketSequence)
             .addCommandSequence(farSampleSequence)
             .addCommandSequence(basket1Sequence)
 //            .addCommandSequence(centerSampleSequence)
@@ -235,7 +234,7 @@ public class BasketAuto extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         claw = new Claw(this);
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new MecanumDrive(hardwareMap, BasketConstantsDash.START_POSE);
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
@@ -246,41 +245,44 @@ public class BasketAuto extends LinearOpMode{
         wrist.init(hardwareMap);
         telescope.init(hardwareMap);
 
-        TrajectoryVelocityConstraint velConstraint = SampleMecanumDrive.getVelocityConstraint(20, 1, DriveConstants.TRACK_WIDTH);
-        TrajectoryAccelerationConstraint accelConstraint = SampleMecanumDrive.getAccelerationConstraint(30);
 
-        basketTraj = drive
-                 .trajectorySequenceBuilder(BasketConstantsDash.START_POSE)
-                 .lineToConstantHeading(basketConstants.FORWARD.getV())
-                 .lineToLinearHeading(vecToPose(basketConstants.BASKET))
-                 .build();
-//        chamberTraj = drive
-//                .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
-//                .lineTo(reflect(basketConstants.CHAMBER.getV()))
-//                .setReversed(true)
-//                .build();
+//        TrajectoryVelocityConstraint velConstraint = SampleMecanumDrive.getVelocityConstraint(20, 1, DriveConstants.TRACK_WIDTH);
+//        TrajectoryAccelerationConstraint accelConstraint = SampleMecanumDrive.getAccelerationConstraint(30);
+
+//        basketTraj = drive
+//                 .trajectorySequenceBuilder(BasketConstantsDash.START_POSE)
+//                 .lineToConstantHeading(basketConstants.FORWARD.getV())
+//                 .lineToLinearHeading(vecToPose(basketConstants.BASKET))
+//                 .build();
+
+        chamberTraj = new Trajectory();
+                drive
+                .actionBuilder(BasketConstantsDash.START_POSE)
+                .lineToY(basketConstants.CHAMBER.getV().y)
+                .setReversed(true)
+                .build();
         farTraj = drive
-                .trajectorySequenceBuilder(basketTraj.end())
-                .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), basketConstants.FAR_SAMPLE.getH(), velConstraint, accelConstraint)
+                .actionBuilder(chamberTraj.())
+                .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), basketConstants.FAR_SAMPLE.getH())
                 .build();
         basket1Traj = drive
-                .trajectorySequenceBuilder(farTraj.end())
+                .actionBuilder(farTraj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_1), velConstraint, accelConstraint)
                 .build();
         centerTraj = drive
-                .trajectorySequenceBuilder(basket1Traj.end())
+                .actionBuilder(basket1Traj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.CENTER_SAMPLE))
                 .build();
         basket2Traj = drive
-                .trajectorySequenceBuilder(centerTraj.end())
+                .actionBuilder(centerTraj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_2))
                 .build();
-        wallTraj = drive
-                .trajectorySequenceBuilder(basket2Traj.end())
+        wallAction = drive
+                .actionBuilder(basket2Traj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.WALL_SAMPLE))
                 .build();
         basket3Traj = drive
-                .trajectorySequenceBuilder(wallTraj.end())
+                .actionBuilder(wallAction.end())
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_3))
                 .build();
 

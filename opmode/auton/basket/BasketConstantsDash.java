@@ -7,7 +7,7 @@ import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.UP;
 import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.WALL_POS;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
 
 @Config
 public class BasketConstantsDash {
