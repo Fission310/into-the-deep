@@ -43,7 +43,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.drive.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.drive.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.drive.messages.MecanumLocalizerInputsMessage;
-import org.firstinspires.ftc.teamcode.drive.messages.PoseMessage;import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
+import org.firstinspires.ftc.teamcode.drive.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -248,6 +249,7 @@ public final class MecanumDrive {
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         localizer = new PinpointLocalizer(hardwareMap.get(GoBildaPinpointDriver.class, "odo"));
+        localizer.setPose(pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }

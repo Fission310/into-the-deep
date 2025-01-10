@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.basket;
 
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.BOT_LENGTH;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.BOT_WIDTH;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.TILE_LENGTH;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.UP;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.WALL_POS;
+import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
 
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 

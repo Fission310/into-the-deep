@@ -314,9 +314,4 @@ public class ClipAuto extends LinearOpMode{
             telemetry.update();
         }
     }
-
-    public Pose2d vecToPose(Constant constant){
-        Vector2d vec = constant.getV();
-        return new Pose2d(vec.getX(), vec.getY(), constant.getH());
-    }
 }
