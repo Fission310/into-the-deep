@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.clip;
 
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.BOT_LENGTH;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.BOT_WIDTH;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.TILE_LENGTH;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.UP;
-import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.WALL_POS;
+import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 @Config
 public class ClipConstantsDash {

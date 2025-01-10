@@ -2,55 +2,65 @@ package org.firstinspires.ftc.teamcode.opmode.auton.clip;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.stuyfission.fissionlib.command.AutoCommandMachine;
 import com.stuyfission.fissionlib.command.Command;
 import com.stuyfission.fissionlib.command.CommandSequence;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
-import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "ClipAuto", preselectTeleOp = "Main")
 public class ClipAuto extends LinearOpMode{
     private boolean busy = false;
     private ClipConstants clipConstants = ClipConstantsDash.clipConstants;
-    private TrajectorySequence startChamberTraj;
-    private TrajectorySequence farTraj;
-    private TrajectorySequence sampleDrop1Traj;
-    private TrajectorySequence centerTraj;
-    private TrajectorySequence sampleDrop2Traj;
-    private TrajectorySequence wallTraj;
-    private TrajectorySequence sampleDrop3Traj;
-    private TrajectorySequence wallIntake1Traj;
-    private TrajectorySequence chamber1Traj;
-    private TrajectorySequence wallIntake2Traj;
-    private TrajectorySequence chamber2Traj;
-    private TrajectorySequence wallIntake3Traj;
-    private TrajectorySequence chamber3Traj;
-    private SampleMecanumDrive drive;
+    private Action startChamberAction;
+    private Action farAction;
+    private Action sampleDrop1Action;
+    private Action centerAction;
+    private Action sampleDrop2Action;
+    private Action wallAction;
+    private Action sampleDrop3Action;
+    private Action wallIntake1Action;
+    private Action chamber1Action;
+    private Action wallIntake2Action;
+    private Action chamber2Action;
+    private Action wallIntake3Action;
+    private Action chamber3Action;
+    private MecanumDrive drive;
 
-    private Command startChamberCommand = () -> drive.followTrajectorySequenceAsync(startChamberTraj);
-    private Command farTrajCommand = () -> drive.followTrajectorySequenceAsync(farTraj);
-    private Command sampleDrop1Command = () -> drive.followTrajectorySequenceAsync(sampleDrop1Traj);
-    private Command centerTrajCommand = () -> drive.followTrajectorySequenceAsync(centerTraj);
-    private Command sampleDrop2Command = () -> drive.followTrajectorySequenceAsync(sampleDrop2Traj);
-    private Command wallTrajCommand = () -> drive.followTrajectorySequenceAsync(wallTraj);
-    private Command sampleDrop3Command = () -> drive.followTrajectorySequenceAsync(sampleDrop3Traj);
-    private Command wallIntake1Command = () -> drive.followTrajectorySequenceAsync(wallIntake1Traj);
-    private Command chamber1Command = () -> drive.followTrajectorySequenceAsync(chamber1Traj);
-    private Command wallIntake2Command = () -> drive.followTrajectorySequenceAsync(wallIntake2Traj);
-    private Command chamber2Command = () -> drive.followTrajectorySequenceAsync(chamber2Traj);
-    private Command wallIntake3Command = () -> drive.followTrajectorySequenceAsync(wallIntake3Traj);
-    private Command chamber3Command = () -> drive.followTrajectorySequenceAsync(chamber3Traj);
+    private Command startChamberCommand = () -> followActionAsync(startChamberAction);
+    private Command farTrajCommand = () -> followActionAsync(farAction);
+    private Command sampleDrop1Command = () -> followActionAsync(sampleDrop1Action);
+    private Command centerTrajCommand = () -> followActionAsync(centerAction);
+    private Command sampleDrop2Command = () -> followActionAsync(sampleDrop2Action);
+    private Command wallTrajCommand = () -> followActionAsync(wallAction);
+    private Command sampleDrop3Command = () -> followActionAsync(sampleDrop3Action);
+    private Command wallIntake1Command = () -> followActionAsync(wallIntake1Action);
+    private Command chamber1Command = () -> followActionAsync(chamber1Action);
+    private Command wallIntake2Command = () -> followActionAsync(wallIntake2Action);
+    private Command chamber2Command = () -> followActionAsync(chamber2Action);
+    private Command wallIntake3Command = () -> followActionAsync(wallIntake3Action);
+    private Command chamber3Command = () -> followActionAsync(chamber3Action);
+
+    private void followActionAsync(Action action){
+        busy = true;
+        Thread thread = new Thread(
+                () -> {
+                    Actions.runBlocking(action);
+                    busy = false;
+                }
+        );
+        thread.start();
+    }
+
     private Claw claw;
     private Pivot pivot;
     private Scoring scoring;
@@ -232,7 +242,7 @@ public class ClipAuto extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         claw = new Claw(this);
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new MecanumDrive(hardwareMap, ClipConstantsDash.START_POSE);
         pivot = new Pivot(this, new Telescope(this));
         scoring = new Scoring(this);
         wrist = new Wrist(this);
@@ -242,75 +252,68 @@ public class ClipAuto extends LinearOpMode{
         scoring.init(hardwareMap);
         wrist.init(hardwareMap);
 
-        drive.setPoseEstimate(ClipConstantsDash.START_POSE);
-        startChamberTraj = drive
-                .trajectorySequenceBuilder(ClipConstantsDash.START_POSE)
-                .lineTo(clipConstants.START_CHAMBER.getV())
+        startChamberAction = drive
+                .actionBuilder(ClipConstantsDash.START_POSE)
+                .lineToY(clipConstants.START_CHAMBER.getVec().y)
                 .setReversed(true)
                 .build();
-        farTraj = drive
-                .trajectorySequenceBuilder(startChamberTraj.end())
-                .splineToLinearHeading(vecToPose(clipConstants.FAR_SAMPLE), clipConstants.FAR_SAMPLE.getH())
+        farAction = drive
+                .actionBuilder(clipConstants.START_CHAMBER.getPose())
+                .splineToLinearHeading(clipConstants.FAR_SAMPLE.getPose(), clipConstants.FAR_SAMPLE.getH())
                 .build();
-        sampleDrop1Traj = drive
-                .trajectorySequenceBuilder(farTraj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.SAMPLE_DROP_1))
+        sampleDrop1Action = drive
+                .actionBuilder(clipConstants.FAR_SAMPLE.getPose())
+                .splineToLinearHeading(clipConstants.SAMPLE_DROP_1.getPose(), clipConstants.SAMPLE_DROP_1.getH())
                 .build();
-        centerTraj = drive
-                .trajectorySequenceBuilder(sampleDrop1Traj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.CENTER_SAMPLE))
+        centerAction = drive
+                .actionBuilder(clipConstants.SAMPLE_DROP_1.getPose())
+                .splineToLinearHeading(clipConstants.CENTER_SAMPLE.getPose(), clipConstants.CENTER_SAMPLE.getH())
                 .build();
-        sampleDrop2Traj = drive
-                .trajectorySequenceBuilder(centerTraj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.SAMPLE_DROP_2))
+        sampleDrop2Action = drive
+                .actionBuilder(clipConstants.CENTER_SAMPLE.getPose())
+                .splineToLinearHeading(clipConstants.SAMPLE_DROP_2.getPose(), clipConstants.SAMPLE_DROP_2.getH())
                 .build();
-        wallTraj = drive
-                .trajectorySequenceBuilder(sampleDrop2Traj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.WALL_SAMPLE))
+        wallAction = drive
+                .actionBuilder(clipConstants.SAMPLE_DROP_2.getPose())
+                .splineToLinearHeading(clipConstants.WALL_SAMPLE.getPose(), clipConstants.WALL_SAMPLE.getH())
                 .build();
-        sampleDrop3Traj = drive
-                .trajectorySequenceBuilder(wallTraj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.SAMPLE_DROP_3))
+        sampleDrop3Action = drive
+                .actionBuilder(clipConstants.WALL_SAMPLE.getPose())
+                .splineToLinearHeading(clipConstants.SAMPLE_DROP_3.getPose(), clipConstants.SAMPLE_DROP_3.getH())
                 .build();
-        wallIntake1Traj = drive
-                .trajectorySequenceBuilder(sampleDrop3Traj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.WALL_INTAKE_1))
-                .setReversed(true)
-                .setTangent(Math.toRadians(135))
+        wallIntake1Action = drive
+                .actionBuilder(clipConstants.SAMPLE_DROP_3.getPose())
+                .splineToLinearHeading(clipConstants.WALL_INTAKE_1.getPose(), clipConstants.WALL_INTAKE_1.getH())
+                .setTangent(Math.toRadians(135))//
                 .build();
-        chamber1Traj = drive
-                .trajectorySequenceBuilder(wallIntake1Traj.end())
-                .splineTo(clipConstants.CHAMBER_1.getV(), clipConstants.CHAMBER_1.getH())
-                .setReversed(false)
+        chamber1Action = drive
+                .actionBuilder(clipConstants.WALL_INTAKE_1.getPose())
+                .splineToLinearHeading(clipConstants.CHAMBER_1.getPose(), clipConstants.CHAMBER_1.getH())
                 .build();
-        wallIntake2Traj = drive
-                .trajectorySequenceBuilder(chamber1Traj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.WALL_INTAKE_2))
-                .setReversed(true)
+        wallIntake2Action = drive
+                .actionBuilder(clipConstants.CHAMBER_1.getPose())
+                .splineToLinearHeading(clipConstants.WALL_INTAKE_2.getPose(), clipConstants.WALL_INTAKE_2.getH())
                 .build();
-        chamber2Traj = drive
-                .trajectorySequenceBuilder(wallIntake2Traj.end())
-                .splineTo(clipConstants.CHAMBER_2.getV(), clipConstants.CHAMBER_2.getH())
-                .setReversed(false)
+        chamber2Action = drive
+                .actionBuilder(clipConstants.WALL_INTAKE_2.getPose())
+                .splineToLinearHeading(clipConstants.CHAMBER_2.getPose(), clipConstants.CHAMBER_2.getH())
                 .build();
-        wallIntake3Traj = drive
-                .trajectorySequenceBuilder(chamber2Traj.end())
-                .lineToSplineHeading(vecToPose(clipConstants.WALL_INTAKE_3))
-                .setReversed(true)
+        wallIntake3Action = drive
+                .actionBuilder(clipConstants.CHAMBER_2.getPose())
+                .splineToLinearHeading(clipConstants.WALL_INTAKE_3.getPose(), clipConstants.WALL_INTAKE_3.getH())
                 .build();
-        chamber3Traj = drive
-                .trajectorySequenceBuilder(wallIntake3Traj.end())
-                .splineTo(clipConstants.CHAMBER_3.getV(), clipConstants.CHAMBER_3.getH())
-                .setReversed(false)
+        chamber3Action = drive
+                .actionBuilder(clipConstants.WALL_INTAKE_3.getPose())
+                .splineToLinearHeading(clipConstants.CHAMBER_3.getPose(), clipConstants.CHAMBER_3.getH())
                 .build();
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
-            drive.update();
+            drive.updatePoseEstimate();
             telescope.update();
             pivot.update();
-            commandMachine.run(drive.isBusy() || busy);
+            commandMachine.run(busy);
             telemetry.update();
         }
     }
