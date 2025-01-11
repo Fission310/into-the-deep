@@ -62,6 +62,7 @@ public class Scoring extends Mechanism {
     private Command pivotGrabIntake = () -> pivot.intakeGrabPos();
     private Command telescopeFront = () -> telescope.frontPos();
     private Command telescopeIntake = () -> telescope.frontIntakePos();
+    private Command telescopeIntakeShort = () -> telescope.frontIntakeShortPos();
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
@@ -113,6 +114,15 @@ public class Scoring extends Mechanism {
             .addCommand(release)
             .build();
 
+    public CommandSequence frontIntakeShort = new CommandSequence()
+            .addCommand(pivotDownIntake)
+            .addCommand(telescopeIntakeShort)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(wristIntakeScore)
+            .addCommand(setStateIntake)
+            .addCommand(release)
+            .build();
+
     public CommandSequence grabIntake = new CommandSequence()
             .addCommand(pivotGrabIntake)
             .addWaitCommand(PIVOT_GRAB_WAIT)
@@ -148,6 +158,13 @@ public class Scoring extends Mechanism {
         state = State.BASKET;
         pivot.basketPos();
         telescope.basketPos();
+        wrist.basketPos();
+    }
+
+    public void goLowBasket() {
+        state = State.BASKET;
+        pivot.basketPos();
+        telescope.lowBasketPos();
         wrist.basketPos();
     }
 
@@ -197,6 +214,8 @@ public class Scoring extends Mechanism {
             claw.release();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET) && state != State.BASKET) {
             goBasket();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_LOW_BASKET) && state != State.BASKET) {
+            goLowBasket();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP) && state != State.CLIP) {
             goClip();
         }
@@ -219,6 +238,9 @@ public class Scoring extends Mechanism {
             case FRONT:
                 drivetrain.setNormal();
                 claw.stop();
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE_SHORT)) {
+                    frontIntakeShort.trigger();
+                }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     if (!frontClicked) {
                         frontIntake.trigger();

@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 @Config
 public class Claw extends Mechanism {
     public static double GRAB_POWER = 1;
-    public static double RELEASE_POWER = -0.3;
+    public static double RELEASE_POWER = -0.8;
 
     private CRServo clawServo;
 
