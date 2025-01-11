@@ -24,7 +24,7 @@ import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.DownsampledWriter;
 import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.acmerobotics.roadrunner.ftc.FlightRecorder;
-import com.acmerobotics.roadrunner.ftc.LazyImu;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;import com.acmerobotics.roadrunner.ftc.LazyImu;
 import com.acmerobotics.roadrunner.ftc.LynxFirmware;
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
@@ -43,7 +43,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.drive.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.drive.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.drive.messages.MecanumLocalizerInputsMessage;
-import org.firstinspires.ftc.teamcode.drive.messages.PoseMessage;import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
+import org.firstinspires.ftc.teamcode.drive.messages.PoseMessage;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -63,13 +63,13 @@ public final class MecanumDrive {
 
         // drive model parameters
         public double inPerTick = 1;
-        public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 0;
+        public double lateralInPerTick = 0.24161;
+        public double trackWidthTicks = 12;
 
         // feedforward parameters (in tick units)
-        public double kS = 0;
-        public double kV = 0;
-        public double kA = 0;
+        public double kS = 2.04;
+        public double kV = 0.1;
+        public double kA = 0.04;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
@@ -81,13 +81,13 @@ public final class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 0.0;
-        public double lateralGain = 0.0;
-        public double headingGain = 0.0; // shared with turn
+        public double axialGain = 5;
+        public double lateralGain = 6;
+        public double headingGain = 3; // shared with turn
 
-        public double axialVelGain = 0.0;
-        public double lateralVelGain = 0.0;
-        public double headingVelGain = 0.0; // shared with turn
+        public double axialVelGain = 0.6;
+        public double lateralVelGain = 0.7;
+        public double headingVelGain = 0.8; // shared with turn
     }
 
     public static Params PARAMS = new Params();
@@ -169,10 +169,10 @@ public final class MecanumDrive {
             if (!initialized) {
                 initialized = true;
 
-                lastLeftFrontPos = leftFrontPosVel.position;
-                lastLeftBackPos = leftBackPosVel.position;
-                lastRightBackPos = rightBackPosVel.position;
-                lastRightFrontPos = rightFrontPosVel.position;
+                lastLeftFrontPos = (int)leftFrontPosVel.position;
+                lastLeftBackPos = (int)leftBackPosVel.position;
+                lastRightBackPos = (int)rightBackPosVel.position;
+                lastRightFrontPos = (int)rightFrontPosVel.position;
 
                 lastHeading = heading;
 
@@ -199,10 +199,10 @@ public final class MecanumDrive {
                     }).times(PARAMS.inPerTick)
             ));
 
-            lastLeftFrontPos = leftFrontPosVel.position;
-            lastLeftBackPos = leftBackPosVel.position;
-            lastRightBackPos = rightBackPosVel.position;
-            lastRightFrontPos = rightFrontPosVel.position;
+            lastLeftFrontPos = (int)leftFrontPosVel.position;
+            lastLeftBackPos = (int)leftBackPosVel.position;
+            lastRightBackPos = (int)rightBackPosVel.position;
+            lastRightFrontPos = (int)rightFrontPosVel.position;
 
             lastHeading = heading;
 
@@ -247,7 +247,12 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new PinpointLocalizer(hardwareMap.get(GoBildaPinpointDriver.class, "odo"));
+        GoBildaPinpointDriverRR odo = hardwareMap.get(GoBildaPinpointDriverRR.class, "odo");
+        odo.setOffsets(-102.6, -113.5);
+        odo.setEncoderResolution(GoBildaPinpointDriverRR.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriverRR.EncoderDirection.FORWARD, GoBildaPinpointDriverRR.EncoderDirection.FORWARD);
+        odo.resetPosAndIMU();
+        localizer = new PinpointLocalizer(odo);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
@@ -359,6 +364,8 @@ public final class MecanumDrive {
             c.setStroke("#4CAF50FF");
             c.setStrokeWidth(1);
             c.strokePolyline(xPoints, yPoints);
+
+            p.put("tesssting", "hi");
 
             return true;
         }
