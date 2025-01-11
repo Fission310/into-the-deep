@@ -24,7 +24,8 @@ import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.DownsampledWriter;
 import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.acmerobotics.roadrunner.ftc.FlightRecorder;
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;import com.acmerobotics.roadrunner.ftc.LazyImu;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
+import com.acmerobotics.roadrunner.ftc.LazyImu;
 import com.acmerobotics.roadrunner.ftc.LynxFirmware;
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
@@ -55,11 +56,10 @@ public final class MecanumDrive {
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
-        //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
-        public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        // see
+        // https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
+        public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // drive model parameters
         public double inPerTick = 1;
@@ -97,13 +97,11 @@ public final class MecanumDrive {
 
     public final TurnConstraints defaultTurnConstraints = new TurnConstraints(
             PARAMS.maxAngVel, -PARAMS.maxAngAccel, PARAMS.maxAngAccel);
-    public final VelConstraint defaultVelConstraint =
-            new MinVelConstraint(Arrays.asList(
-                    kinematics.new WheelVelConstraint(PARAMS.maxWheelVel),
-                    new AngularVelConstraint(PARAMS.maxAngVel)
-            ));
-    public final AccelConstraint defaultAccelConstraint =
-            new ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel);
+    public final VelConstraint defaultVelConstraint = new MinVelConstraint(Arrays.asList(
+            kinematics.new WheelVelConstraint(PARAMS.maxWheelVel),
+            new AngularVelConstraint(PARAMS.maxAngVel)));
+    public final AccelConstraint defaultAccelConstraint = new ProfileAccelConstraint(PARAMS.minProfileAccel,
+            PARAMS.maxProfileAccel);
 
     public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
 
@@ -137,7 +135,7 @@ public final class MecanumDrive {
             imu = lazyImu.get();
 
             // TODO: reverse encoders if needed
-            //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            // leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
             this.pose = pose;
         }
@@ -169,10 +167,10 @@ public final class MecanumDrive {
             if (!initialized) {
                 initialized = true;
 
-                lastLeftFrontPos = (int)leftFrontPosVel.position;
-                lastLeftBackPos = (int)leftBackPosVel.position;
-                lastRightBackPos = (int)rightBackPosVel.position;
-                lastRightFrontPos = (int)rightFrontPosVel.position;
+                lastLeftFrontPos = (int) leftFrontPosVel.position;
+                lastLeftBackPos = (int) leftBackPosVel.position;
+                lastRightBackPos = (int) rightBackPosVel.position;
+                lastRightFrontPos = (int) rightFrontPosVel.position;
 
                 lastHeading = heading;
 
@@ -181,35 +179,33 @@ public final class MecanumDrive {
 
             double headingDelta = heading.minus(lastHeading);
             Twist2dDual<Time> twist = kinematics.forward(new MecanumKinematics.WheelIncrements<>(
-                    new DualNum<Time>(new double[]{
+                    new DualNum<Time>(new double[] {
                             (leftFrontPosVel.position - lastLeftFrontPos),
                             leftFrontPosVel.velocity,
                     }).times(PARAMS.inPerTick),
-                    new DualNum<Time>(new double[]{
+                    new DualNum<Time>(new double[] {
                             (leftBackPosVel.position - lastLeftBackPos),
                             leftBackPosVel.velocity,
                     }).times(PARAMS.inPerTick),
-                    new DualNum<Time>(new double[]{
+                    new DualNum<Time>(new double[] {
                             (rightBackPosVel.position - lastRightBackPos),
                             rightBackPosVel.velocity,
                     }).times(PARAMS.inPerTick),
-                    new DualNum<Time>(new double[]{
+                    new DualNum<Time>(new double[] {
                             (rightFrontPosVel.position - lastRightFrontPos),
                             rightFrontPosVel.velocity,
-                    }).times(PARAMS.inPerTick)
-            ));
+                    }).times(PARAMS.inPerTick)));
 
-            lastLeftFrontPos = (int)leftFrontPosVel.position;
-            lastLeftBackPos = (int)leftBackPosVel.position;
-            lastRightBackPos = (int)rightBackPosVel.position;
-            lastRightFrontPos = (int)rightFrontPosVel.position;
+            lastLeftFrontPos = (int) leftFrontPosVel.position;
+            lastLeftBackPos = (int) leftBackPosVel.position;
+            lastRightBackPos = (int) rightBackPosVel.position;
+            lastRightFrontPos = (int) rightFrontPosVel.position;
 
             lastHeading = heading;
 
             pose = pose.plus(new Twist2d(
                     twist.line.value(),
-                    headingDelta
-            ));
+                    headingDelta));
 
             return twist.velocity().value();
         }
@@ -223,7 +219,8 @@ public final class MecanumDrive {
         }
 
         // TODO: make sure your config has motors with these names (or change them)
-        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
+        // see
+        // https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBack = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightBack = hardwareMap.get(DcMotorEx.class, "rightRear");
@@ -239,9 +236,9 @@ public final class MecanumDrive {
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
-        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
+        // see
+        // https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         lazyImu = new LazyImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
 
@@ -250,9 +247,11 @@ public final class MecanumDrive {
         GoBildaPinpointDriverRR odo = hardwareMap.get(GoBildaPinpointDriverRR.class, "odo");
         odo.setOffsets(-102.6, -113.5);
         odo.setEncoderResolution(GoBildaPinpointDriverRR.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriverRR.EncoderDirection.FORWARD, GoBildaPinpointDriverRR.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriverRR.EncoderDirection.FORWARD,
+                GoBildaPinpointDriverRR.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
         localizer = new PinpointLocalizer(odo);
+        localizer.setPose(pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
@@ -319,8 +318,7 @@ public final class MecanumDrive {
 
             PoseVelocity2dDual<Time> command = new HolonomicController(
                     PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
-                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
-            )
+                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain)
                     .compute(txWorldTarget, localizer.getPose(), robotVelRobot);
             driveCommandWriter.write(new DriveCommandMessage(command));
 
@@ -334,8 +332,7 @@ public final class MecanumDrive {
             double rightBackPower = feedforward.compute(wheelVels.rightBack) / voltage;
             double rightFrontPower = feedforward.compute(wheelVels.rightFront) / voltage;
             mecanumCommandWriter.write(new MecanumCommandMessage(
-                    voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
-            ));
+                    voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower));
 
             leftFront.setPower(leftFrontPower);
             leftBack.setPower(leftBackPower);
@@ -413,8 +410,7 @@ public final class MecanumDrive {
 
             PoseVelocity2dDual<Time> command = new HolonomicController(
                     PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
-                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
-            )
+                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain)
                     .compute(txWorldTarget, localizer.getPose(), robotVelRobot);
             driveCommandWriter.write(new DriveCommandMessage(command));
 
@@ -427,8 +423,7 @@ public final class MecanumDrive {
             double rightBackPower = feedforward.compute(wheelVels.rightBack) / voltage;
             double rightFrontPower = feedforward.compute(wheelVels.rightFront) / voltage;
             mecanumCommandWriter.write(new MecanumCommandMessage(
-                    voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
-            ));
+                    voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower));
 
             leftFront.setPower(feedforward.compute(wheelVels.leftFront) / voltage);
             leftBack.setPower(feedforward.compute(wheelVels.leftBack) / voltage);
@@ -460,14 +455,13 @@ public final class MecanumDrive {
     public PoseVelocity2d updatePoseEstimate() {
         PoseVelocity2d vel = localizer.update();
         poseHistory.add(localizer.getPose());
-        
+
         while (poseHistory.size() > 100) {
             poseHistory.removeFirst();
         }
 
         estimatedPoseWriter.write(new PoseMessage(localizer.getPose()));
-        
-        
+
         return vel;
     }
 
@@ -495,12 +489,9 @@ public final class MecanumDrive {
                 new TrajectoryBuilderParams(
                         1e-6,
                         new ProfileParams(
-                                0.25, 0.1, 1e-2
-                        )
-                ),
+                                0.25, 0.1, 1e-2)),
                 beginPose, 0.0,
                 defaultTurnConstraints,
-                defaultVelConstraint, defaultAccelConstraint
-        );
+                defaultVelConstraint, defaultAccelConstraint);
     }
 }

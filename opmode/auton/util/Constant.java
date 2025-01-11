@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.util;
 
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 
 public class Constant {
     public double X_POS;
@@ -13,8 +14,12 @@ public class Constant {
         HEADING = h;
     }
 
-    public Vector2d getV() {
+    public Vector2d getVec() {
         return new Vector2d(X_POS, Y_POS);
+    }
+
+    public Pose2d getPose(){
+        return new Pose2d(X_POS, Y_POS, HEADING);
     }
 
     public double getH() {
