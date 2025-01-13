@@ -67,7 +67,7 @@ public final class MecanumDrive {
         public double trackWidthTicks = 12.5;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.065;
+        public double kS = 0.2;
         public double kV = 0.14;
         public double kA = 0.04;
 
@@ -347,6 +347,8 @@ public final class MecanumDrive {
             p.put("xError", error.position.x);
             p.put("yError", error.position.y);
             p.put("headingError (deg)", Math.toDegrees(error.heading.toDouble()));
+            p.put("expected velocity x", txWorldTarget.velocity().value().linearVel.x);
+            p.put("expected velocity y", txWorldTarget.velocity().value().linearVel.y);
 
             // only draw when active; only one drive action should be active at a time
             Canvas c = p.fieldOverlay();

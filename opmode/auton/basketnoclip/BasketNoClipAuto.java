@@ -284,7 +284,6 @@ public class BasketNoClipAuto extends LinearOpMode{
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
-            drive.updatePoseEstimate();
             telescope.update();
             pivot.update();
             commandMachine.run(busy);
