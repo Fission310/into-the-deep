@@ -52,9 +52,12 @@ public class BasketNoClipConstants {
             Math.toRadians(140)
     );
     public static Constant BASKET_1 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 16,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 2,
-            Math.toRadians(41)
+//            -TILE_LENGTH * 2.5 - BOT_WIDTH + 12.5,
+//            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 5.75,
+//            Math.toRadians(30)
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 19.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 6.0,
+            Math.toRadians(45)
     );
     public static Constant BASKET_2 = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 16,
