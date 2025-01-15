@@ -15,11 +15,11 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
-import org.firstinspires.ftc.teamcode.opmode.auton.basket.BasketConstantsDash;
 
 @Autonomous(name = "BasketNoClipAuto", preselectTeleOp = "Main")
 public class BasketNoClipAuto extends LinearOpMode{
-    private boolean busy = false;
+    private boolean driveBusy = false;
+    private boolean commandBusy = false;
     private BasketNoClipConstants basketNoClipConstants = BasketNoClipConstantsDash.basketNoClipConstants;
     private Action basket1Action;
     private Action farSampleAction;
@@ -40,11 +40,11 @@ public class BasketNoClipAuto extends LinearOpMode{
     private Command basket4Command = () -> followActionAsync(basket4Action);
 
     private void followActionAsync(Action action){
-        busy = true;
+        driveBusy = true;
         Thread thread = new Thread(
                 () -> {
                     Actions.runBlocking(action);
-                    busy = false;
+                    driveBusy = false;
                 }
         );
         thread.start();
@@ -55,9 +55,10 @@ public class BasketNoClipAuto extends LinearOpMode{
     private Telescope telescope;
     private Wrist wrist;
 
-    private Command busyTrue = () -> busy = true;
-    private Command busyFalse = () -> busy = false;
+    private Command commandBusyTrue = () -> commandBusy = true;
+    private Command commandBusyFalse = () -> commandBusy = false;
     private Command release = () -> claw.release();
+    private Command stopIntake = () -> claw.stop();
     private Command grab = () -> claw.grab();
     private Command pivotFront = () -> pivot.frontPos();
     private Command pivotClip = () -> pivot.clipPos();
@@ -82,42 +83,55 @@ public class BasketNoClipAuto extends LinearOpMode{
 
     private CommandSequence basket1Sequence = new CommandSequence()
             .addCommand(basket1Command)
-            .addWaitCommand(2.0)
-            .addCommand(pivotBasket)
-            .addCommand(telescopeBasket)
-            .addCommand(wristBasket)
-            .addCommand(release)
-            .addWaitCommand(0.3)
+            .addCommand(pivotDownIntake)
+            .addWaitCommand(0.1)
             .addCommand(wristIntakeScore)
-            .addWaitCommand(0.4)
-            .addCommand(telescopeFront)
-            .addWaitCommand(0.1)
-            .addCommand(wristRetract)
-            .addWaitCommand(0.1)
-            .addCommand(pivotFront)
+            .addCommand(grab)
+            .addWaitCommand(1)
+//            .addCommand(commandBusyTrue)
+//            .addWaitCommand(2.0)
+//            .addCommand(wristIntakeScore)
+//            .addCommand(pivotBasket)
+//            .addCommand(telescopeBasket)
+//            .addWaitCommand(2)
+//            .addCommand(wristBasket)
+//            .addWaitCommand(0.1)
+//            .addCommand(release)
+//            .addWaitCommand(0.2)
+//            .addCommand(wristIntakeScore)
+//            .addWaitCommand(0.4)
+//            .addCommand(stopIntake)
+//            .addCommand(telescopeFront)
+//            .addWaitCommand(0.1)
+//            .addCommand(wristRetract)
+//            .addWaitCommand(0.1)
+//            .addCommand(pivotFront)
+//            .addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(farSampleCommand)
-            .addCommand(busyTrue)
-            .addWaitCommand(0.3)
-            .addCommand(pivotUpIntake)
             .addCommand(telescopeIntake)
             .addWaitCommand(1)
-            .addCommand(wristIntakeScore)
-            .addWaitCommand(1)
-            .addCommand(pivotGrabIntake)
-            .addWaitCommand(0.3)
-            .addCommand(grab)
-            .addWaitCommand(1)
-            .addCommand(pivotUpIntake)
-            .addCommand(wristRetract)
-            .addWaitCommand(0.1)
-            .addCommand(telescopeRetract)
-            .addWaitCommand(0.51)
-            .addCommand(pivotUp)
-            .addWaitCommand(1)
-            .addCommand(busyFalse)
+//            .addCommand(commandBusyTrue)
+//            .addWaitCommand(0.3)
+//            .addCommand(pivotUpIntake)
+//            .addCommand(telescopeIntake)
+//            .addWaitCommand(1)
+//            .addCommand(wristIntakeScore)
+//            .addWaitCommand(1)
+//            .addCommand(pivotGrabIntake)
+//            .addWaitCommand(0.3)
+//            .addCommand(grab)
+//            .addWaitCommand(1)
+//            .addCommand(pivotUpIntake)
+//            .addCommand(wristRetract)
+//            .addWaitCommand(0.1)
+//            .addCommand(telescopeRetract)
+//            .addWaitCommand(0.51)
+//            .addCommand(pivotUp)
+//            .addWaitCommand(1)
+//            .addCommand(commandBusyFalse)
             .build();
     private CommandSequence basket2Sequence = new CommandSequence()
             .addCommand(basket2Command)
@@ -210,7 +224,7 @@ public class BasketNoClipAuto extends LinearOpMode{
     private CommandSequence doNothing = new CommandSequence().build();
     private AutoCommandMachine commandMachine = new AutoCommandMachine()
             .addCommandSequence(basket1Sequence)
-//            .addCommandSequence(farSampleSequence)
+            .addCommandSequence(farSampleSequence)
 //            .addCommandSequence(basket2Sequence)
 //            .addCommandSequence(centerSampleSequence)
 //            .addCommandSequence(basket3Sequence)
@@ -292,7 +306,7 @@ public class BasketNoClipAuto extends LinearOpMode{
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
             telescope.update();
             pivot.update();
-            commandMachine.run(busy);
+            commandMachine.run(driveBusy || commandBusy);
             telemetry.addData("drive x", drive.localizer.getPose().position.x);
             telemetry.addData("drive y", drive.localizer.getPose().position.y);
             telemetry.update();
