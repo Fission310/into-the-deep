@@ -56,6 +56,7 @@ public class Scoring extends Mechanism {
 
     private Command release = () -> claw.release();
     private Command grab = () -> claw.grab();
+    private Command stopIntake = () -> claw.stop();
     private Command pivotFront = () -> pivot.frontPos();
     private Command pivotUpIntake = () -> pivot.intakeUpPos();
     private Command pivotDownIntake = () -> pivot.intakeDownPos();
@@ -83,6 +84,7 @@ public class Scoring extends Mechanism {
             .addWaitCommand(BASKET_RELEASE_WAIT)
             .addCommand(wristIntakeScore)
             .addWaitCommand(BASKET_OUTTAKE_WAIT)
+            .addCommand(stopIntake)
             .addCommand(telescopeFront)
             .addWaitCommand(BASKET_RETRACT_WAIT)
             .addCommand(wristRetract)
@@ -237,7 +239,6 @@ public class Scoring extends Mechanism {
                 break;
             case FRONT:
                 drivetrain.setNormal();
-                claw.stop();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE_SHORT)) {
                     frontIntakeShort.trigger();
                 }

@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 @Config
 public class Drivetrain extends Mechanism {
 
-    public static double SLOW_SPEED = 0.4;
-    public static double SLOW_TURN = 0.6;
+    public static double SLOW_SPEED = 0.6;
+    public static double SLOW_TURN = 0.4;
     public static double NORMAL_SPEED = 1;
     private double speed = NORMAL_SPEED;
     private double turnSpeed = NORMAL_SPEED;
