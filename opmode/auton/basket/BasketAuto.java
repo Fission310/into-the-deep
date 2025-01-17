@@ -1,24 +1,19 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.basket.setup;
-
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
+package org.firstinspires.ftc.teamcode.opmode.auton.basket;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
-import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.fasterxml.jackson.databind.JsonSerializer;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.stuyfission.fissionlib.command.AutoCommandMachine;
 import com.stuyfission.fissionlib.command.Command;
@@ -27,13 +22,12 @@ import com.stuyfission.fissionlib.command.CommandSequence;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Autonomous(name = "BasketAuto", preselectTeleOp = "Main")
 public class BasketAuto extends LinearOpMode{
     private boolean reflect;
     private boolean busy = false;
-    private Color color;
     private BasketConstants basketConstants;
-    public BasketAuto(Color color, BasketConstants basketConstants){
-        this.color = color;
+    public BasketAuto(BasketConstants basketConstants){
         this.basketConstants = basketConstants;
     }
 
@@ -247,7 +241,6 @@ public class BasketAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        reflect = color == Color.BLUE;
         claw = new Claw(this);
         drive = new SampleMecanumDrive(hardwareMap);
         telescope = new Telescope(this);
@@ -264,8 +257,8 @@ public class BasketAuto extends LinearOpMode{
         TrajectoryAccelerationConstraint accelConstraint = SampleMecanumDrive.getAccelerationConstraint(30);
 
         basketTraj = drive
-                 .trajectorySequenceBuilder(reflect(BasketConstantsDash.START_POSE))
-                 .lineToConstantHeading(reflect(basketConstants.FORWARD.getV()))
+                 .trajectorySequenceBuilder(BasketConstantsDash.START_POSE)
+                 .lineToConstantHeading(basketConstants.FORWARD.getV())
                  .lineToLinearHeading(vecToPose(basketConstants.BASKET))
                  .build();
 //        chamberTraj = drive
@@ -274,31 +267,31 @@ public class BasketAuto extends LinearOpMode{
 //                .setReversed(true)
 //                .build();
         farTraj = drive
-                .trajectorySequenceBuilder(reflect(basketTraj.end()))
-                .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), reflect(basketConstants.FAR_SAMPLE.getH()), velConstraint, accelConstraint)
+                .trajectorySequenceBuilder(basketTraj.end())
+                .splineToLinearHeading(vecToPose(basketConstants.FAR_SAMPLE), basketConstants.FAR_SAMPLE.getH(), velConstraint, accelConstraint)
                 .build();
         basket1Traj = drive
-                .trajectorySequenceBuilder(reflect(farTraj.end()))
+                .trajectorySequenceBuilder(farTraj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_1), velConstraint, accelConstraint)
                 .build();
         centerTraj = drive
-                .trajectorySequenceBuilder(reflect(basket1Traj.end()))
+                .trajectorySequenceBuilder(basket1Traj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.CENTER_SAMPLE))
                 .build();
         basket2Traj = drive
-                .trajectorySequenceBuilder(reflect(centerTraj.end()))
+                .trajectorySequenceBuilder(centerTraj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_2))
                 .build();
         wallTraj = drive
-                .trajectorySequenceBuilder(reflect(basket2Traj.end()))
+                .trajectorySequenceBuilder(basket2Traj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.WALL_SAMPLE))
                 .build();
         basket3Traj = drive
-                .trajectorySequenceBuilder(reflect(wallTraj.end()))
+                .trajectorySequenceBuilder(wallTraj.end())
                 .lineToSplineHeading(vecToPose(basketConstants.BASKET_3))
                 .build();
 
-        drive.setPoseEstimate(reflect(BasketConstantsDash.START_POSE));
+        drive.setPoseEstimate(BasketConstantsDash.START_POSE);
 
         while(opModeInInit() && !isStopRequested()){
             drive.update();
@@ -308,7 +301,7 @@ public class BasketAuto extends LinearOpMode{
             pivot.update();
         }
 
-        drive.setPoseEstimate(reflect(BasketConstantsDash.START_POSE));
+        drive.setPoseEstimate(BasketConstantsDash.START_POSE);
 
         waitForStart();
 
@@ -324,30 +317,8 @@ public class BasketAuto extends LinearOpMode{
 
         Thread.sleep(500);
     }
-
-    public Pose2d reflect(Pose2d pose) {
-        if (reflect) {
-            return new Pose2d(pose.getX() * -1, pose.getY() * -1, reflect(pose.getHeading()));
-        }
-        return pose;
-    }
-
-    public Vector2d reflect(Vector2d vector) {
-        if (reflect) {
-            return new Vector2d(vector.getX() * -1, vector.getY() * -1);
-        }
-        return vector;
-    }
-
-    public double reflect(double theta) {
-        if (reflect) {
-            return Math.toRadians(180) + theta;
-        }
-        return theta;
-    }
-
     public Pose2d vecToPose(Constant constant){
-        Vector2d vec = reflect(constant.getV());
-        return new Pose2d(vec.getX(), vec.getY(), reflect(constant.getH()));
+        Vector2d vec = constant.getV();
+        return new Pose2d(vec.getX(), vec.getY(), constant.getH());
     }
 }
