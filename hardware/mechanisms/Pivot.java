@@ -29,6 +29,7 @@ public class Pivot extends Mechanism {
     public static int INTAKE_UP_POS = 270;
     public static int INTAKE_DOWN_POS = 270;
     public static int INTAKE_GRAB_POS = -30;
+    public static int AUTO_INTAKE_GRAB_POS = -30;
     public static int WALL_POS = 800;
     public static int BASKET_POS = 2200;
     public static int AUTO_BASKET_POS = 2400;
@@ -139,6 +140,10 @@ public class Pivot extends Mechanism {
 
     public void intakeGrabPos() {
         setTarget(INTAKE_GRAB_POS);
+    }
+
+    public void autoIntakeGrabPos() {
+        setTarget(AUTO_INTAKE_GRAB_POS);
     }
 
     public void wallPos() {
