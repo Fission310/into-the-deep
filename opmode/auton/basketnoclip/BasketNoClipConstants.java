@@ -25,23 +25,23 @@ public class BasketNoClipConstants {
 //            -TILE_LENGTH * 2.5 - BOT_WIDTH + 12.5,
 //            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 5.75,
 //            Math.toRadians(30)
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 23.0,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 5.0,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 22.0,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 6.0,
             Math.toRadians(45)
     );
     public static Constant FAR_SAMPLE = new Constant(
 //            -TILE_LENGTH * 2.5 + BOT_WIDTH / 2 + 4,
 //            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 1,
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 25.0,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 26.0,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 3.0,
-            UP - Math.toRadians(3)
+            UP - Math.toRadians(5)
     );
     public static Constant FAR_SAMPLE_INT = new Constant(
 //            -TILE_LENGTH * 2.5 + BOT_WIDTH / 2 + 4 + 5,
 //            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 1 + 3,
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 25.0 - 0.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 3.0 - 0.5,
-            UP + Math.toRadians(18)
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 25.0 - 2,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 3.0 + 1,
+            UP - Math.toRadians(15.5)
     );
     public static Constant CENTER_SAMPLE = new Constant(
             -TILE_LENGTH * 2.5 + BOT_WIDTH / 2 - 5 + 2,
