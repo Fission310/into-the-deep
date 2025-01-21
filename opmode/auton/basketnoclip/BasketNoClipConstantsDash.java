@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auton.basketnoclip;
 import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 @Config
 public class BasketNoClipConstantsDash {

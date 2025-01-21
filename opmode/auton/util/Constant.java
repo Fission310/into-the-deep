@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.util;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 public class Constant {
     public double X_POS;
