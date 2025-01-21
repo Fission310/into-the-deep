@@ -16,11 +16,11 @@ public class Wrist extends Mechanism {
     private Servo wristServoRight;
     private Servo wristServoLeft;
 
-    public static double[][] INTAKE_POS = { { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 }, { 0.6, 0.6 } };
+    public static double[][] INTAKE_POS = { { 0.63, 0.63 }, { 0.63, 0.63 }, { 0.63, 0.63 }, { 0.63, 0.63 } };
     public static double[][] INTAKE_DOWN_POS = { { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
     public static double[][] FRONT_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] WALL_POS = { { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
-    public static double[][] BASKET_POS = { { 0.3, 0.3 }, { 0.3, 0.3 }, { 0.3, 0.3 }, { 0.3, 0.3 } };
+    public static double[][] BASKET_POS = { { 0.33, 0.33 }, { 0.33, 0.33 }, { 0.33, 0.33 }, { 0.33, 0.33 } };
     public static double[][] CLIP_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] CLIP_SCORE_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] BACK_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };

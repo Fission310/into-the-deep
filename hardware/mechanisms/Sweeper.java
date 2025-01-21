@@ -12,11 +12,17 @@ public class Sweeper extends Mechanism {
     private Servo sweeperServo;
 
     public static boolean extended = false;
-    public static double RETRACT_POS = 0.93;
-    public static double EXTEND_POS = 0.05;
+    public static double RETRACT_POS = 0.92;
+    public static double EXTEND_POS = 0.13;
 
     public Sweeper(LinearOpMode opMode) {
         this.opMode = opMode;
+    }
+
+    @Override
+    public void init(HardwareMap hwMap) {
+        sweeperServo = hwMap.get(Servo.class, "sweeperServo");
+        retractPos();
     }
 
     public void extendPos() {
@@ -35,11 +41,6 @@ public class Sweeper extends Mechanism {
         } else {
             extendPos();
         }
-    }
-
-    @Override
-    public void init(HardwareMap hwMap) {
-        sweeperServo = hwMap.get(Servo.class, "sweeperServo");
     }
 
     @Override
