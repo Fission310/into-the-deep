@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.stuyfission.fissionlib.util.Mechanism;
-import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 public class Drivetrain extends Mechanism {
@@ -19,7 +19,7 @@ public class Drivetrain extends Mechanism {
     private double speed = NORMAL_SPEED;
     private double turnSpeed = NORMAL_SPEED;
 
-    private MecanumDrive drivetrain;
+    private SampleMecanumDrive drivetrain;
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -42,20 +42,19 @@ public class Drivetrain extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        drivetrain = new MecanumDrive(hwMap, new Pose2d(new Vector2d(0, 0), 0));
-        // run w/o encoders?
+        drivetrain = new SampleMecanumDrive(hwMap);
+        drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
-        drivetrain.setDrivePowers(
-                new PoseVelocity2d(
-                        new Vector2d(
+        drivetrain.setWeightedDrivePower(
+                new Pose2d(
                         -gamepad.left_stick_y * speed,
-                        -gamepad.left_stick_x * speed),
+                        -gamepad.left_stick_x * speed,
                         -gamepad.right_stick_x * turnSpeed));
 
-        drivetrain.updatePoseEstimate();
+        drivetrain.update();
 
     }
 

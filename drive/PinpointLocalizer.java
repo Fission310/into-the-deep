@@ -1,61 +1,58 @@
 package org.firstinspires.ftc.teamcode.drive;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.localization.Localizer;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.util.GoBildaPinpointDriver;
 
 public class PinpointLocalizer implements Localizer {
-    public GoBildaPinpointDriverRR odo;
+    private GoBildaPinpointDriver odo;
 
-    public PinpointLocalizer(GoBildaPinpointDriverRR odo) {
+    public PinpointLocalizer(GoBildaPinpointDriver odo) {
         this.odo = odo;
     }
 
     @NonNull
     @Override
-    public Pose2d getPose() {
+    public Pose2d getPoseEstimate() {
         Pose2D pose = odo.getPosition();
-
-        Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-        telemetry.addData("odo pos x", odo.getPosition().getX(DistanceUnit.INCH));
-        telemetry.addData("odo pos y", odo.getPosition().getY(DistanceUnit.INCH));
-        telemetry.update();
-        return new Pose2d(pose.getX(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH),
+        return new Pose2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH),
                 pose.getHeading(AngleUnit.RADIANS));
     }
 
     @Override
-    public void setPose(@NonNull Pose2d pose2d) {
-        odo.setPosition(new Pose2D(DistanceUnit.INCH, pose2d.position.x, pose2d.position.y, AngleUnit.RADIANS,
-                pose2d.heading.toDouble()));
+    public void setPoseEstimate(@NonNull Pose2d pose2d) {
+        odo.setPosition(new Pose2D(DistanceUnit.INCH, pose2d.getY(), pose2d.getX(), AngleUnit.RADIANS, pose2d.getHeading()));
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
         odo.update();
-        telemetry.addData("set odo pos x", pose2d.position.x);
-        telemetry.addData("set odo pos y", pose2d.position.y);
+        telemetry.addData("set odo pos x", pose2d.getX());
+        telemetry.addData("set odo pos y", pose2d.getY());
         telemetry.addData("odo pos x", odo.getPosition().getX(DistanceUnit.INCH));
         telemetry.addData("odo pos y", odo.getPosition().getY(DistanceUnit.INCH));
         telemetry.update();
     }
 
+    @Nullable
     @Override
-    public PoseVelocity2d update() {
+    public Pose2d getPoseVelocity() {
+        Pose2D pose = odo.getVelocity();
+        return new Pose2d(-pose.getY(DistanceUnit.INCH), pose.getX(DistanceUnit.INCH),
+                pose.getHeading(AngleUnit.RADIANS));
+    }
+
+    @Override
+    public void update() {
         odo.update();
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.addData("odo v x", odo.getVelocity().getX(DistanceUnit.INCH));
-        t.addData("odo v y", odo.getVelocity().getY(DistanceUnit.INCH));
+        t.addData("status", odo.getDeviceStatus());
         t.update();
-        Pose2D pose = odo.getVelocity();
-        return new PoseVelocity2d(new Vector2d(pose.getX(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH)),
-                pose.getHeading(AngleUnit.RADIANS));
-
     }
 }
