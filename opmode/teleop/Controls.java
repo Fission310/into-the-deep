@@ -18,4 +18,5 @@ public class Controls {
     public static final Input TELE_RETRACT = Input.LEFT_TRIGGER;
     public static final Input WRIST_LEFT = Input.DPAD_LEFT;
     public static final Input WRIST_RIGHT = Input.DPAD_RIGHT;
+    public static final Input CLIMB_1 = Input.DPAD_DOWN;
 }

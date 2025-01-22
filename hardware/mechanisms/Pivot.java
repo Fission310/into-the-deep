@@ -216,6 +216,8 @@ public class Pivot extends Mechanism {
             basketPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP)) {
             clipPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
+            upPos();
         }
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("pivot encoder reading", getPosition());

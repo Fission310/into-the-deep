@@ -24,6 +24,7 @@ public class Wrist extends Mechanism {
     public static double[][] CLIP_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] CLIP_SCORE_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] BACK_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
+    public static double[][] CLIMB_POS = { { 0.5, 0.5 }, { 0.5, 0.5 }, { 0.5, 0.5 }, { 0.5, 0.5 } };
     public static double[][] currPos;
 
     private int wristPos = 0;
@@ -98,6 +99,11 @@ public class Wrist extends Mechanism {
 
     public void backPos() {
         currPos = BACK_POS;
+        setPosition();
+    }
+
+    public void climbPos() {
+        currPos = CLIMB_POS;
         setPosition();
     }
 

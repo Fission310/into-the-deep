@@ -18,7 +18,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class Telescope extends Mechanism {
     public static int ABIT = 20;
-
     public static int AUTO_INTAKE_FAR_POS = 450;
     public static int AUTO_INTAKE_CENTER_POS = 450;
     public static int AUTO_INTAKE_WALL_POS = 700;
@@ -35,14 +34,16 @@ public class Telescope extends Mechanism {
     public static int CLIP_SCORE = 100;
     public static int CLIP_EXTENSION = 330;
     public static int BACK_POS = 300;
+    public static int CLIMB_UP_1_POS = 330;
+    public static int CLIMB_DOWN_POS = 100;
     public static int MAX_EXTENSION = 670;
     public static int MIN_LENGTH = 15;
     public static double DOWN_MULTIPLIER = 0.15;
     public static double INCH_PER_TICK = 0.0369;
-
     public static double VERTICAL_KP = 0.007;
     public static double HORIZONTAL_KP = 0.002;
 
+    public static boolean climbPressed = false;
     public static double target = 0;
     public static double power = 0;
     public static double POWER_MULTIPLIER = 1;
@@ -166,6 +167,16 @@ public class Telescope extends Mechanism {
         setTarget(BACK_POS);
     }
 
+    public void climbPos() {
+        controller = verticalController;
+        if(!climbPressed){
+            setTarget(CLIMB_UP_1_POS);
+        } else{
+            setTarget(CLIMB_DOWN_POS);
+        }
+        climbPressed = !climbPressed;
+    }
+
     public double getLength() {
         return MIN_LENGTH + getPosition() * INCH_PER_TICK;
     }
@@ -216,6 +227,8 @@ public class Telescope extends Mechanism {
             basketPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP)) {
             clipPos();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
+           climbPos();
         }
     }
 }

@@ -30,6 +30,7 @@ public class Scoring extends Mechanism {
         BASKET,
         UP,
         CLIP,
+        CLIMB,
     }
 
     public static double BASKET_OUTTAKE_WAIT = 0.4;
@@ -178,6 +179,12 @@ public class Scoring extends Mechanism {
         telescope.clipPos();
         wrist.clipPos();
     }
+    public void goClimb() {
+        state = State.CLIMB;
+        pivot.upPos();
+        telescope.climbPos();
+        wrist.climbPos();
+    }
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -222,6 +229,8 @@ public class Scoring extends Mechanism {
             goLowBasket();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP) && state != State.CLIP) {
             goClip();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1) && state != State.CLIMB && state != State.INTAKE) {
+            goClimb();
         }
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP)) {
@@ -256,6 +265,9 @@ public class Scoring extends Mechanism {
             case INTAKE:
                 drivetrain.setIntake();
                 wrist.loop(gamepad);
+                if(claw.isSample()){
+                    retractTele.trigger();
+                }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
                         retractTele.trigger();
@@ -299,7 +311,9 @@ public class Scoring extends Mechanism {
                     scoreClip.trigger();
                 }
                 break;
-
+            case CLIMB:
+                drivetrain.setScore();
+                break;
         }
     }
 }
