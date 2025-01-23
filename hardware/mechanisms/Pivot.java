@@ -40,6 +40,8 @@ public class Pivot extends Mechanism {
     public static int BACK_POS = 3800;
     public static int UP_POS = 1850;
     public static int HIGHEST = 2230;
+    public static int CLIMB_UP_POS = 2350;
+    public static int CLIMB_DOWN_POS = -500;
     public static int TICKS_PER_REV = 8192;
 
     public static double KP = 0.00065;
@@ -47,6 +49,7 @@ public class Pivot extends Mechanism {
     public static double KD = 0.00005;
     public static double KF = 0.005;
 
+    public static boolean climbPressed = false;
     public static double target = 0;
     public static double actualTarget = 0;
     public static double power = 0;
@@ -181,7 +184,13 @@ public class Pivot extends Mechanism {
     public void upPos() {
         setTarget(UP_POS);
     }
+    public void climbUpPos() {
+        setTarget(CLIMB_UP_POS);
+    }
 
+    public void climbDownPos() {
+        setTarget(CLIMB_DOWN_POS);
+    }
     public void setTarget(double target) {
         Pivot.target = target;
         Pivot.actualTarget = target;
@@ -217,7 +226,13 @@ public class Pivot extends Mechanism {
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP)) {
             clipPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
-            upPos();
+            if(!climbPressed){
+                climbUpPos();
+            }
+            else{
+                climbDownPos();
+            }
+            climbPressed = !climbPressed;
         }
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("pivot encoder reading", getPosition());

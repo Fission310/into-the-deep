@@ -12,11 +12,11 @@ public class Controls {
     public static final Input PIVOT_FRONT = Input.A; // CROSS
     public static final Input PIVOT_WALL = Input.X; // SQUARE
     public static final Input PIVOT_BASKET = Input.Y; // TRIANGLE
-    public static final Input PIVOT_LOW_BASKET = Input.DPAD_UP;
+    public static final Input PIVOT_LOW_BASKET = Input.NONE;
     public static final Input PIVOT_CLIP = Input.B; // CIRCLE
     public static final Input TELE_EXTEND = Input.RIGHT_TRIGGER;
     public static final Input TELE_RETRACT = Input.LEFT_TRIGGER;
     public static final Input WRIST_LEFT = Input.DPAD_LEFT;
     public static final Input WRIST_RIGHT = Input.DPAD_RIGHT;
-    public static final Input CLIMB_1 = Input.DPAD_DOWN;
+    public static final Input CLIMB_1 = Input.DPAD_UP;
 }

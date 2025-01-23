@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo.Direction;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
@@ -110,6 +111,14 @@ public class Wrist extends Mechanism {
     public void updatePos(double left, double right) {
         wristServoRight.setPosition(right);
         wristServoLeft.setPosition(left);
+    }
+
+    @Override
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addData("wrist pos", currPos[0][0]);
+        telemetry.addData("servo left", wristServoLeft.getPosition());
+        telemetry.addData("servo right", wristServoRight.getPosition());
+        telemetry.update();
     }
 
     @Override

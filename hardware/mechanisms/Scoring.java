@@ -30,7 +30,8 @@ public class Scoring extends Mechanism {
         BASKET,
         UP,
         CLIP,
-        CLIMB,
+        CLIMB_UP,
+        CLIMB_DOWN,
     }
 
     public static double BASKET_OUTTAKE_WAIT = 0.4;
@@ -46,7 +47,10 @@ public class Scoring extends Mechanism {
     public static double CLIP_CLIP_WAIT = 0.3;
     public static double CLIP_RELEASE_WAIT = 0.1;
     public static double CLIP_PIVOT_WAIT = 0.1;
+    public static double CLIMB_UP_WAIT = 0.5;
+    public static double CLIMB_DOWN_WAIT = 0.5;
 
+    private boolean climbPressed = false;
     private boolean frontClicked = false;
     private boolean dpadClicked = false;
     private boolean rightStickClicked = false;
@@ -65,6 +69,8 @@ public class Scoring extends Mechanism {
     private Command telescopeFront = () -> telescope.frontPos();
     private Command telescopeIntake = () -> telescope.frontIntakePos();
     private Command telescopeIntakeShort = () -> telescope.frontIntakeShortPos();
+    private Command telescopeClimbDownPos = () -> telescope.climbDownPos();
+    private Command telescopeClimbUpPos = () -> telescope.climbUpPos();
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
@@ -72,9 +78,12 @@ public class Scoring extends Mechanism {
     private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristClipScore = () -> wrist.clipScorePos();
+    private Command wristClimbPos = () -> wrist.climbPos();
     private Command wristRetract = () -> wrist.frontPos();
     private Command pivotUp = () -> pivot.upPos();
     private Command pivotClipDown = () -> pivot.clipDownPos();
+    private Command pivotClimbDownPos = () -> pivot.climbDownPos();
+    private Command pivotClimbUpPos = () -> pivot.climbUpPos();
     private Command telescopeScoreClip = () -> telescope.clipScorePos();
 
     private CommandSequence intakeGrab = new CommandSequence()
@@ -144,6 +153,20 @@ public class Scoring extends Mechanism {
             .addCommand(setStateUp)
             .build();
 
+    public CommandSequence climbUp = new CommandSequence()
+        .addCommand(pivotClimbUpPos)
+        .addWaitCommand(CLIMB_UP_WAIT)
+        .addCommand(telescopeClimbUpPos)
+        .addCommand(wristClimbPos)
+        .build();
+
+    public CommandSequence climbDown = new CommandSequence()
+        .addCommand(telescopeClimbDownPos)
+        .addWaitCommand(CLIMB_DOWN_WAIT)
+        .addCommand(pivotClimbDownPos)
+        .addCommand(wristClimbPos)
+        .build();
+
     public void goFront() {
         state = State.FRONT;
         pivot.frontPos();
@@ -179,12 +202,6 @@ public class Scoring extends Mechanism {
         telescope.clipPos();
         wrist.clipPos();
     }
-    public void goClimb() {
-        state = State.CLIMB;
-        pivot.upPos();
-        telescope.climbPos();
-        wrist.climbPos();
-    }
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -199,6 +216,7 @@ public class Scoring extends Mechanism {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("state", state);
+        wrist.telemetry(telemetry);
         telemetry.update();
     }
 
@@ -229,9 +247,21 @@ public class Scoring extends Mechanism {
             goLowBasket();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP) && state != State.CLIP) {
             goClip();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1) && state != State.CLIMB && state != State.INTAKE) {
-            goClimb();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1) && state != State.INTAKE) {
+            if(state != State.CLIMB_DOWN && state != State.CLIMB_UP && !climbPressed){
+                state = State.CLIMB_UP;
+                climbUp.trigger();
+            }
+            else if(state == State.CLIMB_UP && !climbPressed){
+                state = State.CLIMB_DOWN;
+                climbDown.trigger();
+            }
+            climbPressed = true;
         }
+        if(!GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)){
+            climbPressed = false;
+        }
+
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP)) {
             if (!rightStickClicked) {
@@ -252,6 +282,7 @@ public class Scoring extends Mechanism {
                 drivetrain.setNormal();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE_SHORT)) {
                     frontIntakeShort.trigger();
+                    sweeper.extendPos();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     if (!frontClicked) {
@@ -311,7 +342,10 @@ public class Scoring extends Mechanism {
                     scoreClip.trigger();
                 }
                 break;
-            case CLIMB:
+            case CLIMB_UP:
+                drivetrain.setScore();
+                break;
+            case CLIMB_DOWN:
                 drivetrain.setScore();
                 break;
         }
