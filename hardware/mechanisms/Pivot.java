@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -21,33 +22,33 @@ import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 
 @Config
 public class Pivot extends Mechanism {
-    public static int ABIT = 20;
-    public static int RESET_POS = 200;
+    public static int ABIT = 1;
+    public static int RESET_POS = 9;
     public static int RESET_WAIT = 1;
-    public static int INIT_POS = 1200;
-    public static int FRONT_POS = 100;
-    public static int INTAKE_UP_POS = 270;
-    public static int INTAKE_DOWN_POS = 270;
-    public static int INTAKE_GRAB_POS = -30;
-    public static int AUTO_INTAKE_GRAB_POS = -30;
-    public static int WALL_POS = 800;
-    public static int BASKET_POS = 2200;
-    public static int AUTO_BASKET_POS = 2400;
-    public static int CLIP_POS = 1650;
-    public static int CLIP_DOWN_POS = 1500;
-    public static int CLIP_BACK_POS = 2400;
-    public static int CLIP_BACK_DOWN_POS = 2450;
-    public static int BACK_POS = 3800;
+    public static int INIT_POS =  53;
+    public static int FRONT_POS = 4;
+    public static int INTAKE_UP_POS = 12;
+    public static int INTAKE_DOWN_POS = 12;
+    public static int INTAKE_GRAB_POS = -2;
+    public static int AUTO_INTAKE_GRAB_POS = -2;
+    public static int WALL_POS = 35;
+    public static int BASKET_POS = 97;
+    public static int AUTO_BASKET_POS = 105;
+    public static int CLIP_POS = 73;
+    public static int CLIP_DOWN_POS = 66;
+    public static int CLIP_BACK_POS = 105;
+    public static int CLIP_BACK_DOWN_POS = 108;
+    public static int BACK_POS = 167;
     public static int UP_POS = 1850;
-    public static int HIGHEST = 2230;
-    public static int CLIMB_UP_POS = 2350;
-    public static int CLIMB_DOWN_POS = -500;
-    public static int TICKS_PER_REV = 8192;
+    public static int HIGHEST = 81;
+    public static int CLIMB_UP_POS = 103;
+    public static int CLIMB_DOWN_POS = -22;
+    public static int TICKS_PER_REV = 360;
 
-    public static double KP = 0.00065;
-    public static double KI = 0.05;
-    public static double KD = 0.00005;
-    public static double KF = 0.005;
+    public static double KP = 0.0000286;
+    public static double KI = 0.0022;
+    public static double KD = 0.0000022;
+    public static double KF = 0.00022;
 
     public static boolean climbPressed = false;
     public static double target = 0;
@@ -59,6 +60,7 @@ public class Pivot extends Mechanism {
     private Telescope telescope;
 
     private final DcMotorEx[] motors = new DcMotorEx[2];
+    private AnalogInput encoder;
 
     private VoltageSensor voltage;
 
@@ -86,6 +88,7 @@ public class Pivot extends Mechanism {
         controller.setFeedForward(FeedForward.ROTATIONAL);
         controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
 
+        encoder = hwMap.get(AnalogInput.class, "pivotEncoder");
         motors[0] = hwMap.get(DcMotorEx.class, "pivotLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "pivotRightMotor");
 
@@ -197,14 +200,14 @@ public class Pivot extends Mechanism {
     }
 
     public double getPosition() {
-        return motors[0].getCurrentPosition();
+        return encoder.getVoltage() / 3.2 * 360;
     }
 
     public void update() {
         controller.setPIDF(KP, KI, KD, KF);
         controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
         controller.setLength(telescope.getLength());
-        power = controller.calculate(getPosition(), target) / voltage.getVoltage() * 12.0;
+        power = controller.calculate((getPosition() + TICKS_PER_REV) % TICKS_PER_REV, target) / voltage.getVoltage() * 12.0;
         Telemetry t = FtcDashboard.getInstance().getTelemetry();
         t.addData("pivot power", power);
         t.addData("pivot position", getPosition());
