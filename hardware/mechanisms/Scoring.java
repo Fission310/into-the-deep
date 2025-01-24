@@ -154,18 +154,18 @@ public class Scoring extends Mechanism {
             .build();
 
     public CommandSequence climbUp = new CommandSequence()
-        .addCommand(pivotClimbUpPos)
-        .addWaitCommand(CLIMB_UP_WAIT)
-        .addCommand(telescopeClimbUpPos)
-        .addCommand(wristClimbPos)
-        .build();
+            .addCommand(pivotClimbUpPos)
+            .addWaitCommand(CLIMB_UP_WAIT)
+            .addCommand(telescopeClimbUpPos)
+            .addCommand(wristClimbPos)
+            .build();
 
     public CommandSequence climbDown = new CommandSequence()
-        .addCommand(telescopeClimbDownPos)
-        .addWaitCommand(CLIMB_DOWN_WAIT)
-        .addCommand(pivotClimbDownPos)
-        .addCommand(wristClimbPos)
-        .build();
+            .addCommand(telescopeClimbDownPos)
+            .addWaitCommand(CLIMB_DOWN_WAIT)
+            .addCommand(pivotClimbDownPos)
+            .addCommand(wristClimbPos)
+            .build();
 
     public void goFront() {
         state = State.FRONT;
@@ -248,20 +248,18 @@ public class Scoring extends Mechanism {
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP) && state != State.CLIP) {
             goClip();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1) && state != State.INTAKE) {
-            if(state != State.CLIMB_DOWN && state != State.CLIMB_UP && !climbPressed){
+            if (state != State.CLIMB_DOWN && state != State.CLIMB_UP && !climbPressed) {
                 state = State.CLIMB_UP;
                 climbUp.trigger();
-            }
-            else if(state == State.CLIMB_UP && !climbPressed){
+            } else if (state == State.CLIMB_UP && !climbPressed) {
                 state = State.CLIMB_DOWN;
                 climbDown.trigger();
             }
             climbPressed = true;
         }
-        if(!GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)){
+        if (!GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
             climbPressed = false;
         }
-
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP)) {
             if (!rightStickClicked) {
@@ -296,9 +294,9 @@ public class Scoring extends Mechanism {
             case INTAKE:
                 drivetrain.setIntake();
                 wrist.loop(gamepad);
-                if(claw.isSample()){
-                    retractTele.trigger();
-                }
+                //if (claw.isSample()) {
+                //    retractTele.trigger();
+                //}
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
                         retractTele.trigger();
