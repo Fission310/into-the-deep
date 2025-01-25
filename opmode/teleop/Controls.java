@@ -6,7 +6,7 @@ public class Controls {
     public static final Input WRIST_DOWN = Input.DPAD_DOWN;
     public static final Input WRIST_UP = Input.DPAD_UP;
     public static final Input GRAB = Input.RIGHT_BUMPER;
-    public static final Input RELEASE = Input.LEFT_BUMPER;
+    public static final Input OUTTAKE = Input.LEFT_BUMPER;
     public static final Input INTAKE_SHORT = Input.DPAD_DOWN;
     public static final Input INTAKE = Input.A; // CROSS
     public static final Input PIVOT_FRONT = Input.A; // CROSS

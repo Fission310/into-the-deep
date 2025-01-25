@@ -16,36 +16,33 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
-public class Claw extends Mechanism {
-    public static double GRAB_POWER = 1;
-    public static double RELEASE_POWER = -0.8;
+public class Intake extends Mechanism {
+    public static double INTAKE_POWER = 1;
+    public static double OUTTAKE_POWER = -0.8;
     public static int SAMPLE = 20;
     public static int RED = 10;
     public static int BLUE = 10;
     public static int YELLOW = 10;
 
-    private CRServo clawServo;
+    private CRServo intakeServo;
     private SampleSensor sampleSensor;
 
-    public Claw(LinearOpMode opMode) {
+    public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
         sampleSensor = new SampleSensor(opMode, "SampleSensor", SAMPLE);
     }
 
-    public void grab() {
+    public void intake() {
         stop();
-        clawServo.setPower(GRAB_POWER);
-        Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.addData("claw power", clawServo.getPower());
-        t.update();
+        intakeServo.setPower(INTAKE_POWER);
     }
 
-    public void release() {
-        clawServo.setPower(RELEASE_POWER);
+    public void outtake() {
+        intakeServo.setPower(OUTTAKE_POWER);
     }
 
     public void stop() {
-        clawServo.setPower(0);
+        intakeServo.setPower(0);
     }
 
     public boolean isSample(){
@@ -54,8 +51,8 @@ public class Claw extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        clawServo = hwMap.get(CRServo.class, "clawServo");
-        clawServo.setDirection(Direction.REVERSE);
+        intakeServo = hwMap.get(CRServo.class, "intakeServo");
+        intakeServo.setDirection(Direction.REVERSE);
 
         sampleSensor.init(hwMap);
     }
@@ -63,9 +60,9 @@ public class Claw extends Mechanism {
     @Override
     public void loop(Gamepad gamepad) {
         if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
-            grab();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
-            release();
+            intake();
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+            outtake();
         }
     }
     private class SampleSensor extends Mechanism {

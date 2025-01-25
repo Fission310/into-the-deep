@@ -15,7 +15,7 @@ import com.stuyfission.fissionlib.util.Mechanism;
 @Config
 public class Scoring extends Mechanism {
     private Drivetrain drivetrain = new Drivetrain(opMode); // OPMODE NULL HERE
-    private Claw claw = new Claw(opMode);
+    private Intake intake = new Intake(opMode);
     private Telescope telescope = new Telescope(opMode);
     public Pivot pivot = new Pivot(opMode, telescope);
     private Wrist wrist = new Wrist(opMode);
@@ -59,9 +59,9 @@ public class Scoring extends Mechanism {
         this.opMode = opMode;
     }
 
-    private Command release = () -> claw.release();
-    private Command grab = () -> claw.grab();
-    private Command stopIntake = () -> claw.stop();
+    private Command intakeCommand = () -> intake.intake();
+    private Command outakeCommand = () -> intake.outtake();
+    private Command stopIntake = () -> intake.stop();
     private Command pivotFront = () -> pivot.frontPos();
     private Command pivotUpIntake = () -> pivot.intakeUpPos();
     private Command pivotDownIntake = () -> pivot.intakeDownPos();
@@ -87,11 +87,11 @@ public class Scoring extends Mechanism {
     private Command telescopeScoreClip = () -> telescope.clipScorePos();
 
     private CommandSequence intakeGrab = new CommandSequence()
-            .addCommand(grab)
+            .addCommand(intakeCommand)
             .build();
 
     private CommandSequence scoreBasket = new CommandSequence()
-            .addCommand(release)
+            .addCommand(outakeCommand)
             .addWaitCommand(BASKET_RELEASE_WAIT)
             .addCommand(wristIntakeScore)
             .addWaitCommand(BASKET_OUTTAKE_WAIT)
@@ -110,7 +110,7 @@ public class Scoring extends Mechanism {
             .addWaitCommand(CLIP_PIVOT_WAIT)
             .addCommand(wristClipScore)
             .addWaitCommand(CLIP_CLIP_WAIT)
-            .addCommand(release)
+            .addCommand(outakeCommand)
             .addWaitCommand(CLIP_RELEASE_WAIT)
             .addCommand(pivotFront)
             .addCommand(wristRetract)
@@ -124,7 +124,7 @@ public class Scoring extends Mechanism {
             .addWaitCommand(PIVOT_DOWN_WAIT)
             .addCommand(wristIntakeScore)
             .addCommand(setStateIntake)
-            .addCommand(release)
+            .addCommand(outakeCommand)
             .build();
 
     public CommandSequence frontIntakeShort = new CommandSequence()
@@ -134,13 +134,13 @@ public class Scoring extends Mechanism {
             .addWaitCommand(PIVOT_DOWN_WAIT)
             .addCommand(wristIntakeScore)
             .addCommand(setStateIntake)
-            .addCommand(release)
+            .addCommand(outakeCommand)
             .build();
 
     public CommandSequence grabIntake = new CommandSequence()
             .addCommand(pivotGrabIntake)
             .addWaitCommand(PIVOT_GRAB_WAIT)
-            .addCommand(grab)
+            .addCommand(intakeCommand)
             .build();
 
     public CommandSequence retractTele = new CommandSequence()
@@ -206,7 +206,7 @@ public class Scoring extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
-        claw.init(hwMap);
+        intake.init(hwMap);
         pivot.init(hwMap);
         telescope.init(hwMap);
         wrist.init(hwMap);
@@ -240,7 +240,7 @@ public class Scoring extends Mechanism {
             frontClicked = true;
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL) && state != State.WALL) {
             goWall();
-            claw.release();
+            intake.outtake();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET) && state != State.BASKET) {
             goBasket();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_LOW_BASKET) && state != State.BASKET) {
@@ -274,7 +274,7 @@ public class Scoring extends Mechanism {
             case UP:
                 sweeper.retractPos();
                 drivetrain.setNormal();
-                claw.stop();
+                intake.stop();
                 break;
             case FRONT:
                 drivetrain.setNormal();
@@ -294,9 +294,9 @@ public class Scoring extends Mechanism {
             case INTAKE:
                 drivetrain.setIntake();
                 wrist.loop(gamepad);
-                //if (claw.isSample()) {
-                //    retractTele.trigger();
-                //}
+                // if (claw.isSample()) {
+                // retractTele.trigger();
+                // }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
                         retractTele.trigger();
@@ -307,36 +307,36 @@ public class Scoring extends Mechanism {
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
                     grabIntake.trigger();
-                    claw.grab();
+                    intake.intake();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_DOWN)) {
                     wrist.down();
                     pivot.intakeUpPos();
-                    claw.grab();
+                    intake.intake();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_UP)) {
                     wrist.intakePos();
                     pivot.intakeGrabPos();
-                    claw.grab();
+                    intake.intake();
                 }
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
-                    claw.release();
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+                    intake.outtake();
                     pivot.intakeDownPos();
                 }
                 break;
             case WALL:
                 drivetrain.setIntake();
-                claw.loop(gamepad);
+                intake.loop(gamepad);
                 break;
             case BASKET:
                 drivetrain.setScore();
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     scoreBasket.trigger();
                 }
                 break;
             case CLIP:
                 drivetrain.setScore();
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.RELEASE)) {
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     scoreClip.trigger();
                 }
                 break;

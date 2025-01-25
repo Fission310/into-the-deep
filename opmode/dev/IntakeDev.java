@@ -3,21 +3,21 @@ package org.firstinspires.ftc.teamcode.opmode.dev;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.Claw;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Intake;
 
-@TeleOp(name = "Claw Dev", group = "dev")
-public class ClawDev extends LinearOpMode {
+@TeleOp(name = "Intake Dev", group = "dev")
+public class IntakeDev extends LinearOpMode {
 
-    private Claw claw = new Claw(this);
+    private Intake intake = new Intake(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        claw.init(hardwareMap);
+        intake.init(hardwareMap);
 
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()) {
-            claw.loop(gamepad1);
+            intake.loop(gamepad1);
         }
     }
 }
