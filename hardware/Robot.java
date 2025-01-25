@@ -23,6 +23,7 @@ public class Robot extends Mechanism {
     @Override
     public void telemetry(Telemetry telemetry) {
         scoring.telemetry(telemetry);
+        telemetry.update();
     }
 
     @Override

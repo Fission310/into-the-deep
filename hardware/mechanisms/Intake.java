@@ -29,7 +29,7 @@ public class Intake extends Mechanism {
 
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
-        sampleSensor = new SampleSensor(opMode, "SampleSensor", SAMPLE);
+        sampleSensor = new SampleSensor(opMode, "intakeSensor", SAMPLE);
     }
 
     public void intake() {
@@ -58,6 +58,11 @@ public class Intake extends Mechanism {
     }
 
     @Override
+    public void telemetry(Telemetry telemetry) {
+        sampleSensor.telemetry(telemetry);
+    }
+
+    @Override
     public void loop(Gamepad gamepad) {
         if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
             intake();
@@ -65,6 +70,7 @@ public class Intake extends Mechanism {
             outtake();
         }
     }
+
     private class SampleSensor extends Mechanism {
 
         private ColorRangeSensor sensor;
@@ -94,19 +100,16 @@ public class Intake extends Mechanism {
             int green = sensor.green();
             int yellow = (red + green) / 2;
             boolean isSample = red > RED || blue > BLUE || yellow > YELLOW;
-            Telemetry t = FtcDashboard.getInstance().getTelemetry();
-            t.addData(name + " red", red);
-            t.addData(name + " blue", blue);
-            t.addData(name + " yellow", yellow);
-            t.addData(name + " isSample", isSample);
-            t.update();
             return isSample;
         }
 
         @Override
         public void telemetry(Telemetry telemetry) {
+            telemetry.addData(name + " red", sensor.red());
+            telemetry.addData(name + " blue", sensor.blue());
+            telemetry.addData(name + " yellow", sensor.green());
+            telemetry.addData(name + " isSample", isSampleColor());
             telemetry.addData(name + " dist", sensor.getDistance(DistanceUnit.MM));
-            telemetry.update();
         }
     }
 }

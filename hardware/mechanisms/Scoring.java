@@ -216,8 +216,12 @@ public class Scoring extends Mechanism {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("state", state);
+        drivetrain.telemetry(telemetry);
+        intake.telemetry(telemetry);
+        pivot.telemetry(telemetry);
+        telescope.telemetry(telemetry);
         wrist.telemetry(telemetry);
-        telemetry.update();
+        sweeper.telemetry(telemetry);
     }
 
     @Override

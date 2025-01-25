@@ -116,9 +116,8 @@ public class Wrist extends Mechanism {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("wrist pos", currPos[0][0]);
-        telemetry.addData("servo left", wristServoLeft.getPosition());
-        telemetry.addData("servo right", wristServoRight.getPosition());
-        telemetry.update();
+        telemetry.addData("wrist servo left", wristServoLeft.getPosition());
+        telemetry.addData("wrist servo right", wristServoRight.getPosition());
     }
 
     @Override

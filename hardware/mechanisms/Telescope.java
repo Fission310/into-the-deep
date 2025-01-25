@@ -80,13 +80,6 @@ public class Telescope extends Mechanism {
         frontPos();
     }
 
-    public void telemetry(Telemetry telemetry) {
-        telemetry.addData("Current Position", getPosition());
-        telemetry.addData("Target", target);
-        telemetry.addData("Power", power);
-        telemetry.update();
-    }
-
     public void autoSampleDropPos() {
         controller = horizontalController;
         setTarget(AUTO_SAMPLE_DROP);
@@ -208,12 +201,13 @@ public class Telescope extends Mechanism {
         }
         motors[0].setPower(power);
         motors[1].setPower(power);
-        Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.addData("Telescope Power", power);
-        t.addData("Telescope position", getPosition());
-        t.addData("Telescope target", target);
-        t.addData("Telescope length", getLength());
-        t.update();
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addData("telescope position", getPosition());
+        telemetry.addData("telescope target", target);
+        telemetry.addData("telescope power", power);
+        telemetry.addData("telescope length", getLength());
     }
 
     @Override

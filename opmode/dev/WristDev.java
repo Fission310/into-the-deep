@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.dev;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.stuyfission.fissionlib.input.GamepadStatic;
@@ -21,6 +23,8 @@ public class WristDev extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         wrist.init(hardwareMap);
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
@@ -36,6 +40,9 @@ public class WristDev extends LinearOpMode {
             } else if (GamepadStatic.isButtonPressed(gamepad1, Input.DPAD_UP)) {
                 wrist.updatePos(LEFT_POS, RIGHT_POS);
             }
+
+            wrist.telemetry(telemetry);
+            telemetry.update();
         }
     }
 }

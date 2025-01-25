@@ -25,7 +25,7 @@ public class Pivot extends Mechanism {
     public static int ABIT = 1;
     public static int RESET_POS = 9;
     public static int RESET_WAIT = 1;
-    public static int INIT_POS =  53;
+    public static int INIT_POS = 53;
     public static int FRONT_POS = 4;
     public static int INTAKE_UP_POS = 12;
     public static int INTAKE_DOWN_POS = 12;
@@ -64,18 +64,6 @@ public class Pivot extends Mechanism {
 
     private VoltageSensor voltage;
 
-    private Command resetEncoders = () -> {
-        motors[0].setMode(RunMode.STOP_AND_RESET_ENCODER);
-        motors[1].setMode(RunMode.STOP_AND_RESET_ENCODER);
-        motors[0].setMode(RunMode.RUN_WITHOUT_ENCODER);
-        motors[1].setMode(RunMode.RUN_WITHOUT_ENCODER);
-    };
-
-    private CommandSequence waitToReset = new CommandSequence()
-            .addWaitCommand(RESET_WAIT)
-            .addCommand(resetEncoders)
-            .build();
-
     public Pivot(LinearOpMode opMode, Telescope telescope) {
         this.opMode = opMode;
         this.telescope = telescope;
@@ -105,13 +93,6 @@ public class Pivot extends Mechanism {
         motors[1].setDirection(DcMotorEx.Direction.FORWARD);
 
         frontPos();
-    }
-
-    public void telemetry(Telemetry telemetry) {
-        // telemetry.addData("Current Position", getPosition());
-        // telemetry.addData("Target", target);
-        // telemetry.addData("Power", power);
-        telemetry.update();
     }
 
     public void moveIntakeUp() {
@@ -187,6 +168,7 @@ public class Pivot extends Mechanism {
     public void upPos() {
         setTarget(UP_POS);
     }
+
     public void climbUpPos() {
         setTarget(CLIMB_UP_POS);
     }
@@ -194,6 +176,7 @@ public class Pivot extends Mechanism {
     public void climbDownPos() {
         setTarget(CLIMB_DOWN_POS);
     }
+
     public void setTarget(double target) {
         Pivot.target = target;
         Pivot.actualTarget = target;
@@ -207,14 +190,17 @@ public class Pivot extends Mechanism {
         controller.setPIDF(KP, KI, KD, KF);
         controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
         controller.setLength(telescope.getLength());
-        power = controller.calculate((getPosition() + TICKS_PER_REV) % TICKS_PER_REV, target) / voltage.getVoltage() * 12.0;
-        Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.addData("pivot power", power);
-        t.addData("pivot position", getPosition());
-        t.addData("target position", target);
-        t.update();
+        power = controller.calculate((getPosition() + TICKS_PER_REV) % TICKS_PER_REV, target) / voltage.getVoltage()
+                * 12.0;
         motors[0].setPower(power);
         motors[1].setPower(power);
+    }
+
+    @Override
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addData("pivot position", getPosition());
+        telemetry.addData("pivot target position", target);
+        telemetry.addData("pivot power", power);
     }
 
     @Override
@@ -229,16 +215,12 @@ public class Pivot extends Mechanism {
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP)) {
             clipPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
-            if(!climbPressed){
+            if (!climbPressed) {
                 climbUpPos();
-            }
-            else{
+            } else {
                 climbDownPos();
             }
             climbPressed = !climbPressed;
         }
-        Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.addData("pivot encoder reading", getPosition());
-        t.update();
     }
 }

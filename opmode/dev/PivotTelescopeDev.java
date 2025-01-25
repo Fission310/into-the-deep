@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.dev;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,11 +19,17 @@ public class PivotTelescopeDev extends LinearOpMode {
         pivot.init(hardwareMap);
         telescope.init(hardwareMap);
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()) {
             pivot.loop(gamepad1);
             telescope.loop(gamepad1);
+
+            pivot.telemetry(telemetry);
+            telescope.telemetry(telemetry);
+            telemetry.update();
         }
     }
 }
