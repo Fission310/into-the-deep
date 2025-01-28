@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "BasketNoClipAuto", preselectTeleOp = "Main")
 public class BasketNoClipAuto extends LinearOpMode {
-    private boolean driveBusy = false;
     private boolean commandBusy = false;
     private BasketNoClipConstants basketNoClipConstants = BasketNoClipConstantsDash.basketNoClipConstants;
     private TrajectorySequence basket1Traj;
@@ -81,8 +80,8 @@ public class BasketNoClipAuto extends LinearOpMode {
 
     private CommandSequence basket1Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
-            .addCommand(intakeCommand)
             .addCommand(basket1Command)
+            /*.addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(1.2)
             .addCommand(pivotBasket)
@@ -101,15 +100,14 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristIntakeScore)*/
             .addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(farSampleCommand)
-            .addCommand(commandBusyTrue)
-            .addWaitCommand(1)
+            /*.addWaitCommand(1)
             .addCommand(telescopeFar)
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeScore)
@@ -118,14 +116,14 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)
+            .addCommand(pivotInit)*/
             .addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence basket2Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
-            .addCommand(intakeCommand)
             .addCommand(basket2Command)
+            /*.addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.6)
             .addCommand(pivotBasket)
@@ -144,14 +142,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristIntakeScore)*/
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence centerSampleSequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(centerSampleCommand)
-            .addCommand(commandBusyTrue)
-            .addWaitCommand(1)
+            /*.addWaitCommand(1)
             .addCommand(telescopeCenter)
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeScore)
@@ -160,13 +157,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)
+            .addCommand(pivotInit)*/
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence basket3Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
-            .addCommand(intakeCommand)
             .addCommand(basket3Command)
+            /*.addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.6)
             .addCommand(pivotBasket)
@@ -185,13 +182,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristIntakeScore)*/
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence wallSampleSequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(wallSampleCommand)
-            .addWaitCommand(2.2)
+            /*.addWaitCommand(2.2)
             .addCommand(telescopeWall)
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeScore)
@@ -199,13 +196,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(1)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)
+            .addCommand(pivotInit)*/
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence basket4Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
-            .addCommand(intakeCommand)
             .addCommand(basket4Command)
+            /*.addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(2.0)
             .addCommand(pivotBasket)
@@ -224,7 +221,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristIntakeScore)*/
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence resetPivot = new CommandSequence()
@@ -322,9 +319,10 @@ public class BasketNoClipAuto extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
+            drive.update();
             telescope.update();
             pivot.update();
-            commandMachine.run(driveBusy || commandBusy);
+            commandMachine.run(drive.isBusy() || commandBusy);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();

@@ -48,7 +48,7 @@ public class Scoring extends Mechanism {
     public static double CLIP_RELEASE_WAIT = 0.1;
     public static double CLIP_PIVOT_WAIT = 0.1;
     public static double CLIMB_UP_WAIT = 0.5;
-    public static double CLIMB_DOWN_WAIT = 0.5;
+    public static double CLIMB_DOWN_WAIT = 10;
 
     private boolean climbPressed = false;
     private boolean frontClicked = false;
@@ -70,7 +70,8 @@ public class Scoring extends Mechanism {
     private Command telescopeIntake = () -> telescope.frontIntakePos();
     private Command telescopeIntakeShort = () -> telescope.frontIntakeShortPos();
     private Command telescopeClimbDownPos = () -> telescope.climbDownPos();
-    private Command telescopeClimbUpPos = () -> telescope.climbUpPos();
+    private Command telescopeClimbUpPos = () -> telescope.climbUpPos1();
+    private Command telescopeClimbUpPos2 = () -> telescope.climbUpPos2();
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
@@ -154,6 +155,7 @@ public class Scoring extends Mechanism {
             .build();
 
     public CommandSequence climbUp = new CommandSequence()
+            .addCommand(stopIntake)
             .addCommand(pivotClimbUpPos)
             .addWaitCommand(CLIMB_UP_WAIT)
             .addCommand(telescopeClimbUpPos)
@@ -161,10 +163,10 @@ public class Scoring extends Mechanism {
             .build();
 
     public CommandSequence climbDown = new CommandSequence()
-            .addCommand(telescopeClimbDownPos)
+            .addCommand(telescopeClimbUpPos2)
             .addWaitCommand(CLIMB_DOWN_WAIT)
+            .addCommand(telescopeClimbDownPos)
             .addCommand(pivotClimbDownPos)
-            .addCommand(wristClimbPos)
             .build();
 
     public void goFront() {
@@ -217,7 +219,7 @@ public class Scoring extends Mechanism {
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("state", state);
         drivetrain.telemetry(telemetry);
-        intake.telemetry(telemetry);
+        //intake.telemetry(telemetry);
         pivot.telemetry(telemetry);
         telescope.telemetry(telemetry);
         wrist.telemetry(telemetry);
@@ -278,7 +280,7 @@ public class Scoring extends Mechanism {
             case UP:
                 sweeper.retractPos();
                 drivetrain.setNormal();
-                intake.stop();
+                intake.intake();
                 break;
             case FRONT:
                 drivetrain.setNormal();

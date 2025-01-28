@@ -28,13 +28,14 @@ public class Telescope extends Mechanism {
     public static int INTAKE_POS = 450;
     public static int INTAKE_SHORT_POS = 80;
     public static int WALL_POS = 100;
-    public static int BASKET_POS = 750;
+    public static int BASKET_POS = 780;
     public static int LOW_BASKET_POS = 220;
     public static int CLIP_POS = 330;
     public static int CLIP_SCORE = 100;
     public static int CLIP_EXTENSION = 330;
     public static int BACK_POS = 300;
     public static int CLIMB_UP_1_POS = 500;
+    public static int CLIMB_UP_2_POS = 200;
     public static int CLIMB_DOWN_POS = -500;
     public static int MAX_EXTENSION = 670;
     public static int MIN_LENGTH = 15;
@@ -160,9 +161,14 @@ public class Telescope extends Mechanism {
         setTarget(BACK_POS);
     }
 
-    public void climbUpPos() {
+    public void climbUpPos1() {
         controller = verticalController;
         setTarget(CLIMB_UP_1_POS);
+    }
+
+    public void climbUpPos2() {
+        controller = verticalController;
+        setTarget(CLIMB_UP_2_POS);
     }
 
     public void climbDownPos() {
@@ -223,7 +229,7 @@ public class Telescope extends Mechanism {
             clipPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
             if(!climbPressed){
-                climbUpPos();
+                climbUpPos1();
             }
             else{
                 climbDownPos();
