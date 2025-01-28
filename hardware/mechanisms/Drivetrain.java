@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.stuyfission.fissionlib.util.Mechanism;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
 
 @Config
 public class Drivetrain extends Mechanism {
@@ -18,7 +20,7 @@ public class Drivetrain extends Mechanism {
     private double speed = NORMAL_SPEED;
     private double turnSpeed = NORMAL_SPEED;
 
-    private SampleMecanumDrive drivetrain;
+    private Follower drivetrain;
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -41,17 +43,16 @@ public class Drivetrain extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        drivetrain = new SampleMecanumDrive(hwMap);
-        drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Constants.setConstants(FConstants.class, LConstants.class);
+        drivetrain = new Follower(hwMap);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
-        drivetrain.setWeightedDrivePower(
-                new Pose2d(
+        drivetrain.setTeleOpMovementVectors(
                         -gamepad.left_stick_y * speed,
                         -gamepad.left_stick_x * speed,
-                        -gamepad.right_stick_x * turnSpeed));
+                        -gamepad.right_stick_x * turnSpeed, true);
 
         drivetrain.update();
 

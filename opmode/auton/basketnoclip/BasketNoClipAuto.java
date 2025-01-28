@@ -2,46 +2,46 @@ package org.firstinspires.ftc.teamcode.opmode.auton.basketnoclip;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.pathgen.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.stuyfission.fissionlib.command.AutoCommandMachine;
 import com.stuyfission.fissionlib.command.Command;
 import com.stuyfission.fissionlib.command.CommandSequence;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "BasketNoClipAuto", preselectTeleOp = "Main")
 public class BasketNoClipAuto extends LinearOpMode {
     private boolean commandBusy = false;
     private BasketNoClipConstants basketNoClipConstants = BasketNoClipConstantsDash.basketNoClipConstants;
-    private TrajectorySequence basket1Traj;
-    private TrajectorySequence farSampleTraj;
-    private TrajectorySequence farSampleIntTraj;
-    private TrajectorySequence basket2Traj;
-    private TrajectorySequence centerSampleTraj;
-    private TrajectorySequence centerSampleIntTraj;
-    private TrajectorySequence basket3Traj;
-    private TrajectorySequence wallSampleTraj;
-    private TrajectorySequence wallSampleIntTraj;
-    private TrajectorySequence basket4Traj;
+    private PathChain basket1Traj;
+    private PathChain farSampleTraj;
+    private PathChain farSampleIntTraj;
+    private PathChain basket2Traj;
+    private PathChain centerSampleTraj;
+    private PathChain centerSampleIntTraj;
+    private PathChain basket3Traj;
+    private PathChain wallSampleTraj;
+    private PathChain wallSampleIntTraj;
+    private PathChain basket4Traj;
 
-    private SampleMecanumDrive drive;
+    private Follower drive;
 
-    private Command basket1Command = () -> drive.followTrajectorySequenceAsync(basket1Traj);
-    private Command farSampleCommand = () -> drive.followTrajectorySequenceAsync(farSampleTraj);
-    private Command farSampleIntCommand = () -> drive.followTrajectorySequenceAsync(farSampleIntTraj);
-    private Command basket2Command = () -> drive.followTrajectorySequenceAsync(basket2Traj);
-    private Command centerSampleCommand = () -> drive.followTrajectorySequenceAsync(centerSampleTraj);
-    private Command centerSampleIntCommand = () -> drive.followTrajectorySequenceAsync(centerSampleIntTraj);
-    private Command basket3Command = () -> drive.followTrajectorySequenceAsync(basket3Traj);
-    private Command wallSampleCommand = () -> drive.followTrajectorySequenceAsync(wallSampleTraj);
-    private Command wallSampleIntCommand = () -> drive.followTrajectorySequenceAsync(wallSampleIntTraj);
-    private Command basket4Command = () -> drive.followTrajectorySequenceAsync(basket4Traj);
+    private Command basket1Command = () -> drive.followPath(basket1Traj, true);
+    private Command farSampleCommand = () -> drive.followPath(farSampleTraj, true);
+    private Command farSampleIntCommand = () -> drive.followPath(farSampleIntTraj, true);
+    private Command basket2Command = () -> drive.followPath(basket2Traj, true);
+    private Command centerSampleCommand = () -> drive.followPath(centerSampleTraj, true);
+    private Command centerSampleIntCommand = () -> drive.followPath(centerSampleIntTraj, true);
+    private Command basket3Command = () -> drive.followPath(basket3Traj, true);
+    private Command wallSampleCommand = () -> drive.followPath(wallSampleTraj, true);
+    private Command wallSampleIntCommand = () -> drive.followPath(wallSampleIntTraj, true);
+    private Command basket4Command = () -> drive.followPath(basket4Traj, true);
 
     private Intake intake;
     private Pivot pivot;
@@ -245,7 +245,7 @@ public class BasketNoClipAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         intake = new Intake(this);
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new Follower(hardwareMap);
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
@@ -257,64 +257,74 @@ public class BasketNoClipAuto extends LinearOpMode {
         telescope.init(hardwareMap);
 
         basket1Traj = drive
-                .trajectorySequenceBuilder(BasketNoClipConstantsDash.START_POSE)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_1.getPose(), 5 * Math.PI / 4)
+                .pathBuilder()
+                //.addBezierCurve(BasketNoClipConstantsDash.START_POSE)
+                //.splineToLinearHeading(basketNoClipConstants.BASKET_1.getPose(), 5 * Math.PI / 4)
                 .build();
         farSampleTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.BASKET_1.getPose())
-                .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.FAR_SAMPLE.getPose(), Math.PI / 2)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.BASKET_1.getPose())
+                //.setReversed(false)
+                //.splineToLinearHeading(basketNoClipConstants.FAR_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         farSampleIntTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.FAR_SAMPLE.getPose())
-                .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.FAR_SAMPLE_INT.getPose(), Math.PI / 2)
+                .pathBuilder()
+                //.pathBuilder(basketNoClipConstants.FAR_SAMPLE.getPose())
+                //.setReversed(false)
+                //.splineToLinearHeading(basketNoClipConstants.FAR_SAMPLE_INT.getPose(), Math.PI / 2)
                 .build();
         basket2Traj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.FAR_SAMPLE_INT.getPose())
-                .setReversed(true)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_2.getPose(), 5 * Math.PI / 4)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.FAR_SAMPLE_INT.getPose())
+                //.setReversed(true)
+                //.splineToLinearHeading(basketNoClipConstants.BASKET_2.getPose(), 5 * Math.PI / 4)
                 .build();
         centerSampleTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.BASKET_2.getPose())
-                .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.CENTER_SAMPLE.getPose(), Math.PI / 2)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.BASKET_2.getPose())
+                //.setReversed(false)
+                //.splineToLinearHeading(basketNoClipConstants.CENTER_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         centerSampleIntTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.CENTER_SAMPLE.getPose())
-                .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.CENTER_SAMPLE_INT.getPose(), Math.PI / 2)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.CENTER_SAMPLE.getPose())
+                //.setReversed(false)
+                //.splineToLinearHeading(basketNoClipConstants.CENTER_SAMPLE_INT.getPose(), Math.PI / 2)
                 .build();
         basket3Traj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.CENTER_SAMPLE_INT.getPose())
-                .setReversed(true)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_3.getPose(), 5 * Math.PI / 4)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.CENTER_SAMPLE_INT.getPose())
+                //.setReversed(true)
+                //.splineToLinearHeading(basketNoClipConstants.BASKET_3.getPose(), 5 * Math.PI / 4)
                 .build();
         wallSampleTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.BASKET_3.getPose())
-                .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.BASKET_3.getPose())
+                //.setReversed(false)
+                //.splineToLinearHeading(basketNoClipConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         wallSampleIntTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.WALL_SAMPLE.getPose())
-                .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.WALL_SAMPLE_INT.getPose(), Math.PI / 2)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.WALL_SAMPLE.getPose())
+                //.setReversed(false)
+                //.splineToLinearHeading(basketNoClipConstants.WALL_SAMPLE_INT.getPose(), Math.PI / 2)
                 .build();
         basket4Traj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.WALL_SAMPLE.getPose())
-                .setReversed(true)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
+                .pathBuilder()
+                //.trajectorySequenceBuilder(basketNoClipConstants.WALL_SAMPLE.getPose())
+                //.setReversed(true)
+                //.splineToLinearHeading(basketNoClipConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
                 .build();
 
         while (opModeInInit() && !isStopRequested()) {
-            drive.updatePoseEstimate();
-            telemetry.addData("drive x", drive.getPoseEstimate().getX());
-            telemetry.addData("drive y", drive.getPoseEstimate().getY());
+            drive.update();
+            telemetry.addData("drive x", drive.getPose().getX());
+            telemetry.addData("drive y", drive.getPose().getY());
             telemetry.update();
             pivot.update();
         }
 
-        drive.setPoseEstimate(BasketNoClipConstantsDash.START_POSE);
+        drive.setPose(BasketNoClipConstantsDash.START_POSE);
 
         waitForStart();
 
@@ -323,8 +333,8 @@ public class BasketNoClipAuto extends LinearOpMode {
             telescope.update();
             pivot.update();
             commandMachine.run(drive.isBusy() || commandBusy);
-            telemetry.addData("drive x", drive.getPoseEstimate().getX());
-            telemetry.addData("drive y", drive.getPoseEstimate().getY());
+            telemetry.addData("drive x", drive.getPose().getX());
+            telemetry.addData("drive y", drive.getPose().getY());
             telemetry.update();
         }
 

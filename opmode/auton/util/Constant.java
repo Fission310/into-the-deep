@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.util;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Point;
 
 public class Constant {
     public double X_POS;
@@ -14,12 +14,12 @@ public class Constant {
         HEADING = h;
     }
 
-    public Vector2d getVec() {
-        return new Vector2d(X_POS, Y_POS);
+    public Point getVec() {
+        return new Point(X_POS, Y_POS);
     }
 
-    public Pose2d getPose(){
-        return new Pose2d(X_POS, Y_POS, HEADING);
+    public Pose getPose(){
+        return new Pose(X_POS, Y_POS, HEADING);
     }
 
     public double getH() {
