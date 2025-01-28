@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.stuyfission.fissionlib.command.AutoCommandMachine;
@@ -14,6 +15,9 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
+
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
 
 @Autonomous(name = "BasketNoClipAuto", preselectTeleOp = "Main")
 public class BasketNoClipAuto extends LinearOpMode {
@@ -250,6 +254,7 @@ public class BasketNoClipAuto extends LinearOpMode {
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
 
+        Constants.setConstants(FConstants.class, LConstants.class);
         intake.init(hardwareMap);
         pivot.init(hardwareMap);
         pivot.initPos();
@@ -258,7 +263,7 @@ public class BasketNoClipAuto extends LinearOpMode {
 
         basket1Traj = drive
                 .pathBuilder()
-                //.addBezierCurve(BasketNoClipConstantsDash.START_POSE)
+//                .addBezierCurve(BasketNoClipConstantsDash.START_POSE)
                 //.splineToLinearHeading(basketNoClipConstants.BASKET_1.getPose(), 5 * Math.PI / 4)
                 .build();
         farSampleTraj = drive
@@ -324,7 +329,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             pivot.update();
         }
 
-        drive.setPose(BasketNoClipConstantsDash.START_POSE);
+        drive.setStartingPose(BasketNoClipConstantsDash.START_POSE);
 
         waitForStart();
 
