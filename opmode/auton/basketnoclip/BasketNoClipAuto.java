@@ -26,7 +26,6 @@ public class BasketNoClipAuto extends LinearOpMode {
     private TrajectorySequence centerSampleIntTraj;
     private TrajectorySequence basket3Traj;
     private TrajectorySequence wallSampleTraj;
-    private TrajectorySequence wallSampleIntTraj;
     private TrajectorySequence basket4Traj;
 
     private SampleMecanumDrive drive;
@@ -39,7 +38,6 @@ public class BasketNoClipAuto extends LinearOpMode {
     private Command centerSampleIntCommand = () -> drive.followTrajectorySequenceAsync(centerSampleIntTraj);
     private Command basket3Command = () -> drive.followTrajectorySequenceAsync(basket3Traj);
     private Command wallSampleCommand = () -> drive.followTrajectorySequenceAsync(wallSampleTraj);
-    private Command wallSampleIntCommand = () -> drive.followTrajectorySequenceAsync(wallSampleIntTraj);
     private Command basket4Command = () -> drive.followTrajectorySequenceAsync(basket4Traj);
 
     private Intake intake;
@@ -181,7 +179,6 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence wallSampleSequence = new CommandSequence()
@@ -264,8 +261,7 @@ public class BasketNoClipAuto extends LinearOpMode {
                 .setReversed(false)
                 .splineToLinearHeading(BasketNoClipConstants.FAR_SAMPLE.getPose(), Math.PI / 2)
                 .build();
-        farSampleIntTraj = drive
-                .trajectorySequenceBuilder(farSampleTraj.end())
+        farSampleIntTraj = drive.trajectorySequenceBuilder(farSampleTraj.end())
                 .setReversed(false)
                 .splineToLinearHeading(BasketNoClipConstants.FAR_SAMPLE_INT.getPose(), Math.PI / 2)
                 .build();
@@ -294,13 +290,8 @@ public class BasketNoClipAuto extends LinearOpMode {
                 .setReversed(false)
                 .splineToLinearHeading(BasketNoClipConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
                 .build();
-        wallSampleIntTraj = drive
-                .trajectorySequenceBuilder(wallSampleTraj.end())
-                .setReversed(false)
-                .splineToLinearHeading(BasketNoClipConstants.WALL_SAMPLE_INT.getPose(), Math.PI / 2)
-                .build();
         basket4Traj = drive
-                .trajectorySequenceBuilder(wallSampleIntTraj.end())
+                .trajectorySequenceBuilder(wallSampleTraj.end())
                 .setReversed(true)
                 .splineToLinearHeading(BasketNoClipConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
                 .build();
