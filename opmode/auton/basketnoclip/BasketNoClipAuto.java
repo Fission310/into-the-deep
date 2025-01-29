@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Autonomous(name = "BasketNoClipAuto", preselectTeleOp = "Main")
 public class BasketNoClipAuto extends LinearOpMode {
     private boolean commandBusy = false;
-    private BasketNoClipConstants basketNoClipConstants = BasketNoClipConstantsDash.basketNoClipConstants;
     private TrajectorySequence basket1Traj;
     private TrajectorySequence farSampleTraj;
     private TrajectorySequence farSampleIntTraj;
@@ -81,7 +80,7 @@ public class BasketNoClipAuto extends LinearOpMode {
     private CommandSequence basket1Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(basket1Command)
-            /*.addCommand(intakeCommand)
+            .addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(1.2)
             .addCommand(pivotBasket)
@@ -100,14 +99,14 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)*/
+            .addCommand(wristIntakeScore)
             .addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence farSampleSequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(farSampleCommand)
-            /*.addWaitCommand(1)
+            .addWaitCommand(1)
             .addCommand(telescopeFar)
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeScore)
@@ -116,14 +115,14 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)*/
+            .addCommand(pivotInit)
             .addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence basket2Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(basket2Command)
-            /*.addCommand(intakeCommand)
+            .addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.6)
             .addCommand(pivotBasket)
@@ -142,13 +141,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)*/
+            .addCommand(wristIntakeScore)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence centerSampleSequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(centerSampleCommand)
-            /*.addWaitCommand(1)
+            .addWaitCommand(1)
             .addCommand(telescopeCenter)
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeScore)
@@ -157,13 +156,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)*/
+            .addCommand(pivotInit)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence basket3Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(basket3Command)
-            /*.addCommand(intakeCommand)
+            .addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.6)
             .addCommand(pivotBasket)
@@ -182,13 +181,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)*/
+            .addCommand(wristIntakeScore)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence wallSampleSequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(wallSampleCommand)
-            /*.addWaitCommand(2.2)
+            .addWaitCommand(2.2)
             .addCommand(telescopeWall)
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeScore)
@@ -196,13 +195,13 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(1)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)*/
+            .addCommand(pivotInit)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence basket4Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
             .addCommand(basket4Command)
-            /*.addCommand(intakeCommand)
+            .addCommand(intakeCommand)
             .addCommand(wristIntakeScore)
             .addWaitCommand(2.0)
             .addCommand(pivotBasket)
@@ -221,7 +220,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(pivotFront)
             .addWaitCommand(0.4)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)*/
+            .addCommand(wristIntakeScore)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence resetPivot = new CommandSequence()
@@ -257,53 +256,53 @@ public class BasketNoClipAuto extends LinearOpMode {
         telescope.init(hardwareMap);
 
         basket1Traj = drive
-                .trajectorySequenceBuilder(BasketNoClipConstantsDash.START_POSE)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_1.getPose(), 5 * Math.PI / 4)
+                .trajectorySequenceBuilder(BasketNoClipConstants.START.getPose())
+                .splineToLinearHeading(BasketNoClipConstants.BASKET_1.getPose(), 5 * Math.PI / 4)
                 .build();
         farSampleTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.BASKET_1.getPose())
+                .trajectorySequenceBuilder(basket1Traj.end())
                 .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.FAR_SAMPLE.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketNoClipConstants.FAR_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         farSampleIntTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.FAR_SAMPLE.getPose())
+                .trajectorySequenceBuilder(farSampleTraj.end())
                 .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.FAR_SAMPLE_INT.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketNoClipConstants.FAR_SAMPLE_INT.getPose(), Math.PI / 2)
                 .build();
         basket2Traj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.FAR_SAMPLE_INT.getPose())
+                .trajectorySequenceBuilder(farSampleIntTraj.end())
                 .setReversed(true)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_2.getPose(), 5 * Math.PI / 4)
+                .splineToLinearHeading(BasketNoClipConstants.BASKET_2.getPose(), 5 * Math.PI / 4)
                 .build();
         centerSampleTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.BASKET_2.getPose())
+                .trajectorySequenceBuilder(basket2Traj.end())
                 .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.CENTER_SAMPLE.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketNoClipConstants.CENTER_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         centerSampleIntTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.CENTER_SAMPLE.getPose())
+                .trajectorySequenceBuilder(centerSampleTraj.end())
                 .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.CENTER_SAMPLE_INT.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketNoClipConstants.CENTER_SAMPLE_INT.getPose(), Math.PI / 2)
                 .build();
         basket3Traj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.CENTER_SAMPLE_INT.getPose())
+                .trajectorySequenceBuilder(centerSampleIntTraj.end())
                 .setReversed(true)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_3.getPose(), 5 * Math.PI / 4)
+                .splineToLinearHeading(BasketNoClipConstants.BASKET_3.getPose(), 5 * Math.PI / 4)
                 .build();
         wallSampleTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.BASKET_3.getPose())
+                .trajectorySequenceBuilder(basket3Traj.end())
                 .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketNoClipConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         wallSampleIntTraj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.WALL_SAMPLE.getPose())
+                .trajectorySequenceBuilder(wallSampleTraj.end())
                 .setReversed(false)
-                .splineToLinearHeading(basketNoClipConstants.WALL_SAMPLE_INT.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketNoClipConstants.WALL_SAMPLE_INT.getPose(), Math.PI / 2)
                 .build();
         basket4Traj = drive
-                .trajectorySequenceBuilder(basketNoClipConstants.WALL_SAMPLE.getPose())
+                .trajectorySequenceBuilder(wallSampleIntTraj.end())
                 .setReversed(true)
-                .splineToLinearHeading(basketNoClipConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
+                .splineToLinearHeading(BasketNoClipConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
                 .build();
 
         while (opModeInInit() && !isStopRequested()) {
@@ -314,7 +313,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             pivot.update();
         }
 
-        drive.setPoseEstimate(BasketNoClipConstantsDash.START_POSE);
+        drive.setPoseEstimate(BasketNoClipConstants.START.getPose());
 
         waitForStart();
 
