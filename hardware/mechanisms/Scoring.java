@@ -299,7 +299,7 @@ public class Scoring extends Mechanism {
                 break;
             case INTAKE:
                 drivetrain.setIntake();
-                wrist.loop(gamepad);
+                //wrist.loop(gamepad);
                 // if (claw.isSample()) {
                 // retractTele.trigger();
                 // }
