@@ -12,8 +12,8 @@ public class Sweeper extends Mechanism {
     private Servo sweeperServo;
 
     public static boolean extended = false;
-    public static double RETRACT_POS = 0.92;
-    public static double EXTEND_POS = 0.13;
+    public static double RETRACT_POS = 1.0;
+    public static double EXTEND_POS = 0.24;
 
     public Sweeper(LinearOpMode opMode) {
         this.opMode = opMode;
