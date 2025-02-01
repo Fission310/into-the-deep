@@ -73,6 +73,7 @@ public class BasketNoClipAuto extends LinearOpMode {
     private Command telescopeExtendClip = () -> telescope.clipExtensionPos();
     private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristRetract = () -> wrist.frontPos();
+    private Command wristRetractFirst = () -> wrist.retractPos();
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristBasket = () -> wrist.basketPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
@@ -91,7 +92,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addWaitCommand(0.3)
             .addCommand(outtake)
             .addWaitCommand(0.2)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristRetractFirst)
             .addWaitCommand(0.2)
             .addCommand(telescopeFront)
             .addWaitCommand(0.2)
@@ -111,7 +112,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(0.4)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)
+            .addCommand(pivotUp)
             .addCommand(commandBusyFalse)
             .build();
 
@@ -128,7 +129,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addWaitCommand(0.3)
             .addCommand(outtake)
             .addWaitCommand(0.2)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristRetractFirst)
             .addWaitCommand(0.2)
             .addCommand(telescopeFront)
             .addWaitCommand(0.2)
@@ -147,7 +148,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(0.4)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)
+            .addCommand(pivotUp)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence basket3Sequence = new CommandSequence()
@@ -163,7 +164,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addWaitCommand(0.3)
             .addCommand(outtake)
             .addWaitCommand(0.2)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristRetractFirst)
             .addWaitCommand(0.2)
             .addCommand(telescopeFront)
             .addWaitCommand(0.2)
@@ -182,7 +183,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addWaitCommand(0.4)
             .addCommand(telescopeRetract)
-            .addCommand(pivotInit)
+            .addCommand(pivotUp)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence basket4Sequence = new CommandSequence()
@@ -199,7 +200,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addWaitCommand(0.3)
             .addCommand(outtake)
             .addWaitCommand(0.2)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristRetractFirst)
             .addWaitCommand(0.2)
             .addCommand(telescopeFront)
             .addWaitCommand(0.2)

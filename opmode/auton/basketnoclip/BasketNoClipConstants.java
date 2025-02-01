@@ -29,8 +29,8 @@ public class BasketNoClipConstants {
             Math.toRadians(43)
     );
     public static Constant BASKET_4 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 22.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 1,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 21.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 1.5,
             Math.toRadians(30)
     );
     public static Constant FAR_SAMPLE = new Constant(
