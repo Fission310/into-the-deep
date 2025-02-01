@@ -7,13 +7,13 @@ public class Controls {
     public static final Input WRIST_UP = Input.DPAD_UP;
     public static final Input GRAB = Input.RIGHT_BUMPER;
     public static final Input OUTTAKE = Input.LEFT_BUMPER;
-    public static final Input INTAKE_SHORT = Input.DPAD_DOWN;
+    public static final Input INTAKE_SHORT = Input.X; // SQUARE
     public static final Input INTAKE = Input.A; // CROSS
     public static final Input PIVOT_FRONT = Input.A; // CROSS
-    public static final Input PIVOT_WALL = Input.X; // SQUARE
+    public static final Input PIVOT_WALL = Input.NONE; // SQUARE
     public static final Input PIVOT_BASKET = Input.Y; // TRIANGLE
-    public static final Input PIVOT_LOW_BASKET = Input.NONE;
-    public static final Input PIVOT_CLIP = Input.B; // CIRCLE
+    public static final Input PIVOT_LOW_BASKET = Input.B; // CIRCLE
+    public static final Input PIVOT_CLIP = Input.NONE; // CIRCLE
     public static final Input TELE_EXTEND = Input.RIGHT_TRIGGER;
     public static final Input TELE_RETRACT = Input.LEFT_TRIGGER;
     public static final Input WRIST_LEFT = Input.DPAD_LEFT;

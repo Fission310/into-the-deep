@@ -75,7 +75,6 @@ public class Scoring extends Mechanism {
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
-    private Command sweeperRetract = () -> sweeper.retractPos();
     private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristClipScore = () -> wrist.clipScorePos();
@@ -129,7 +128,6 @@ public class Scoring extends Mechanism {
             .build();
 
     public CommandSequence frontIntakeShort = new CommandSequence()
-            .addCommand(sweeperRetract)
             .addCommand(pivotDownIntake)
             .addCommand(telescopeIntakeShort)
             .addWaitCommand(PIVOT_DOWN_WAIT)
@@ -313,6 +311,7 @@ public class Scoring extends Mechanism {
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
                     grabIntake.trigger();
+                    sweeper.retractPos();
                     intake.intake();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_DOWN)) {

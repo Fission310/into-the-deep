@@ -12,8 +12,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Config
 public class Drivetrain extends Mechanism {
 
-    public static double SLOW_SPEED = 0.6;
-    public static double SLOW_TURN = 0.4;
+    public static double INTAKE_SLOW_SPEED = 0.6;
+    public static double INTAKE_SLOW_TURN = 0.5;
+    public static double BASKET_SLOW_TURN = 0.8;
     public static double NORMAL_SPEED = 1;
     private double speed = NORMAL_SPEED;
     private double turnSpeed = NORMAL_SPEED;
@@ -25,13 +26,13 @@ public class Drivetrain extends Mechanism {
     }
 
     public void setIntake() {
-        turnSpeed = SLOW_TURN;
+        turnSpeed = INTAKE_SLOW_TURN;
         speed = NORMAL_SPEED;
     }
 
     public void setScore() {
-        turnSpeed = SLOW_TURN;
-        speed = SLOW_SPEED;
+        turnSpeed = BASKET_SLOW_TURN;
+        speed = NORMAL_SPEED;
     }
 
     public void setNormal() {
