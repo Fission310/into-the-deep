@@ -20,7 +20,7 @@ public class Telescope extends Mechanism {
     public static int ABIT = 20;
     public static int AUTO_INTAKE_FAR_POS = 395;
     public static int AUTO_INTAKE_CENTER_POS = 415;
-    public static int AUTO_INTAKE_WALL_POS = 470;
+    public static int AUTO_INTAKE_WALL_POS = 465;
     public static int AUTO_BASKET_POS = 1100;
     public static int AUTO_SAMPLE_DROP = 300;
     public static int UP_RETRACTION = -60;
@@ -36,7 +36,7 @@ public class Telescope extends Mechanism {
     public static int BACK_POS = 300;
     public static int CLIMB_UP_1_POS = 500;
     public static int CLIMB_UP_2_POS = 200;
-    public static int CLIMB_DOWN_POS = -500;
+    public static int CLIMB_DOWN_POS = -500000;
     public static int MAX_EXTENSION = 670;
     public static int MIN_LENGTH = 15;
     public static double DOWN_MULTIPLIER = 0.15;

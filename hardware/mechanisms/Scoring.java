@@ -48,7 +48,7 @@ public class Scoring extends Mechanism {
     public static double CLIP_RELEASE_WAIT = 0.1;
     public static double CLIP_PIVOT_WAIT = 0.1;
     public static double CLIMB_UP_WAIT = 0.5;
-    public static double CLIMB_DOWN_WAIT = 10;
+    public static double CLIMB_DOWN_WAIT = 3;
 
     private boolean climbPressed = false;
     private boolean frontClicked = false;

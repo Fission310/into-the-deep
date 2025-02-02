@@ -29,38 +29,38 @@ public class BasketNoClipConstants {
             Math.toRadians(40)
     );
     public static Constant BASKET_4 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 18.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 2.5,
-            Math.toRadians(30)
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 20.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
+            Math.toRadians(41)
     );
     public static Constant FAR_SAMPLE = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 25,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 1.3,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 1.8,
             UP + Math.toRadians(2)
     );
     public static Constant FAR_SAMPLE_INT = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 24,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 5,
-            UP + Math.toRadians(5)
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 24.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 1,
+            UP + Math.toRadians(3)
     );
     public static Constant CENTER_SAMPLE = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 16,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 2.3,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 17.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 2.9,
             UP + Math.toRadians(2)
     );
     public static Constant CENTER_SAMPLE_INT = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 16.0,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 2.3,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 3.3,
             UP + Math.toRadians(5)
     );
     public static Constant WALL_SAMPLE = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 12.0,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 2.5,
-            UP + Math.toRadians(7)
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 17,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 4,
+            UP + Math.toRadians(14)
     );
     public static Constant WALL_SAMPLE_INT = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 12.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 1,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 13,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
             UP + Math.toRadians(25)
     );
 }
