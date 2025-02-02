@@ -40,7 +40,7 @@ public class Scoring extends Mechanism {
     public static double UP_POS_WAIT = 0.1;
     public static double TELESCOPE_RETRACT_WAIT = 0.10;
     public static double WRIST_RETRACT_WAIT = 0.10;
-    public static double PIVOT_DOWN_WAIT = 0.1;
+    public static double PIVOT_DOWN_WAIT = 0.25;
     public static double PIVOT_GRAB_WAIT = 0.3;
     public static double PIVOT_UP_WAIT = 0.5;
     public static double CLIP_EXTEND_WAIT = 1;
