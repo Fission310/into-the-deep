@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.opmode.auton.util.Constant;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class BasketNoClipConstants {
+public class BasketConstants {
     public static Constant START = new Constant(
             -TILE_LENGTH * 2 + BOT_WIDTH / 2,
             -WALL_POS + BOT_LENGTH / 2,
@@ -29,6 +29,16 @@ public class BasketNoClipConstants {
             Math.toRadians(40)
     );
     public static Constant BASKET_4 = new Constant(
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 20.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
+            Math.toRadians(41)
+    );
+    public static Constant BASKET_5 = new Constant(
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 20.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
+            Math.toRadians(41)
+    );
+    public static Constant BASKET_6 = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 20.5,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
             Math.toRadians(41)
@@ -62,5 +72,15 @@ public class BasketNoClipConstants {
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 13,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
             UP + Math.toRadians(25)
+    );
+    public static Constant SUBMERSIBLE_1 = new Constant(
+            -TILE_LENGTH,
+            - TILE_LENGTH / 2,
+            Math.toRadians(0)
+    );
+    public static Constant SUBMERSIBLE_2 = new Constant(
+            -TILE_LENGTH,
+            - TILE_LENGTH / 2,
+            Math.toRadians(0)
     );
 }

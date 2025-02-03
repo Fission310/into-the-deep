@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name = "BasketNoClipAuto", preselectTeleOp = "Main")
-public class BasketNoClipAuto extends LinearOpMode {
+@Autonomous(name = "BasketAuto", preselectTeleOp = "Main")
+public class BasketAuto extends LinearOpMode {
     private boolean commandBusy = false;
     private TrajectorySequence basket1Traj;
     private TrajectorySequence farSampleTraj;
@@ -30,6 +30,11 @@ public class BasketNoClipAuto extends LinearOpMode {
     private TrajectorySequence wallSampleTraj;
     private TrajectorySequence wallSampleIntTraj;
     private TrajectorySequence basket4Traj;
+    private TrajectorySequence sub1Traj;
+    private TrajectorySequence basket5Traj;
+    private TrajectorySequence sub2Traj;
+    private TrajectorySequence basket6Traj;
+
 
     private SampleMecanumDrive drive;
 
@@ -43,6 +48,11 @@ public class BasketNoClipAuto extends LinearOpMode {
     private Command wallSampleCommand = () -> drive.followTrajectorySequenceAsync(wallSampleTraj);
     private Command wallSampleIntCommand = () -> drive.followTrajectorySequenceAsync(wallSampleIntTraj);
     private Command basket4Command = () -> drive.followTrajectorySequenceAsync(basket4Traj);
+    private Command sub1Command = () -> drive.followTrajectorySequenceAsync(sub1Traj);
+    private Command basket5Command = () -> drive.followTrajectorySequenceAsync(basket5Traj);
+    private Command sub2Command = () -> drive.followTrajectorySequenceAsync(sub2Traj);
+    private Command basket6Command = () -> drive.followTrajectorySequenceAsync(basket6Traj);
+
 
     private Intake intake;
     private Pivot pivot;
@@ -209,6 +219,68 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommand(wristRetract)
             .addCommand(commandBusyFalse)
             .build();
+
+    private CommandSequence sub1Sequence = new CommandSequence()
+            .addCommand(commandBusyTrue)
+            .addCommand(sub1Command)
+            /*
+            todo add limelight work here
+             */
+            .addCommand(commandBusyFalse)
+            .build();
+
+    private CommandSequence basket5Sequence = new CommandSequence()
+            .addCommand(commandBusyTrue)
+            .addCommand(basket5Command)
+            .addCommand(intakeCommand)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.3)
+            .addCommand(pivotBasket)
+            .addCommand(telescopeBasket)
+            .addWaitCommand(0.5)
+            .addCommand(wristBasket)
+            .addCommand(intakeCommand)
+            .addWaitCommand(0.2)
+            .addCommand(outtake)
+            .addWaitCommand(0.2)
+            .addCommand(wristRetractFirst)
+            .addWaitCommand(0.2)
+            .addCommand(telescopeFront)
+            .addWaitCommand(0.2)
+            .addCommand(wristRetract)
+            .addCommand(commandBusyFalse)
+            .build();
+
+    private CommandSequence sub2Sequence = new CommandSequence()
+            .addCommand(commandBusyTrue)
+            .addCommand(sub2Command)
+            /*
+            todo add limelight work here
+             */
+            .addCommand(commandBusyFalse)
+            .build();
+
+    private CommandSequence basket6Sequence = new CommandSequence()
+            .addCommand(commandBusyTrue)
+            .addCommand(basket6Command)
+            .addCommand(intakeCommand)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.3)
+            .addCommand(pivotBasket)
+            .addCommand(telescopeBasket)
+            .addWaitCommand(0.5)
+            .addCommand(wristBasket)
+            .addCommand(intakeCommand)
+            .addWaitCommand(0.2)
+            .addCommand(outtake)
+            .addWaitCommand(0.2)
+            .addCommand(wristRetractFirst)
+            .addWaitCommand(0.2)
+            .addCommand(telescopeFront)
+            .addWaitCommand(0.2)
+            .addCommand(wristRetract)
+            .addCommand(commandBusyFalse)
+            .build();
     private CommandSequence resetPivot = new CommandSequence()
             .addCommand(pivotReset)
             .addWaitCommand(2)
@@ -222,6 +294,10 @@ public class BasketNoClipAuto extends LinearOpMode {
             .addCommandSequence(basket3Sequence)
             .addCommandSequence(wallSampleSequence)
             .addCommandSequence(basket4Sequence)
+            .addCommandSequence(sub1Sequence)
+            .addCommandSequence(basket5Sequence)
+            .addCommandSequence(sub2Sequence)
+            .addCommandSequence(basket6Sequence)
             .addCommandSequence(resetPivot)
             .addCommandSequence(doNothing)
             .build();
@@ -244,37 +320,37 @@ public class BasketNoClipAuto extends LinearOpMode {
         TrajectoryVelocityConstraint slowTurn = SampleMecanumDrive.getVelocityConstraint(10, 0.1, DriveConstants.TRACK_WIDTH);
 
         basket1Traj = drive
-                .trajectorySequenceBuilder(BasketNoClipConstants.START.getPose())
-                .splineToLinearHeading(BasketNoClipConstants.BASKET_1.getPose(), 5 * Math.PI / 4)
+                .trajectorySequenceBuilder(BasketConstants.START.getPose())
+                .splineToLinearHeading(BasketConstants.BASKET_1.getPose(), 5 * Math.PI / 4)
                 .build();
         telemetry.addLine("Built basket1Traj");
         telemetry.update();
         farSampleTraj = drive
                 .trajectorySequenceBuilder(basket1Traj.end())
                 .setReversed(false)
-                .splineToLinearHeading(BasketNoClipConstants.FAR_SAMPLE.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketConstants.FAR_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         telemetry.addLine("Built farSampleTraj");
         telemetry.update();
         farSampleIntTraj = drive.trajectorySequenceBuilder(farSampleTraj.end())
                 .setVelConstraint(slowTurn)
                 .setReversed(false)
-                .splineToLinearHeading(BasketNoClipConstants.FAR_SAMPLE_INT.getPose(),
-                        BasketNoClipConstants.FAR_SAMPLE_INT.getH())
+                .splineToLinearHeading(BasketConstants.FAR_SAMPLE_INT.getPose(),
+                        BasketConstants.FAR_SAMPLE_INT.getH())
                 .build();
         telemetry.addLine("Built farSampleIntTraj");
         telemetry.update();
         basket2Traj = drive
                 .trajectorySequenceBuilder(farSampleIntTraj.end())
                 .setReversed(true)
-                .splineToLinearHeading(BasketNoClipConstants.BASKET_2.getPose(), 5 * Math.PI / 4)
+                .splineToLinearHeading(BasketConstants.BASKET_2.getPose(), 5 * Math.PI / 4)
                 .build();
         telemetry.addLine("Built basket2Traj");
         telemetry.update();
         centerSampleTraj = drive
                 .trajectorySequenceBuilder(basket2Traj.end())
                 .setReversed(false)
-                .splineToLinearHeading(BasketNoClipConstants.CENTER_SAMPLE.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketConstants.CENTER_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         telemetry.addLine("Built centerSampleTraj");
         telemetry.update();
@@ -282,39 +358,67 @@ public class BasketNoClipAuto extends LinearOpMode {
                 .trajectorySequenceBuilder(centerSampleTraj.end())
                 .setVelConstraint(slowTurn)
                 .setReversed(false)
-                .splineToLinearHeading(BasketNoClipConstants.CENTER_SAMPLE_INT.getPose(),
-                        BasketNoClipConstants.CENTER_SAMPLE_INT.getH())
+                .splineToLinearHeading(BasketConstants.CENTER_SAMPLE_INT.getPose(),
+                        BasketConstants.CENTER_SAMPLE_INT.getH())
                 .build();
         telemetry.addLine("Built centerSampleIntTraj");
         telemetry.update();
         basket3Traj = drive
                 .trajectorySequenceBuilder(centerSampleIntTraj.end())
                 .setReversed(true)
-                .splineToLinearHeading(BasketNoClipConstants.BASKET_3.getPose(), 5 * Math.PI / 4)
+                .splineToLinearHeading(BasketConstants.BASKET_3.getPose(), 5 * Math.PI / 4)
                 .build();
         telemetry.addLine("Built basket3Traj");
         telemetry.update();
         wallSampleTraj = drive
                 .trajectorySequenceBuilder(basket3Traj.end())
                 .setReversed(false)
-                .splineToLinearHeading(BasketNoClipConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
+                .splineToLinearHeading(BasketConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
                 .build();
         telemetry.addLine("Built wallSampleTraj");
         telemetry.update();
         wallSampleIntTraj = drive
                 .trajectorySequenceBuilder(wallSampleTraj.end())
                 .setReversed(false)
-                .splineToLinearHeading(BasketNoClipConstants.WALL_SAMPLE_INT.getPose(),
-                        BasketNoClipConstants.WALL_SAMPLE_INT.getH())
+                .splineToLinearHeading(BasketConstants.WALL_SAMPLE_INT.getPose(),
+                        BasketConstants.WALL_SAMPLE_INT.getH())
                 .build();
         telemetry.addLine("Built wallSampleIntTraj");
         telemetry.update();
         basket4Traj = drive
                 .trajectorySequenceBuilder(wallSampleIntTraj.end())
                 .setReversed(true)
-                .splineToLinearHeading(BasketNoClipConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
+                .splineToLinearHeading(BasketConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
                 .build();
         telemetry.addLine("Built basket4Traj");
+        telemetry.update();
+        sub1Traj = drive
+                .trajectorySequenceBuilder(basket4Traj.end())
+                .setReversed(false)
+                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_1.getPose(), BasketConstants.SUBMERSIBLE_1.getH())
+                .build();
+        telemetry.addLine("Built sub1Traj");
+        telemetry.update();
+        basket5Traj = drive
+                .trajectorySequenceBuilder(sub1Traj.end())
+                .setReversed(true)
+                .splineToLinearHeading(BasketConstants.BASKET_5.getPose(), 5 * Math.PI / 4)
+                .build();
+        telemetry.addLine("Built basket5Traj");
+        telemetry.update();
+        sub2Traj = drive
+                .trajectorySequenceBuilder(basket5Traj.end())
+                .setReversed(false)
+                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_2.getPose(), BasketConstants.SUBMERSIBLE_2.getH())
+                .build();
+        telemetry.addLine("Built sub2raj");
+        telemetry.update();
+        basket6Traj = drive
+                .trajectorySequenceBuilder(sub2Traj.end())
+                .setReversed(true)
+                .splineToLinearHeading(BasketConstants.BASKET_6.getPose(), 5 * Math.PI / 4)
+                .build();
+        telemetry.addLine("Built basket6Traj");
         telemetry.update();
 
         while (opModeInInit() && !isStopRequested()) {
@@ -325,7 +429,7 @@ public class BasketNoClipAuto extends LinearOpMode {
             pivot.update();
         }
 
-        drive.setPoseEstimate(BasketNoClipConstants.START.getPose());
+        drive.setPoseEstimate(BasketConstants.START.getPose());
 
         waitForStart();
 
