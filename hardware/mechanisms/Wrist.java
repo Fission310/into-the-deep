@@ -17,15 +17,17 @@ public class Wrist extends Mechanism {
     private Servo wristServoRight;
     private Servo wristServoLeft;
 
-    public static double[][] INTAKE_POS = { { 0.62, 0.61 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
-    public static double[][] AUTO_INTAKE_POS = { { 0.63, 0.62 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double INTAKE_DOWN_ABIT = 0.05;
+    public static double BASKET_DOWN_ABIT = -0.08;
+    public static double[][] INTAKE_POS = { { 0.4, 0.55 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_INTAKE_POS = { { 0.59, 0.57 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_DOWN_POS = { { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
-    public static double[][] FRONT_POS = { { 0.35, 0.35 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
-    public static double[][] WALL_POS = { { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
-    public static double[][] BASKET_POS = { { 0.4, 0.4 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
-    public static double[][] CLIP_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
-    public static double[][] CLIP_SCORE_POS = { { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
-    public static double[][] BACK_POS = { { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
+    public static double[][] FRONT_POS = { { 0.2, 0.35 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
+    public static double[][] WALL_POS = { { 0.36, 0.35 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
+    public static double[][] BASKET_POS = { { 0.28, 0.38 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
+    public static double[][] CLIP_POS = { { 0.58, 0.58 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
+    public static double[][] CLIP_SCORE_POS = { { 0.58, 0.58 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
+    public static double[][] BACK_POS = { { 0.18, 0.18 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] CLIMB_POS = { { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
     public static double[][] RETRACT_POS = { { 0.73, 0.73 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
     public static double[][] currPos;
@@ -43,6 +45,15 @@ public class Wrist extends Mechanism {
         wristServoLeft = hwMap.get(Servo.class, "wristServoLeft");
         wristServoLeft.setDirection(Direction.REVERSE);
         frontPos();
+    }
+    public void intakeABit(){
+        wristServoRight.setPosition(currPos[wristPos][0] + INTAKE_DOWN_ABIT);
+        wristServoLeft.setPosition(currPos[wristPos][0] + INTAKE_DOWN_ABIT);
+    }
+
+    public void basketABit(){
+        wristServoRight.setPosition(currPos[wristPos][0] + BASKET_DOWN_ABIT);
+        wristServoLeft.setPosition(currPos[wristPos][0] + BASKET_DOWN_ABIT);
     }
 
     private void setPosition() {

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class Drivetrain extends Mechanism {
 
     public static double INTAKE_SLOW_SPEED = 0.6;
-    public static double INTAKE_SLOW_TURN = 0.35;
+    public static double INTAKE_SLOW_TURN = 0.30;
     public static double BASKET_SLOW_TURN = 0.8;
     public static double NORMAL_SPEED = 1;
     private double speed = NORMAL_SPEED;

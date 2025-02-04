@@ -34,7 +34,7 @@ public class Scoring extends Mechanism {
         CLIMB_DOWN,
     }
 
-    public static double BASKET_OUTTAKE_WAIT = 0.4;
+    public static double BASKET_OUTTAKE_WAIT = 0.1;
     public static double BASKET_RELEASE_WAIT = 0.2;
     public static double BASKET_RETRACT_WAIT = 0.1;
     public static double UP_POS_WAIT = 0.1;
@@ -48,7 +48,7 @@ public class Scoring extends Mechanism {
     public static double CLIP_RELEASE_WAIT = 0.1;
     public static double CLIP_PIVOT_WAIT = 0.1;
     public static double CLIMB_UP_WAIT = 0.5;
-    public static double CLIMB_DOWN_WAIT = 3;
+    public static double CLIMB_DOWN_WAIT = 1;
 
     private boolean climbPressed = false;
     private boolean frontClicked = false;
@@ -232,6 +232,12 @@ public class Scoring extends Mechanism {
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
+            if(state == State.BASKET){
+                wrist.basketABit();
+            }
+            else if(state == State.INTAKE){
+                wrist.intakeABit();
+            }
         }
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_RETRACT)) {
@@ -245,9 +251,9 @@ public class Scoring extends Mechanism {
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL) && state != State.WALL) {
             goWall();
             intake.outtake();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET) && state != State.BASKET) {
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET)) {
             goBasket();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_LOW_BASKET) && state != State.BASKET) {
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_LOW_BASKET)) {
             goLowBasket();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_CLIP) && state != State.CLIP) {
             goClip();
