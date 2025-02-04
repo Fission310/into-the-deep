@@ -13,7 +13,7 @@ public class Sweeper extends Mechanism {
 
     public static boolean extended = false;
     public static double RETRACT_POS = 1.0;
-    public static double EXTEND_POS = 0.24;
+    public static double EXTEND_POS = 0.16;
 
     public Sweeper(LinearOpMode opMode) {
         this.opMode = opMode;
