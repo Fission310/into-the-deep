@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.basketnoclip;
+package org.firstinspires.ftc.teamcode.opmode.auton;
 
 import static org.firstinspires.ftc.teamcode.opmode.auton.util.GameConstants.*;
 

@@ -187,6 +187,10 @@ public class Telescope extends Mechanism {
         Telescope.target = target;
     }
 
+    public void setTargetInches(double target){
+        setTarget(target / INCH_PER_TICK);
+    }
+
     public double getPosition() {
         return motors[0].getCurrentPosition();
     }
