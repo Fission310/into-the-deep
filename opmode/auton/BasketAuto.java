@@ -94,7 +94,7 @@ public class BasketAuto extends LinearOpMode {
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command wristBasket = () -> wrist.basketPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
-    private Command p2p = () -> Drive.p2p(drive, new Pose2d(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY(), Math.toRadians(limelight.getTx())));
+    private Command p2p = () -> Drive.p2p(drive, new Pose2d(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading() - Math.toRadians(limelight.getTx())));
     private Command telescopeExtendInches = () -> telescope.setTargetInches(LimelightConstants.calcDistance(Math.toRadians(limelight.getTy())));
 
     private CommandSequence basket1Sequence = new CommandSequence()
