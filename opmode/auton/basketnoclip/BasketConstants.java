@@ -60,17 +60,17 @@ public class BasketConstants {
     );
     public static Constant CENTER_SAMPLE_INT = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 16.0,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 3.3,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 7.3,
             UP + Math.toRadians(5)
     );
     public static Constant WALL_SAMPLE = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 17,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 4,
-            UP + Math.toRadians(14)
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 15,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 4.2,
+            UP + Math.toRadians(17)
     );
     public static Constant WALL_SAMPLE_INT = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 13,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 3,
             UP + Math.toRadians(25)
     );
     public static Constant SUBMERSIBLE_1 = new Constant(
