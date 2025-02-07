@@ -95,6 +95,7 @@ public class BasketAuto extends LinearOpMode {
     private Command wristBasket = () -> wrist.basketPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command p2p = () -> Drive.p2p(drive, new Pose2d(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading() - Math.toRadians(limelight.getTx())));
+    private Command driveStop = () -> drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
     private Command telescopeExtendInches = () -> telescope.setTargetInches(LimelightConstants.calcDistance(Math.toRadians(limelight.getTy())));
 
     private CommandSequence basket1Sequence = new CommandSequence()
@@ -231,22 +232,23 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(sub1Command)
             .addCommand(pivotUpIntake)
-            .addWaitCommand(2.3)
-//            .addCommand(p2p)
-//            .addWaitCommand(1)
-//            .addCommand(pivotGrabIntake)
-//            .addCommand(telescopeExtendInches)
-//            .addWaitCommand(0.4)
-//            .addCommand(wristIntakeScore)
-//            .addCommand(intakeCommand)
-//            .addWaitCommand(1)
-//            .addCommand(pivotUpIntake)
-//            .addCommand(wristRetract)
-//            .addWaitCommand(0.2)
-//            .addCommand(telescopeRetract)
-            .addWaitCommand(0.4)
-            .addCommand(pivotUp)
-            .addCommand(commandBusyFalse)
+            .addWaitCommand(10)
+            .addCommand(p2p)
+            .addWaitCommand(3)
+            .addCommand(driveStop)
+            //.addCommand(pivotGrabIntake)
+            //.addCommand(telescopeExtendInches)
+            //.addWaitCommand(0.4)
+            //.addCommand(wristIntakeScore)
+            //.addCommand(intakeCommand)
+            //.addWaitCommand(1)
+            //.addCommand(pivotUpIntake)
+            //.addCommand(wristRetract)
+            //.addWaitCommand(0.2)
+            //.addCommand(telescopeRetract)
+            //.addWaitCommand(0.4)
+            //.addCommand(pivotUp)
+            //.addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence basket5Sequence = new CommandSequence()
@@ -275,19 +277,20 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(sub2Command)
             .addCommand(pivotUpIntake)
-            .addWaitCommand(2.3)
-//            .addCommand(p2p)
-//            .addWaitCommand(1)
-//            .addCommand(pivotGrabIntake)
-//            .addCommand(telescopeExtendInches)
-//            .addWaitCommand(0.4)
-//            .addCommand(wristIntakeScore)
-//            .addCommand(intakeCommand)
-//            .addWaitCommand(0.4)
-//            .addCommand(pivotUpIntake)
-//            .addCommand(wristRetract)
-//            .addWaitCommand(0.2)
-//            .addCommand(telescopeRetract)
+            .addWaitCommand(10)
+            .addCommand(p2p)
+            .addWaitCommand(3)
+            .addCommand(driveStop)
+            .addCommand(pivotGrabIntake)
+            .addCommand(telescopeExtendInches)
+            .addWaitCommand(0.4)
+            .addCommand(wristIntakeScore)
+            .addCommand(intakeCommand)
+            .addWaitCommand(0.4)
+            .addCommand(pivotUpIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(0.2)
+            .addCommand(telescopeRetract)
             .addWaitCommand(0.4)
             .addCommand(pivotUp)
             .addCommand(commandBusyFalse)
@@ -328,9 +331,9 @@ public class BasketAuto extends LinearOpMode {
             .addCommandSequence(wallSampleSequence)
             .addCommandSequence(basket4Sequence)
             .addCommandSequence(sub1Sequence)
-            .addCommandSequence(basket5Sequence)
-            .addCommandSequence(sub2Sequence)
-            .addCommandSequence(basket6Sequence)
+            //.addCommandSequence(basket5Sequence)
+            //.addCommandSequence(sub2Sequence)
+            //.addCommandSequence(basket6Sequence)
             .addCommandSequence(resetPivot)
             .addCommandSequence(doNothing)
             .build();
@@ -343,14 +346,14 @@ public class BasketAuto extends LinearOpMode {
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
-//        limelight = new Limelight(this);
+        limelight = new Limelight(this);
 
         intake.init(hardwareMap);
         pivot.init(hardwareMap);
         pivot.initPos();
         wrist.init(hardwareMap);
         telescope.init(hardwareMap);
-//        limelight.init(hardwareMap);
+        limelight.init(hardwareMap);
 
         TrajectoryVelocityConstraint slowTurn = SampleMecanumDrive.getVelocityConstraint(10, 0.1, DriveConstants.TRACK_WIDTH);
 
@@ -461,7 +464,6 @@ public class BasketAuto extends LinearOpMode {
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();
             pivot.update();
-//            limelight.update();
         }
 
         drive.setPoseEstimate(BasketConstants.START.getPose());
@@ -472,16 +474,16 @@ public class BasketAuto extends LinearOpMode {
             drive.update();
             telescope.update();
             pivot.update();
-//            limelight.update();
+            limelight.update();
             commandMachine.run(drive.isBusy() || commandBusy);
-//            telemetry.addData("limelight tx", limelight.getTx());
-//            telemetry.addData("limelight ty", limelight.getTy());
+            telemetry.addData("limelight tx", limelight.getTx());
+            telemetry.addData("limelight ty", limelight.getTy());
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();
         }
 
-//        limelight.stop();
+        limelight.stop();
         Thread.sleep(500);
     }
 }
