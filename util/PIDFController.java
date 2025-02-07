@@ -258,7 +258,7 @@ public class PIDFController {
         totalError += period * (setPoint - measuredValue);
         totalError = totalError < minIntegral ? minIntegral : Math.min(maxIntegral, totalError);
 
-        Telemetry t = FtcDashboard.getInstance().getTelemetry();
+        //Telemetry t = FtcDashboard.getInstance().getTelemetry();
         double feedForward = 0;
         switch (this.feedForward) {
             case LINEAR:
@@ -267,17 +267,17 @@ public class PIDFController {
             case ROTATIONAL:
                 double theta = (highestPos - measuredValue) * 2 * Math.PI / ticksPerRev;
                 feedForward = kF * Math.sin(theta) * length;
-                t.addData("ff", feedForward);
-                t.addData("theta", theta);
+                //t.addData("ff", feedForward);
+                //t.addData("theta", theta);
                 break;
             default:
                 break;
         }
 
-        t.addData("p", errorVal_p);
-        t.addData("i", totalError);
-        t.addData("d", errorVal_v);
-        t.update();
+        //t.addData("p", errorVal_p);
+        //t.addData("i", totalError);
+        //t.addData("d", errorVal_v);
+        //t.update();
 
         // returns u(t)
         return kP * errorVal_p + kI * totalError + kD * errorVal_v + feedForward;

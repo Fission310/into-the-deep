@@ -15,7 +15,6 @@ import com.stuyfission.fissionlib.util.Mechanism;
 public class Limelight extends Mechanism {
     private Limelight3A limelight;
     private double tx, ty, ta;
-    private Pose3D botpose;
 
     public Limelight(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -33,11 +32,10 @@ public class Limelight extends Mechanism {
 
     public void update() {
         LLResult result = limelight.getLatestResult();
-        if (result != null && result.isValid()) {
+        if (result != null) {
             tx = result.getTx();
             ty = result.getTy();
             ta = result.getTa();
-            botpose = result.getBotpose();
         }
     }
 
@@ -48,7 +46,6 @@ public class Limelight extends Mechanism {
         telemetry.addData("limelight tx", tx);
         telemetry.addData("limelight ty", ty);
         telemetry.addData("limelight ta", ta);
-        telemetry.addData("limelight botpose", botpose);
     }
 
     public void stop() {

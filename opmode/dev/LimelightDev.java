@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.LimelightConstants;
 
 import java.util.List;
 
@@ -108,6 +109,9 @@ public class LimelightDev extends LinearOpMode {
                 telemetry.addData("LL Latency", captureLatency + targetingLatency);
                 telemetry.addData("Parse Latency", parseLatency);
                 telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+                    telemetry.addData("tx", result.getTx());
+                    telemetry.addData("ty", result.getTy());
+                telemetry.addData("extend", LimelightConstants.calcDistance(result.getTy()));
 
                 if (result.isValid()) {
                     telemetry.addData("tx", result.getTx());
