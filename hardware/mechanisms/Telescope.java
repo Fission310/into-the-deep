@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,17 +17,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class Telescope extends Mechanism {
     public static int ABIT = 20;
-    public static int AUTO_INTAKE_FAR_POS = 365;
-    public static int AUTO_INTAKE_CENTER_POS = 335;
-    public static int AUTO_INTAKE_WALL_POS = 475;
+    public static int AUTO_INTAKE_FAR_POS = 362;
+    public static int AUTO_INTAKE_CENTER_POS = 305;
+    public static int AUTO_INTAKE_WALL_POS = 485;
     public static int AUTO_BASKET_POS = 675;
     public static int AUTO_SAMPLE_DROP = 300;
     public static int UP_RETRACTION = -60;
     public static int FRONT_POS = -50;
     public static int INTAKE_POS = 450;
     public static int INTAKE_SHORT_POS = 50;
+    public static int AUTO_INTAKE_SHORT_POS = 50;
     public static int WALL_POS = 100;
-    public static int BASKET_POS = 660;
+    public static int BASKET_POS = 675;
     public static int LOW_BASKET_POS = 220;
     public static int CLIP_POS = 330;
     public static int CLIP_SCORE = 100;
@@ -63,6 +63,7 @@ public class Telescope extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
+        voltage = hwMap.voltageSensor.iterator().next();
         motors[0] = hwMap.get(DcMotorEx.class, "telescopeLeftMotor");
         motors[1] = hwMap.get(DcMotorEx.class, "telescopeRightMotor");
 
@@ -124,6 +125,11 @@ public class Telescope extends Mechanism {
     public void frontIntakeShortPos() {
         controller = horizontalController;
         setTarget(INTAKE_SHORT_POS);
+    }
+
+    public void frontIntakeAutoShortPos() {
+        controller = horizontalController;
+        setTarget(AUTO_INTAKE_SHORT_POS);
     }
 
     public void wallPos() {
@@ -206,7 +212,7 @@ public class Telescope extends Mechanism {
 
     public void update() {
         controller.setTarget(target);
-        power = controller.calculate(getPosition()) * POWER_MULTIPLIER;
+        power = controller.calculate(getPosition()) * POWER_MULTIPLIER / voltage.getVoltage() * 12.0;
         if (target < getPosition() && controller == verticalController) {
             power *= DOWN_MULTIPLIER;
         }
