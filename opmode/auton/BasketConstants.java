@@ -44,23 +44,23 @@ public class BasketConstants {
             Math.toRadians(39)
     );
     public static Constant FAR_SAMPLE = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 26,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 26.5,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
-            UP + Math.toRadians(2)
+            UP + Math.toRadians(3)
     );
     public static Constant FAR_SAMPLE_INT = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 26,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 26.5,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 7.25,
             UP + Math.toRadians(13.5)
     );
 
     public static Constant CENTER_SAMPLE = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 15.35,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 16,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 0.5,
-            UP + Math.toRadians(2)
+            UP + Math.toRadians(4)
     );
     public static Constant CENTER_SAMPLE_INT = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 15.35,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 16,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 7.75,
             UP + Math.toRadians(12.5)
     );

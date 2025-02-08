@@ -18,9 +18,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class Telescope extends Mechanism {
     public static int ABIT = 20;
-    public static int AUTO_INTAKE_FAR_POS = 385;
-    public static int AUTO_INTAKE_CENTER_POS = 355;
-    public static int AUTO_INTAKE_WALL_POS = 490;
+    public static int AUTO_INTAKE_FAR_POS = 365;
+    public static int AUTO_INTAKE_CENTER_POS = 335;
+    public static int AUTO_INTAKE_WALL_POS = 475;
     public static int AUTO_BASKET_POS = 675;
     public static int AUTO_SAMPLE_DROP = 300;
     public static int UP_RETRACTION = -60;
@@ -28,7 +28,7 @@ public class Telescope extends Mechanism {
     public static int INTAKE_POS = 450;
     public static int INTAKE_SHORT_POS = 50;
     public static int WALL_POS = 100;
-    public static int BASKET_POS = 600;
+    public static int BASKET_POS = 660;
     public static int LOW_BASKET_POS = 220;
     public static int CLIP_POS = 330;
     public static int CLIP_SCORE = 100;
@@ -37,7 +37,7 @@ public class Telescope extends Mechanism {
     public static int CLIMB_UP_1_POS = 500;
     public static int CLIMB_UP_2_POS = 200;
     public static int CLIMB_DOWN_POS = -500000;
-    public static int MAX_EXTENSION = 670;
+    public static int MAX_EXTENSION = 750;
     public static int MIN_LENGTH = 15;
     public static double DOWN_MULTIPLIER = 0.15;
     public static double INCH_PER_TICK = 0.0369;
@@ -188,6 +188,7 @@ public class Telescope extends Mechanism {
     }
 
     public void setTargetInches(double target){
+        controller = horizontalController;
         setTarget(target / INCH_PER_TICK);
     }
 

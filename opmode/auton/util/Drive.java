@@ -10,7 +10,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 public class Drive {
     public static double HEADING_P = 0.5;
     public static double HEADING_D = 0;
-    public static double TRANS_P = 0.15;
+    public static double TRANS_P = 0.12;
     public static double TRANS_D = 0;
 
     public static void p2p(SampleMecanumDrive drive, Pose2d target) {

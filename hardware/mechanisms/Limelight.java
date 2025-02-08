@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 import static org.firstinspires.ftc.teamcode.opmode.auton.util.LimelightConstants.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLStatus;
@@ -14,7 +13,7 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 public class Limelight extends Mechanism {
     private Limelight3A limelight;
-    private double tx, ty, ta;
+    private double tx, ty, tangle;
 
     public Limelight(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -35,7 +34,7 @@ public class Limelight extends Mechanism {
         if (result != null) {
             tx = result.getTx();
             ty = result.getTy();
-            ta = result.getTa();
+            tangle = result.getPythonOutput()[3];
         }
     }
 
@@ -45,7 +44,7 @@ public class Limelight extends Mechanism {
         telemetry.addData("limelight temp", "%.1fC", status.getTemp());
         telemetry.addData("limelight tx", tx);
         telemetry.addData("limelight ty", ty);
-        telemetry.addData("limelight ta", ta);
+        telemetry.addData("limelight tangle", tangle);
     }
 
     public void stop() {
@@ -62,5 +61,9 @@ public class Limelight extends Mechanism {
 
     public double getTy() {
         return ty;
+    }
+
+    public double getTangle() {
+        return tangle;
     }
 }

@@ -24,6 +24,10 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Autonomous(name = "BasketAuto", preselectTeleOp = "Main")
 public class BasketAuto extends LinearOpMode {
     private boolean commandBusy = false;
+    private Pose2d targetPoint = null;
+    public static double llTx = 0;
+    public static double llTy = 0;
+    public static double llTangle = 0;
     private TrajectorySequence basket1Traj;
     private TrajectorySequence farSampleTraj;
     private TrajectorySequence farSampleIntTraj;
@@ -92,11 +96,27 @@ public class BasketAuto extends LinearOpMode {
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command wristBasket = () -> wrist.basketPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
-    private Command p2p = () -> Drive.p2p(drive, new Pose2d(drive.getPoseEstimate().getX(),
-            drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading() - Math.toRadians(limelight.getTx())));
-    private Command driveStop = () -> drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
+    private Command setResult = () -> {
+        llTx = limelight.getTx();
+        llTy = limelight.getTy();
+        llTangle = limelight.getTangle();
+        if(llTangle > 90){
+            llTangle = -8;
+        }
+        else if(llTangle < 90){
+            llTangle = 8;
+        }
+        else{
+            llTangle = 0;
+        }
+    };
+    private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
+            drive.getPoseEstimate().getY() - (LimelightConstants.calcXDistance(llTx, llTy) - 6), drive.getPoseEstimate().getHeading());
+    private Command sweepP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
+            drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading() - Math.toRadians(llTangle));
+    private Command driveStop = () -> targetPoint = null;
     private Command telescopeExtendInches = () -> telescope
-            .setTargetInches(LimelightConstants.calcDistance(Math.toRadians(limelight.getTy())));
+            .setTargetInches(LimelightConstants.calcYDistance(llTy) + 1);
 
     private CommandSequence basket1Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
@@ -232,23 +252,28 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(sub1Command)
             .addCommand(pivotUpIntake)
-            .addWaitCommand(10)
-            .addCommand(p2p)
             .addWaitCommand(3)
+            .addCommand(setResult)
+            .addCommand(lineUpP2P)
+            .addWaitCommand(6)
             .addCommand(driveStop)
-            // .addCommand(pivotGrabIntake)
-            // .addCommand(telescopeExtendInches)
-            // .addWaitCommand(0.4)
-            // .addCommand(wristIntakeScore)
-            // .addCommand(intakeCommand)
-            // .addWaitCommand(1)
-            // .addCommand(pivotUpIntake)
-            // .addCommand(wristRetract)
-            // .addWaitCommand(0.2)
-            // .addCommand(telescopeRetract)
-            // .addWaitCommand(0.4)
-            // .addCommand(pivotUp)
-            // .addCommand(commandBusyFalse)
+            .addWaitCommand(2)
+            .addCommand(telescopeExtendInches)
+            .addCommand(intakeCommand)
+            .addWaitCommand(0.4)
+            .addCommand(pivotGrabIntake)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.3)
+            .addCommand(sweepP2P)
+            .addWaitCommand(5)
+            .addCommand(driveStop)
+            .addCommand(pivotUpIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(0.2)
+            .addCommand(telescopeRetract)
+            .addWaitCommand(0.4)
+            .addCommand(pivotUp)
+            .addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence basket5Sequence = new CommandSequence()
@@ -278,7 +303,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(sub2Command)
             .addCommand(pivotUpIntake)
             .addWaitCommand(10)
-            .addCommand(p2p)
+            .addCommand(lineUpP2P)
             .addWaitCommand(3)
             .addCommand(driveStop)
             .addCommand(pivotGrabIntake)
@@ -330,10 +355,10 @@ public class BasketAuto extends LinearOpMode {
             .addCommandSequence(basket3Sequence)
             .addCommandSequence(wallSampleSequence)
             .addCommandSequence(basket4Sequence)
-            .addCommandSequence(sub1Sequence)
-            // .addCommandSequence(basket5Sequence)
-            // .addCommandSequence(sub2Sequence)
-            // .addCommandSequence(basket6Sequence)
+//            .addCommandSequence(sub1Sequence)
+//            .addCommandSequence(basket5Sequence)
+//            .addCommandSequence(sub2Sequence)
+//            .addCommandSequence(basket6Sequence)
             .addCommandSequence(resetPivot)
             .addCommandSequence(doNothing)
             .build();
@@ -346,14 +371,14 @@ public class BasketAuto extends LinearOpMode {
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
-        limelight = new Limelight(this);
+//        limelight = new Limelight(this);
 
         intake.init(hardwareMap);
         pivot.init(hardwareMap);
         pivot.initPos();
         wrist.init(hardwareMap);
         telescope.init(hardwareMap);
-        limelight.init(hardwareMap);
+//        limelight.init(hardwareMap);
 
         TrajectoryVelocityConstraint slowTurn = SampleMecanumDrive.getVelocityConstraint(10, 0.1,
                 DriveConstants.TRACK_WIDTH);
@@ -430,34 +455,34 @@ public class BasketAuto extends LinearOpMode {
                 .build();
         telemetry.addLine("Built basket4Traj");
         telemetry.update();
-        sub1Traj = drive
-                .trajectorySequenceBuilder(basket4Traj.end())
-                .setReversed(false)
-                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_1.getPose(), BasketConstants.SUBMERSIBLE_1.getH())
-                .build();
-        telemetry.addLine("Built sub1Traj");
-        telemetry.update();
-        basket5Traj = drive
-                .trajectorySequenceBuilder(sub1Traj.end())
-                .setReversed(true)
-                .splineToLinearHeading(BasketConstants.BASKET_5.getPose(), 5 * Math.PI / 4)
-                .build();
-        telemetry.addLine("Built basket5Traj");
-        telemetry.update();
-        sub2Traj = drive
-                .trajectorySequenceBuilder(basket5Traj.end())
-                .setReversed(false)
-                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_2.getPose(), BasketConstants.SUBMERSIBLE_2.getH())
-                .build();
-        telemetry.addLine("Built sub2raj");
-        telemetry.update();
-        basket6Traj = drive
-                .trajectorySequenceBuilder(sub2Traj.end())
-                .setReversed(true)
-                .splineToLinearHeading(BasketConstants.BASKET_6.getPose(), 5 * Math.PI / 4)
-                .build();
-        telemetry.addLine("Built basket6Traj");
-        telemetry.update();
+//        sub1Traj = drive
+//                .trajectorySequenceBuilder(basket4Traj.end())
+//                .setReversed(false)
+//                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_1.getPose(), BasketConstants.SUBMERSIBLE_1.getH())
+//                .build();
+//        telemetry.addLine("Built sub1Traj");
+//        telemetry.update();
+//        basket5Traj = drive
+//                .trajectorySequenceBuilder(sub1Traj.end())
+//                .setReversed(true)
+//                .splineToLinearHeading(BasketConstants.BASKET_5.getPose(), 5 * Math.PI / 4)
+//                .build();
+//        telemetry.addLine("Built basket5Traj");
+//        telemetry.update();
+//        sub2Traj = drive
+//                .trajectorySequenceBuilder(basket5Traj.end())
+//                .setReversed(false)
+//                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_2.getPose(), BasketConstants.SUBMERSIBLE_2.getH())
+//                .build();
+//        telemetry.addLine("Built sub2raj");
+//        telemetry.update();
+//        basket6Traj = drive
+//                .trajectorySequenceBuilder(sub2Traj.end())
+//                .setReversed(true)
+//                .splineToLinearHeading(BasketConstants.BASKET_6.getPose(), 5 * Math.PI / 4)
+//                .build();
+//        telemetry.addLine("Built basket6Traj");
+//        telemetry.update();
 
         while (opModeInInit() && !isStopRequested()) {
             drive.updatePoseEstimate();
@@ -472,23 +497,28 @@ public class BasketAuto extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
+            if (targetPoint != null) {
+                Drive.p2p(drive, targetPoint);
+            }
             drive.update();
             telescope.update();
             pivot.update();
             limelight.update();
             commandMachine.run(drive.isBusy() || commandBusy);
-            telemetry.addData("limelight tx", limelight.getTx());
-            telemetry.addData("limelight ty", limelight.getTy());
-            telemetry.addData("telescope extend dist",
-                    LimelightConstants.calcDistance(Math.toRadians(limelight.getTy())));
-            telemetry.addData("target heading",
-                    drive.getPoseEstimate().getHeading() - Math.toRadians(limelight.getTx()));
+//            telemetry.addData("limelight tx", llTx);
+//            telemetry.addData("limelight ty", llTy);
+//            telemetry.addData("limelight tangle", llTangle);
+//            telemetry.addData("limelight strafe distance",
+//                    LimelightConstants.calcXDistance(llTx, llTy) - 6);
+//            telemetry.addData("telescope extend dist",
+//                    LimelightConstants.calcYDistance(Math.toRadians(llTy)));
+            telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();
         }
 
-        limelight.stop();
+//        limelight.stop();
         Thread.sleep(500);
     }
 }

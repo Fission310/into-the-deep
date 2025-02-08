@@ -36,7 +36,6 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -111,7 +110,7 @@ public class LimelightDev extends LinearOpMode {
                 telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
                     telemetry.addData("tx", result.getTx());
                     telemetry.addData("ty", result.getTy());
-                telemetry.addData("extend", LimelightConstants.calcDistance(result.getTy()));
+                telemetry.addData("extend", LimelightConstants.calcYDistance(result.getTy()));
 
                 if (result.isValid()) {
                     telemetry.addData("tx", result.getTx());
