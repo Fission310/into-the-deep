@@ -217,7 +217,7 @@ public class Scoring extends Mechanism {
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("state", state);
         drivetrain.telemetry(telemetry);
-        //intake.telemetry(telemetry);
+        intake.telemetry(telemetry);
         pivot.telemetry(telemetry);
         telescope.telemetry(telemetry);
         wrist.telemetry(telemetry);
@@ -304,9 +304,9 @@ public class Scoring extends Mechanism {
             case INTAKE:
                 drivetrain.setIntake();
                 //wrist.loop(gamepad);
-                // if (claw.isSample()) {
-                // retractTele.trigger();
-                // }
+                if (intake.isSample()) {
+                    retractTele.trigger();
+                }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
                         retractTele.trigger();
