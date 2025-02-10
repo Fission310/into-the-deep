@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -19,10 +18,10 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
     public static double OUTTAKE_POWER = -0.8;
-    public static int SAMPLE = 20;
-    public static int RED = 10;
-    public static int BLUE = 10;
-    public static int YELLOW = 10;
+    public static int SAMPLE = 35;
+    public static int RED = 200;
+    public static int BLUE = 400;
+    public static int YELLOW = 400;
 
     private CRServo intakeServo;
     private SampleSensor sampleSensor;
@@ -77,6 +76,7 @@ public class Intake extends Mechanism {
         private String name;
 
         private double far;
+        private int red, blue, yellow;
 
         public SampleSensor(LinearOpMode opMode, String name, double far) {
             this.opMode = opMode;
@@ -95,19 +95,19 @@ public class Intake extends Mechanism {
         }
 
         public boolean isSampleColor() {
-            int blue = sensor.blue();
-            int red = sensor.red();
+            blue = sensor.blue();
+            red = sensor.red();
             int green = sensor.green();
-            int yellow = (red + green) / 2;
+            yellow = (red + green) / 2;
             boolean isSample = red > RED || blue > BLUE || yellow > YELLOW;
             return isSample;
         }
 
         @Override
         public void telemetry(Telemetry telemetry) {
-            telemetry.addData(name + " red", sensor.red());
-            telemetry.addData(name + " blue", sensor.blue());
-            telemetry.addData(name + " yellow", sensor.green());
+            telemetry.addData(name + " red", red);
+            telemetry.addData(name + " blue", blue);
+            telemetry.addData(name + " yellow", yellow);
             telemetry.addData(name + " isSample", isSampleColor());
             telemetry.addData(name + " dist", sensor.getDistance(DistanceUnit.MM));
         }
