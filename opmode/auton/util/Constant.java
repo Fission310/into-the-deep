@@ -23,6 +23,6 @@ public class Constant {
     }
 
     public double getH() {
-        return HEADING;
+        return Math.toRadians(HEADING);
     }
 }

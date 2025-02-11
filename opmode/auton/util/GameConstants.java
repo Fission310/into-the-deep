@@ -5,8 +5,8 @@ public class GameConstants{
     public static final double BOT_WIDTH = 15.0;
     public static final double WALL_POS = 72;
     public static final double TILE_LENGTH = WALL_POS / 3.0;
-    public static final double RIGHT = Math.toRadians(0);
-    public static final double UP = Math.toRadians(90);
-    public static final double LEFT = Math.toRadians(180);
-    public static final double DOWN = Math.toRadians(270);
+    public static final double RIGHT = 0;
+    public static final double UP = 90;
+    public static final double LEFT = 180;
+    public static final double DOWN = 270;
 }

@@ -16,6 +16,8 @@ import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opmode.auton.BasketConstants;
+import org.firstinspires.ftc.teamcode.opmode.auton.BasketConstants;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
@@ -30,10 +32,8 @@ public class Pivot extends Mechanism {
     public static int INTAKE_UP_POS = 140;
     public static int INTAKE_DOWN_POS = 140;
     public static int INTAKE_GRAB_POS = 124;
-    public static int AUTO_INTAKE_GRAB_POS = 123;
     public static int WALL_POS = 162;
     public static int BASKET_POS = 250;
-    public static int AUTO_BASKET_POS = 250;
     public static int CLIP_POS = 200;
     public static int CLIP_DOWN_POS = 193;
     public static int CLIP_BACK_POS = 232;
@@ -130,7 +130,7 @@ public class Pivot extends Mechanism {
     }
 
     public void autoIntakeGrabPos() {
-        setTarget(AUTO_INTAKE_GRAB_POS);
+        setTarget(BasketConstants.PIVOT_INTAKE_GRAB_POS);
     }
 
     public void wallPos() {
@@ -142,7 +142,7 @@ public class Pivot extends Mechanism {
     }
 
     public void autoBasketPos() {
-        setTarget(AUTO_BASKET_POS);
+        setTarget(BasketConstants.PIVOT_BASKET_POS);
     }
 
     public void clipPos() {
