@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.stuyfission.fissionlib.command.Command;
+import com.stuyfission.fissionlib.command.CommandMachine;
 import com.stuyfission.fissionlib.command.CommandSequence;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
@@ -22,6 +24,7 @@ public class Scoring extends Mechanism {
     private Sweeper sweeper = new Sweeper(opMode);
 
     private State state = State.FRONT;
+    private Color color;
 
     private enum State {
         FRONT,
@@ -55,8 +58,9 @@ public class Scoring extends Mechanism {
     private boolean dpadClicked = false;
     private boolean rightStickClicked = false;
 
-    public Scoring(LinearOpMode opMode) {
+    public Scoring(LinearOpMode opMode, Color color) {
         this.opMode = opMode;
+        this.color = color;
     }
 
     private Command intakeCommand = () -> intake.intake();
@@ -90,6 +94,11 @@ public class Scoring extends Mechanism {
             .addCommand(intakeCommand)
             .build();
 
+    private CommandSequence eject = new CommandSequence()
+            .addCommand(outakeCommand)
+            .addWaitCommand(0.5)
+            .addCommand(intakeCommand)
+            .build();
     private CommandSequence scoreBasket = new CommandSequence()
             .addCommand(outakeCommand)
             .addWaitCommand(BASKET_RELEASE_WAIT)
@@ -159,14 +168,12 @@ public class Scoring extends Mechanism {
             .addCommand(telescopeClimbUpPos)
             .addCommand(wristClimbPos)
             .build();
-
     public CommandSequence climbDown = new CommandSequence()
             .addCommand(telescopeClimbUpPos2)
             .addWaitCommand(CLIMB_DOWN_WAIT)
             .addCommand(telescopeClimbDownPos)
             .addCommand(pivotClimbDownPos)
             .build();
-
     public void goFront() {
         state = State.FRONT;
         pivot.frontPos();
@@ -229,6 +236,8 @@ public class Scoring extends Mechanism {
         drivetrain.loop(gamepad);
         pivot.update();
         telescope.update();
+        intake.update();
+
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
@@ -304,8 +313,11 @@ public class Scoring extends Mechanism {
             case INTAKE:
                 drivetrain.setIntake();
                 //wrist.loop(gamepad);
-                if (intake.isSample()) {
+                if(intake.hasSample() && intake.hasColor(color)){
                     retractTele.trigger();
+                }
+                if(intake.hasSample() && !intake.hasColor(color)){
+                    eject.trigger();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {

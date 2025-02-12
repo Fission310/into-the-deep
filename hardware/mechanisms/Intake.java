@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -12,23 +13,30 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
     public static double OUTTAKE_POWER = -0.8;
+    public static double SAMPLE_ROTATION = 1;
     public static int SAMPLE = 35;
     public static int RED = 200;
     public static int BLUE = 400;
     public static int YELLOW = 400;
 
     private CRServo intakeServo;
-    private SampleSensor sampleSensor;
-
+    private SampleSensor sampleSensor1;
+    private SampleSensor sampleSensor2;
+    private AnalogInput encoder;
+    private double prevPos;
+    private double currPos;
+    private double rotation;
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
-        sampleSensor = new SampleSensor(opMode, "intakeSensor", SAMPLE);
+        sampleSensor1 = new SampleSensor(opMode, "intakeSensor1", SAMPLE);
+        sampleSensor2 = new SampleSensor(opMode, "intakeSensor2", SAMPLE);
     }
 
     public void intake() {
@@ -44,8 +52,32 @@ public class Intake extends Mechanism {
         intakeServo.setPower(0);
     }
 
+    public double getPosition() {
+        return encoder.getVoltage() / 3.2 * 360;
+    }
+    public void setPosition(){
+        prevPos = currPos;
+        currPos = getPosition();
+        if(currPos < prevPos){
+            prevPos -= 360;
+        }
+    }
+    public void setRotation(){
+        rotation = currPos - prevPos;
+    }
+    public boolean hasSample(){
+        return Math.abs(rotation) <= SAMPLE_ROTATION;
+    }
+
     public boolean isSample(){
-        return sampleSensor.isSample() && sampleSensor.isSampleColor();
+        return hasSample() && sampleSensor1.isSampleColor() || sampleSensor2.isSampleColor();
+    }
+    public boolean isSample(Color color){
+        return hasSample() && sampleSensor1.isSampleColor(color) || sampleSensor2.isSampleColor(color);
+    }
+
+    public boolean hasColor(Color color){
+        return sampleSensor1.isSampleColor(color) || sampleSensor2.isSampleColor(color);
     }
 
     @Override
@@ -53,16 +85,29 @@ public class Intake extends Mechanism {
         intakeServo = hwMap.get(CRServo.class, "intakeServo");
         intakeServo.setDirection(Direction.REVERSE);
 
-        sampleSensor.init(hwMap);
+        sampleSensor1.init(hwMap);
+        sampleSensor2.init(hwMap);
+        encoder = hwMap.get(AnalogInput.class, "intakeEncoder");
+        currPos = getPosition();
     }
 
     @Override
     public void telemetry(Telemetry telemetry) {
-        sampleSensor.telemetry(telemetry);
+        telemetry.addData("positionPrev", prevPos);
+        telemetry.addData("positionCurr", currPos);
+        telemetry.addData("rotation", rotation);
+        sampleSensor1.telemetry(telemetry);
+        sampleSensor2.telemetry(telemetry);
+    }
+
+    public void update(){
+        setPosition();
+        setRotation();
     }
 
     @Override
     public void loop(Gamepad gamepad) {
+        update();
         if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
             intake();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
@@ -93,14 +138,29 @@ public class Intake extends Mechanism {
         public boolean isSample() {
             return sensor.getDistance(DistanceUnit.MM) < far;
         }
-
         public boolean isSampleColor() {
             blue = sensor.blue();
             red = sensor.red();
             int green = sensor.green();
             yellow = (red + green) / 2;
-            boolean isSample = red > RED || blue > BLUE || yellow > YELLOW;
-            return isSample;
+            return red > RED || blue > BLUE || yellow > YELLOW;
+        }
+        public boolean isSampleColor(Color color) {
+            blue = sensor.blue();
+            red = sensor.red();
+            if(color == Color.BLUE){
+                return blue > BLUE || yellow > YELLOW;
+            }
+            return red > RED || yellow > YELLOW;
+        }
+        public boolean isBlue(){
+            return blue > BLUE;
+        }
+        public boolean isRed(){
+            return red > RED;
+        }
+        public boolean isYellow(){
+            return yellow > YELLOW;
         }
 
         @Override
@@ -108,8 +168,7 @@ public class Intake extends Mechanism {
             telemetry.addData(name + " red", red);
             telemetry.addData(name + " blue", blue);
             telemetry.addData(name + " yellow", yellow);
-            telemetry.addData(name + " isSample", isSampleColor());
-            telemetry.addData(name + " dist", sensor.getDistance(DistanceUnit.MM));
+            telemetry.addData(name + " hasSample", hasSample());
         }
     }
 }

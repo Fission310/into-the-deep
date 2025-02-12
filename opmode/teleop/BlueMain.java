@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Main", group = "_amain")
-public class Main extends LinearOpMode {
+@TeleOp(name = "BlueMain", group = "_amain")
+public class BlueMain extends LinearOpMode {
 
-    private Robot robot = new Robot(this);
+    private Robot robot = new Robot(this, Color.BLUE);
 
     @Override
     public void runOpMode() throws InterruptedException {
