@@ -21,10 +21,15 @@ public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
     public static double OUTTAKE_POWER = -0.8;
     public static double SAMPLE_ROTATION = 1;
-    public static int SAMPLE = 35;
-    public static int RED = 200;
-    public static int BLUE = 400;
-    public static int YELLOW = 400;
+    public static int SAMPLE1 = 35;
+    public static int RED1 = 200;
+    public static int BLUE1 = 400;
+    public static int YELLOW1 = 400;
+
+    public static int SAMPLE2 = 24;
+    public static int RED2 = 1800;
+    public static int BLUE2 = 1200;
+    public static int YELLOW2 = 2500;
 
     private CRServo intakeServo;
     private SampleSensor sampleSensor1;
@@ -33,10 +38,11 @@ public class Intake extends Mechanism {
     private double prevPos;
     private double currPos;
     private double rotation;
+
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
-        sampleSensor1 = new SampleSensor(opMode, "intakeSensor1", SAMPLE);
-        sampleSensor2 = new SampleSensor(opMode, "intakeSensor2", SAMPLE);
+        sampleSensor1 = new SampleSensor(opMode, "intakeSensor1", SAMPLE1, RED1, BLUE1, YELLOW1);
+        sampleSensor2 = new SampleSensor(opMode, "intakeSensor2", SAMPLE2, RED1, BLUE1, YELLOW1);
     }
 
     public void intake() {
@@ -55,29 +61,23 @@ public class Intake extends Mechanism {
     public double getPosition() {
         return encoder.getVoltage() / 3.2 * 360;
     }
-    public void setPosition(){
+
+    public void setPosition() {
         prevPos = currPos;
         currPos = getPosition();
-        if(currPos < prevPos){
-            prevPos -= 360;
-        }
-    }
-    public void setRotation(){
-        rotation = currPos - prevPos;
-    }
-    public boolean hasSample(){
-        return Math.abs(rotation) <= SAMPLE_ROTATION;
+        rotation = Math.abs(currPos - prevPos);
     }
 
-    public boolean isSample(){
-        return hasSample() && sampleSensor1.isSampleColor() || sampleSensor2.isSampleColor();
-    }
-    public boolean isSample(Color color){
-        return hasSample() && sampleSensor1.isSampleColor(color) || sampleSensor2.isSampleColor(color);
+    public boolean hasSample() {
+        return rotation <= SAMPLE_ROTATION;
     }
 
-    public boolean hasColor(Color color){
+    public boolean hasColor(Color color) {
         return sampleSensor1.isSampleColor(color) || sampleSensor2.isSampleColor(color);
+    }
+
+    public boolean hasWrongColor(Color color) {
+        return sampleSensor1.isSampleWrongColor(color) || sampleSensor2.isSampleWrongColor(color);
     }
 
     @Override
@@ -100,9 +100,10 @@ public class Intake extends Mechanism {
         sampleSensor2.telemetry(telemetry);
     }
 
-    public void update(){
+    public void update() {
         setPosition();
-        setRotation();
+        sampleSensor1.update();
+        sampleSensor2.update();
     }
 
     @Override
@@ -120,13 +121,19 @@ public class Intake extends Mechanism {
         private ColorRangeSensor sensor;
         private String name;
 
-        private double far;
+        private double FAR;
+        private double dist;
         private int red, blue, yellow;
+        private double RED, BLUE, YELLOW;
 
-        public SampleSensor(LinearOpMode opMode, String name, double far) {
+        public SampleSensor(LinearOpMode opMode, String name, double far, double red, double blue, double yellow) {
             this.opMode = opMode;
             this.name = name;
-            this.far = far;
+            this.FAR = far;
+
+            this.RED = red;
+            this.BLUE = blue;
+            this.YELLOW = yellow;
         }
 
         public void init(HardwareMap hwMap) {
@@ -136,30 +143,40 @@ public class Intake extends Mechanism {
         }
 
         public boolean isSample() {
-            return sensor.getDistance(DistanceUnit.MM) < far;
+            return dist < FAR;
         }
-        public boolean isSampleColor() {
+
+        public void update() {
+            dist = sensor.getDistance(DistanceUnit.MM);
             blue = sensor.blue();
             red = sensor.red();
             int green = sensor.green();
             yellow = (red + green) / 2;
-            return red > RED || blue > BLUE || yellow > YELLOW;
         }
+
         public boolean isSampleColor(Color color) {
-            blue = sensor.blue();
-            red = sensor.red();
-            if(color == Color.BLUE){
-                return blue > BLUE || yellow > YELLOW;
+            if (color == Color.BLUE) {
+                return (isBlue() || isYellow()) && isSample();
             }
-            return red > RED || yellow > YELLOW;
+            return (isRed() || isYellow()) && isSample();
         }
-        public boolean isBlue(){
+
+        public boolean isSampleWrongColor(Color color) {
+            if (color == Color.RED) {
+                return isBlue();
+            }
+            return isRed();
+        }
+
+        public boolean isBlue() {
             return blue > BLUE;
         }
-        public boolean isRed(){
-            return red > RED;
+
+        public boolean isRed() {
+            return red > RED && yellow < YELLOW;
         }
-        public boolean isYellow(){
+
+        public boolean isYellow() {
             return yellow > YELLOW;
         }
 
@@ -168,7 +185,7 @@ public class Intake extends Mechanism {
             telemetry.addData(name + " red", red);
             telemetry.addData(name + " blue", blue);
             telemetry.addData(name + " yellow", yellow);
-            telemetry.addData(name + " hasSample", hasSample());
+            telemetry.addData(name + " dist", Math.round(dist));
         }
     }
 }

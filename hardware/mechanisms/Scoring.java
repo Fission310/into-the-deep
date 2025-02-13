@@ -94,11 +94,6 @@ public class Scoring extends Mechanism {
             .addCommand(intakeCommand)
             .build();
 
-    private CommandSequence eject = new CommandSequence()
-            .addCommand(outakeCommand)
-            .addWaitCommand(0.5)
-            .addCommand(intakeCommand)
-            .build();
     private CommandSequence scoreBasket = new CommandSequence()
             .addCommand(outakeCommand)
             .addWaitCommand(BASKET_RELEASE_WAIT)
@@ -174,6 +169,7 @@ public class Scoring extends Mechanism {
             .addCommand(telescopeClimbDownPos)
             .addCommand(pivotClimbDownPos)
             .build();
+
     public void goFront() {
         state = State.FRONT;
         pivot.frontPos();
@@ -238,13 +234,11 @@ public class Scoring extends Mechanism {
         telescope.update();
         intake.update();
 
-
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
-            if(state == State.BASKET){
+            if (state == State.BASKET) {
                 wrist.basketABit();
-            }
-            else if(state == State.INTAKE){
+            } else if (state == State.INTAKE) {
                 wrist.intakeABit();
             }
         }
@@ -312,12 +306,16 @@ public class Scoring extends Mechanism {
                 break;
             case INTAKE:
                 drivetrain.setIntake();
-                //wrist.loop(gamepad);
-                if(intake.hasSample() && intake.hasColor(color)){
-                    retractTele.trigger();
-                }
-                if(intake.hasSample() && !intake.hasColor(color)){
-                    eject.trigger();
+                // wrist.loop(gamepad);
+                if (intake.hasSample()) {
+                    if (intake.hasWrongColor(color)) {
+                        intake.outtake();
+                    } else {
+                        intake.intake();
+                    }
+                    if (intake.hasColor(color)) {
+                        retractTele.trigger();
+                    }
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {

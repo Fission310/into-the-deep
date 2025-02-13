@@ -18,9 +18,9 @@ public class Wrist extends Mechanism {
     private Servo wristServoRight;
     private Servo wristServoLeft;
 
-    public static double INTAKE_DOWN_ABIT = 0.03;
+    public static double INTAKE_DOWN_ABIT = 0.01;
     public static double BASKET_DOWN_ABIT = 0.05;
-    public static double[][] INTAKE_POS = { { 0.49, 0.49 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] INTAKE_POS = { { 0.47, 0.47 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_DOWN_POS = { { 0.71, 0.48 }, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
     public static double[][] FRONT_POS = { { 0.23, 0.3 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] WALL_POS = { { 0.31, 0.3 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
