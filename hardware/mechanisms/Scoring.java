@@ -290,6 +290,9 @@ public class Scoring extends Mechanism {
                 intake.intake();
                 break;
             case FRONT:
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+                    intake.outtake();
+                }
                 drivetrain.setNormal();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE_SHORT)) {
                     frontIntakeShort.trigger();
@@ -309,7 +312,7 @@ public class Scoring extends Mechanism {
                 // wrist.loop(gamepad);
                 if (intake.hasSample()) {
                     if (intake.hasWrongColor(color)) {
-                        intake.outtake();
+                        //intake.outtake();
                     } else {
                         intake.intake();
                     }
