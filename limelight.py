@@ -301,15 +301,94 @@ def runPipeline(frame, llrobot):
                         }
                     )
 
-        game_pieces.sort(key=lambda x: x["area"], reverse=True)
+        # game_pieces.sort(key=lambda x: x["area"], reverse=True)
+        ###
+        # end up with 1 sample
+        LOWER_CLOSE_AREA = 3000
+        LOWER_MEDIUM_AREA = 2000
+        UPPER_GOOD_ANGLE = 100
+        LOWER_GOOD_ANGLE = 80
+        UPPER_MEDIUM_ANGLE = 80
+        LOWER_MEDIUM_ANGLE = 60
 
-        if len(game_pieces) > 0:
-            game_piece = game_pieces[0]
-            llpython = [1, game_piece["position"][0], game_piece["position"][1], game_piece["angle"], 0, 0, 0, 0]
-            largest_contour = game_piece["contour"]
 
-        return largest_contour, colors_only, llpython
+        for game_piece in game_pieces:
+            obstructed = False
+            angleGood = False
+            angleMedium = False
+            angleBad = False
+            distanceFar = False
+            distanceGood = False
+            distanceClose = False
+            difficulty = 0
 
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return np.array([[]]), frame, [0, 0, 0, 0, 0, 0, 0, 0]
+
+            angle = game_piece["angle"]
+            area = game_piece["area"]
+            points = 0
+
+            # Area
+            if area > LOWER_CLOSE_AREA:
+                distanceClose = True
+            elif area > LOWER_MEDIUM_AREA:
+                distanceGood = True
+            else:
+                distanceFar = True
+
+            # Angle
+            if angle > LOWER_GOOD_ANGLE and angle < UPPER_GOOD_ANGLE:
+                angleGood = True
+            elif angle > LOWER_MEDIUM_ANGLE and angle < UPPER_MEDIUM_ANGLE:
+                angleMedium = True
+            else:
+                angleBad = True
+
+            # Calculate difficulty and points based on conditions
+
+        if angleBad:
+            difficulty += 30
+            elif angleMedium:
+            difficulty += 20
+        elif angleGood:
+            difficulty += 10
+
+        if distanceFar:
+            difficulty += 30
+        elif distanceGood:
+            difficulty += 20
+        elif distanceClose:
+            difficulty += 10
+
+        if unobstructed and angleGood and distanceGood:
+            difficulty -= 10
+        elif unobstructed and angleGood and distanceClose:
+            difficulty -= 9
+        elif unobstructed and angleGood and distanceFar:
+            difficulty -= 8
+        elif unobstructed and angleMedium and distanceGood:
+            difficulty -= 7
+        elif unobstructed and angleMedium and distanceClose:
+            difficulty -= 6
+        elif unobstructed and angleMedium and distanceFar:
+            difficulty -= 5
+        elif unobstructed and angleBad and distanceGood:
+            difficulty -= 4
+        elif unobstructed and angleBad and distanceClose:
+            difficulty -= 3
+        elif unobstructed and angleBad and distanceFar:
+            difficulty -= 2
+        else:
+            difficulty += 10
+
+###
+
+if len(game_pieces) > 0:
+    game_piece = game_pieces[0]
+    llpython = [1, game_piece["position"][0], game_piece["position"][1], game_piece["angle"], 0, 0, 0, 0]
+    largest_contour = game_piece["contour"]
+
+return largest_contour, colors_only, llpython
+
+except Exception as e:
+print(f"Error: {str(e)}")
+return np.array([[]]), frame, [0, 0, 0, 0, 0, 0, 0, 0]
