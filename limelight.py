@@ -298,97 +298,128 @@ def runPipeline(frame, llrobot):
                             "hierarchy_level": (
                                 "external" if hierarchy[0][i][3] == -1 else "internal"
                             ),
+                            "difficulty": 0,
                         }
                     )
 
-        # game_pieces.sort(key=lambda x: x["area"], reverse=True)
-        ###
-        # end up with 1 sample
-        LOWER_CLOSE_AREA = 3000
-        LOWER_MEDIUM_AREA = 2000
+        # Edit these values please cookie monster
+        CLOSE_DISTANCE = 0
+        MEDIUM_DISTANCE = 0
+
+        # unobstructed areas
+        CLOSE_AREA = 3000
+        MEDIUM_AREA = 2000
+        FAR_AREA = 1000
+
         UPPER_GOOD_ANGLE = 100
         LOWER_GOOD_ANGLE = 80
         UPPER_MEDIUM_ANGLE = 80
         LOWER_MEDIUM_ANGLE = 60
 
+        
+        good_angle = False
+        medium_angle = False
+        bad_angle = False
+        
+        far_distance = False
+        medium_distance = False
+        close_distance = False
+        
+        far_area = False
+        medium_area = False
+        close_area = False
+
+        no_obstruction = False
+        some_obstruction = False
+        full_obstruction = False
+
+        def dist(position):
+            return math.sqrt(position[0] ** 2 + position[1] ** 2)
 
         for game_piece in game_pieces:
-            obstructed = False
-            angleGood = False
-            angleMedium = False
-            angleBad = False
-            distanceFar = False
-            distanceGood = False
-            distanceClose = False
             difficulty = 0
-
 
             angle = game_piece["angle"]
             area = game_piece["area"]
-            points = 0
+            distance = dist(game_piece["position"])
+
+            # Distance
+            if distance < CLOSE_DISTANCE:
+                close_distance = True
+            elif distance < MEDIUM_DISTANCE:
+                medium_distance = True
+            else:
+                far_distance = True
 
             # Area
-            if area > LOWER_CLOSE_AREA:
-                distanceClose = True
-            elif area > LOWER_MEDIUM_AREA:
-                distanceGood = True
-            else:
-                distanceFar = True
+            if area > CLOSE_AREA:
+                close_area = True
+            elif area > MEDIUM_AREA:
+                medium_area = True
+            elif area > FAR_AREA:
+                far_area = True
 
             # Angle
             if angle > LOWER_GOOD_ANGLE and angle < UPPER_GOOD_ANGLE:
-                angleGood = True
+                good_angle = True
             elif angle > LOWER_MEDIUM_ANGLE and angle < UPPER_MEDIUM_ANGLE:
-                angleMedium = True
+                medium_angle = True
             else:
-                angleBad = True
+                bad_angle = True
+
+            # Obstruction
+            if close_distance:
+                if close_area:
+                    no_obstruction = True
+                elif medium_area:
+                    some_obstruction = True
+                else:
+                    full_obstruction = True
+
+            elif medium_distance:
+                if medium_area:
+                    no_obstruction = True
+                elif far_area:
+                    some_obstruction = True
+                else:
+                    full_obstruction = True
+
+            elif far_distance:
+                if far_area:
+                    no_obstruction = True
+                else:
+                    full_obstruction = True
+
 
             # Calculate difficulty and points based on conditions
+            if full_obstruction:
+                difficulty += 1000 # don't even try getting a fully obstructed one
+            elif some_obstruction:
+                difficulty += 80
 
-        if angleBad:
-            difficulty += 30
-            elif angleMedium:
-            difficulty += 20
-        elif angleGood:
-            difficulty += 10
+            if bad_angle:
+                difficulty += 50
+            elif medium_angle:
+                difficulty += 30
 
-        if distanceFar:
-            difficulty += 30
-        elif distanceGood:
-            difficulty += 20
-        elif distanceClose:
-            difficulty += 10
+            if far_distance:
+                difficulty += 50
+            elif medium_distance:
+                difficulty += 30
 
-        if unobstructed and angleGood and distanceGood:
-            difficulty -= 10
-        elif unobstructed and angleGood and distanceClose:
-            difficulty -= 9
-        elif unobstructed and angleGood and distanceFar:
-            difficulty -= 8
-        elif unobstructed and angleMedium and distanceGood:
-            difficulty -= 7
-        elif unobstructed and angleMedium and distanceClose:
-            difficulty -= 6
-        elif unobstructed and angleMedium and distanceFar:
-            difficulty -= 5
-        elif unobstructed and angleBad and distanceGood:
-            difficulty -= 4
-        elif unobstructed and angleBad and distanceClose:
-            difficulty -= 3
-        elif unobstructed and angleBad and distanceFar:
-            difficulty -= 2
-        else:
-            difficulty += 10
+            game_piece["difficulty"] = difficulty
 
-###
+        game_pieces.sort(key=lambda x: x["difficulty"])
 
-if len(game_pieces) > 0:
-    game_piece = game_pieces[0]
-    llpython = [1, game_piece["position"][0], game_piece["position"][1], game_piece["angle"], 0, 0, 0, 0]
-    largest_contour = game_piece["contour"]
+        if len(game_pieces) > 0:
+            game_piece = game_pieces[0]
+            llpython = [1, game_piece["position"][0], game_piece["position"][1], game_piece["angle"], 0, 0, 0, 0]
+            largest_contour = game_piece["contour"]
 
-return largest_contour, colors_only, llpython
+        return largest_contour, colors_only, llpython
 
-except Exception as e:
-print(f"Error: {str(e)}")
-return np.array([[]]), frame, [0, 0, 0, 0, 0, 0, 0, 0]
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return np.array([[]]), frame, [0, 0, 0, 0, 0, 0, 0, 0]
+
+
