@@ -66,12 +66,6 @@ public class LimelightAuto extends LinearOpMode {
         limelightInfo[2][limelightRun] = llTy;
         limelightInfo[3][limelightRun] = llTangle;
 
-        try {
-            appendCSVData();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
         limelightRun += 1;
     };
     private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
@@ -171,6 +165,13 @@ public class LimelightAuto extends LinearOpMode {
         }
 
         limelight.stop();
+
+        try {
+            appendCSVData();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         Thread.sleep(500);
     }
 
