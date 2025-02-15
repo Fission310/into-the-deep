@@ -13,7 +13,7 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 public class Limelight extends Mechanism {
     private Limelight3A limelight;
-    private double tx, ty, tangle;
+    private double ta, tx, ty, tangle;
 
     public Limelight(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -32,6 +32,7 @@ public class Limelight extends Mechanism {
     public void update() {
         LLResult result = limelight.getLatestResult();
         if (result != null) {
+            ta = result.getTa();
             tx = result.getTx();
             ty = result.getTy();
             tangle = result.getPythonOutput()[3];
@@ -42,6 +43,7 @@ public class Limelight extends Mechanism {
     public void telemetry(Telemetry telemetry) {
         LLStatus status = limelight.getStatus();
         telemetry.addData("limelight temp", "%.1fC", status.getTemp());
+        telemetry.addData("limelight ta", ta);
         telemetry.addData("limelight tx", tx);
         telemetry.addData("limelight ty", ty);
         telemetry.addData("limelight tangle", tangle);
@@ -55,6 +57,9 @@ public class Limelight extends Mechanism {
         limelight.pipelineSwitch(pipeline);
     }
 
+    public double getTa() {
+        return ta;
+    }
     public double getTx() {
         return tx;
     }
