@@ -338,6 +338,7 @@ def runPipeline(frame, llrobot):
 
         for game_piece in game_pieces:
             difficulty = 0
+            expected_area = 0
 
             angle = game_piece["angle"]
             area = game_piece["area"]
@@ -353,10 +354,13 @@ def runPipeline(frame, llrobot):
 
             # Area
             if area > CLOSE_AREA:
+                expected_area = CLOSE_AREA
                 close_area = True
             elif area > MEDIUM_AREA:
+                expected_area = MEDIUM_AREA
                 medium_area = True
             elif area > FAR_AREA:
+                expected_area = FAR_AREA
                 far_area = True
 
             # Angle
@@ -390,22 +394,28 @@ def runPipeline(frame, llrobot):
                 else:
                     full_obstruction = True
 
-
+            
             # Calculate difficulty and points based on conditions
             if full_obstruction:
-                difficulty += 1000 # don't even try getting a fully obstructed one
+                difficulty += 1000
             elif some_obstruction:
-                difficulty += 80
+                difficulty += 100
+            elif no_obstruction:
+                difficulty += 10 - min(abs(area - expected_area), 10) # ensure this is smaller than the some obstruction case (100) (divide or subtract by a certain constant)
 
             if bad_angle:
-                difficulty += 50
+                difficulty += 100
             elif medium_angle:
-                difficulty += 30
+                difficulty += 50
+            elif good_angle:
+                difficulty += abs(90 - angle)
 
             if far_distance:
-                difficulty += 50
+                difficulty += 100
             elif medium_distance:
-                difficulty += 30
+                difficulty += 50
+            elif close_distance:
+                difficulty += abs(CLOSE_DISTANCE - distance) # ensure this is smaller than the medium distance case (50) (divide or subtract by a certain constant)
 
             game_piece["difficulty"] = difficulty
 
