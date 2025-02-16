@@ -23,11 +23,11 @@ public class Intake extends Mechanism {
     public static double SAMPLE_ROTATION = 40;
     public static int SAMPLE1 = 26;
     public static int RED1 = 200;
-    public static int BLUE1 = 400;
-    public static int YELLOW1 = 400;
+    public static int BLUE1 = 600;
+    public static int YELLOW1 = 1000;
 
     public static int SAMPLE2 = 24;
-    public static int RED2 = 1800;
+    public static int RED2 = 1500;
     public static int BLUE2 = 1200;
     public static int YELLOW2 = 2500;
 
@@ -42,7 +42,7 @@ public class Intake extends Mechanism {
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
         sampleSensor1 = new SampleSensor(opMode, "intakeSensor1", SAMPLE1, RED1, BLUE1, YELLOW1);
-        sampleSensor2 = new SampleSensor(opMode, "intakeSensor2", SAMPLE2, RED1, BLUE1, YELLOW1);
+        sampleSensor2 = new SampleSensor(opMode, "intakeSensor2", SAMPLE2, RED2, BLUE2, YELLOW2);
     }
 
     public void intake() {
@@ -123,7 +123,7 @@ public class Intake extends Mechanism {
 
         private double FAR;
         private double dist;
-        private int red, blue, yellow;
+        private int red, blue, green;
         private double RED, BLUE, YELLOW;
 
         public SampleSensor(LinearOpMode opMode, String name, double far, double red, double blue, double yellow) {
@@ -150,8 +150,7 @@ public class Intake extends Mechanism {
             dist = sensor.getDistance(DistanceUnit.MM);
             blue = sensor.blue();
             red = sensor.red();
-            int green = sensor.green();
-            yellow = (red + green) / 2;
+            green = sensor.green();
         }
 
         public boolean isSampleColor(Color color) {
@@ -173,18 +172,21 @@ public class Intake extends Mechanism {
         }
 
         public boolean isRed() {
-            return red > RED && yellow < YELLOW;
+            return red > RED && !isYellow();
         }
 
         public boolean isYellow() {
-            return yellow > YELLOW;
+            return green > YELLOW;
         }
 
         @Override
         public void telemetry(Telemetry telemetry) {
             telemetry.addData(name + " red", red);
             telemetry.addData(name + " blue", blue);
-            telemetry.addData(name + " yellow", yellow);
+            telemetry.addData(name + " green", green);
+            telemetry.addData(name + " is red", isRed());
+            telemetry.addData(name + " is blue", isBlue());
+            telemetry.addData(name + " is yellow", isYellow());
             telemetry.addData(name + " dist", Math.round(dist));
         }
     }

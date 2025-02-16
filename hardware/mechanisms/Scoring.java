@@ -81,6 +81,7 @@ public class Scoring extends Mechanism {
     private Command setStateUp = () -> state = State.UP;
     private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristIntakeScore = () -> wrist.intakePos();
+    private Command wristIntakeShortScore = () -> wrist.intakeShortPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristClimbPos = () -> wrist.climbPos();
     private Command wristRetract = () -> wrist.frontPos();
@@ -135,7 +136,7 @@ public class Scoring extends Mechanism {
             .addCommand(pivotDownIntake)
             .addCommand(telescopeIntakeShort)
             .addWaitCommand(PIVOT_DOWN_WAIT)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristIntakeShortScore)
             .addCommand(setStateIntake)
             .addCommand(outakeCommand)
             .build();
@@ -254,7 +255,7 @@ public class Scoring extends Mechanism {
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL) && state != State.WALL) {
             goWall();
             intake.outtake();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET)) {
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET) && state != State.INTAKE) {
             goBasket();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_LOW_BASKET)) {
             goLowBasket();
