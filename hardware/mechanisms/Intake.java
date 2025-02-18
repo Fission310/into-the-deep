@@ -21,7 +21,7 @@ public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
     public static double OUTTAKE_POWER = -0.8;
     public static double SAMPLE_ROTATION = 200;
-    public static int SAMPLE1 = 18;
+    public static int SAMPLE1 = 19;
     public static int RED1 = 500;
     public static int BLUE1 = 600;
     public static int YELLOW1 = 1000;
@@ -187,6 +187,7 @@ public class Intake extends Mechanism {
             telemetry.addData(name + " is red", isRed());
             telemetry.addData(name + " is blue", isBlue());
             telemetry.addData(name + " is yellow", isYellow());
+            telemetry.addData(name + " is close", isSample());
             telemetry.addData(name + " dist", Math.round(dist));
         }
     }

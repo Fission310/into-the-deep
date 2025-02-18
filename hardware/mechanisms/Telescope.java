@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
-import org.firstinspires.ftc.teamcode.opmode.auton.BasketConstants;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,11 +18,17 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Telescope extends Mechanism {
     public static int ABIT = 60;
     public static int UP_RETRACTION = -60;
+    public static int AUTO_INTAKE_FAR_POS = 352;
+    public static int AUTO_INTAKE_CENTER_POS = 297;
+    public static int AUTO_INTAKE_WALL_POS = 462;
+    public static int AUTO_BASKET_POS = 635;
+    public static int AUTO_SAMPLE_DROP = 300;
+    public static int AUTO_INTAKE_SHORT_POS = 50;
     public static int FRONT_POS = -50;
     public static int INTAKE_POS = 450;
     public static int INTAKE_SHORT_POS = 50;
     public static int WALL_POS = 100;
-    public static int BASKET_POS = 655;
+    public static int BASKET_POS = 630;
     public static int LOW_BASKET_POS = 220;
     public static int CLIP_POS = 330;
     public static int CLIP_SCORE = 100;
@@ -79,27 +84,27 @@ public class Telescope extends Mechanism {
 
     public void autoSampleDropPos() {
         controller = horizontalController;
-        setTarget(BasketConstants.TELESCOPE_SAMPLE_DROP);
+        setTarget(AUTO_SAMPLE_DROP);
     }
 
     public void autoFarPos() {
         controller = horizontalController;
-        setTarget(BasketConstants.TELESCOPE_INTAKE_FAR_POS);
+        setTarget(AUTO_INTAKE_FAR_POS);
     }
 
     public void autoCenterPos() {
         controller = horizontalController;
-        setTarget(BasketConstants.TELESCOPE_INTAKE_CENTER_POS);
+        setTarget(AUTO_INTAKE_CENTER_POS);
     }
 
     public void autoWallPos() {
         controller = horizontalController;
-        setTarget(BasketConstants.TELESCOPE_INTAKE_WALL_POS);
+        setTarget(AUTO_INTAKE_WALL_POS);
     }
 
     public void autoBasketPos(){
         controller = verticalController;
-        setTarget(BasketConstants.TELESCOPE_BASKET_POS);
+        setTarget(AUTO_BASKET_POS);
     }
 
     public void upPos() {
@@ -124,7 +129,7 @@ public class Telescope extends Mechanism {
 
     public void frontIntakeAutoShortPos() {
         controller = horizontalController;
-        setTarget(BasketConstants.TELESCOPE_INTAKE_SHORT_POS);
+        setTarget(AUTO_INTAKE_SHORT_POS);
     }
 
     public void wallPos() {

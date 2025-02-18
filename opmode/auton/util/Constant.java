@@ -19,7 +19,7 @@ public class Constant {
     }
 
     public Pose2d getPose(){
-        return new Pose2d(X_POS, Y_POS, HEADING);
+        return new Pose2d(X_POS, Y_POS, Math.toRadians(HEADING));
     }
 
     public double getH() {

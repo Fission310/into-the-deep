@@ -20,6 +20,8 @@ import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 @Config
 public class Pivot extends Mechanism {
     public static int ABIT = 1;
+    public static int AUTO_BASKET_POS = 250;
+    public static int AUTO_INTAKE_GRAB_POS = 123;
     public static int RESET_POS = 136;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 180;
@@ -125,7 +127,7 @@ public class Pivot extends Mechanism {
     }
 
     public void autoIntakeGrabPos() {
-        setTarget(BasketConstants.PIVOT_INTAKE_GRAB_POS);
+        setTarget(AUTO_INTAKE_GRAB_POS);
     }
 
     public void wallPos() {
@@ -137,7 +139,7 @@ public class Pivot extends Mechanism {
     }
 
     public void autoBasketPos() {
-        setTarget(BasketConstants.PIVOT_BASKET_POS);
+        setTarget(AUTO_BASKET_POS);
     }
 
     public void clipPos() {

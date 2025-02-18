@@ -68,14 +68,4 @@ public class BasketConstants {
             -TILE_LENGTH,
             -TILE_LENGTH / 2 + 6,
             0);
-
-    public static double[][] WRIST_INTAKE_POS =  { { 0.515, 0.515 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
-    public static int PIVOT_INTAKE_GRAB_POS = 123;
-    public static int PIVOT_BASKET_POS = 250;
-    public static int TELESCOPE_INTAKE_FAR_POS = 367;
-    public static int TELESCOPE_INTAKE_CENTER_POS = 307;
-    public static int TELESCOPE_INTAKE_WALL_POS = 477;
-    public static int TELESCOPE_BASKET_POS = 675;
-    public static int TELESCOPE_SAMPLE_DROP = 300;
-    public static int TELESCOPE_INTAKE_SHORT_POS = 50;
 }
