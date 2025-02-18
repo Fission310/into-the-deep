@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -9,14 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
-import com.stuyfission.fissionlib.command.CommandSequence;
-import com.stuyfission.fissionlib.command.Command;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.opmode.auton.BasketConstants;
 import org.firstinspires.ftc.teamcode.opmode.auton.BasketConstants;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
@@ -39,7 +34,7 @@ public class Pivot extends Mechanism {
     public static int CLIP_BACK_POS = 232;
     public static int CLIP_BACK_DOWN_POS = 235;
     public static int BACK_POS = 294;
-    public static int UP_POS = 215;
+    public static int UP_POS = 234;
     public static int HIGHEST = 220;
     public static int CLIMB_UP_POS = 240;
     public static int CLIMB_DOWN_POS = 80;

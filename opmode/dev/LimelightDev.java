@@ -1,163 +1,182 @@
-/*
-Copyright (c) 2024 Limelight Vision
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted (subject to the limitations in the disclaimer below) provided that
-the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this list
-of conditions and the following disclaimer.
-
-Redistributions in binary form must reproduce the above copyright notice, this
-list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-
-Neither the name of FIRST nor the names of its contributors may be used to
-endorse or promote products derived from this software without specific prior
-written permission.
-
-NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
-LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 package org.firstinspires.ftc.teamcode.opmode.dev;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.stuyfission.fissionlib.command.Command;
+import com.stuyfission.fissionlib.command.CommandSequence;
+import com.stuyfission.fissionlib.input.GamepadStatic;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Limelight;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Sweeper;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Drive;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.LimelightConstants;
 
-import java.util.List;
-
-/*
- * This OpMode illustrates how to use the Limelight3A Vision Sensor.
- *
- * @see <a href="https://limelightvision.io/">Limelight</a>
- *
- * Notes on configuration:
- *
- *   The device presents itself, when plugged into a USB port on a Control Hub as an ethernet
- *   interface.  A DHCP server running on the Limelight automatically assigns the Control Hub an
- *   ip address for the new ethernet interface.
- *
- *   Since the Limelight is plugged into a USB port, it will be listed on the top level configuration
- *   activity along with the Control Hub Portal and other USB devices such as webcams.  Typically
- *   serial numbers are displayed below the device's names.  In the case of the Limelight device, the
- *   Control Hub's assigned ip address for that ethernet interface is used as the "serial number".
- *
- *   Tapping the Limelight's name, transitions to a new screen where the user can rename the Limelight
- *   and specify the Limelight's ip address.  Users should take care not to confuse the ip address of
- *   the Limelight itself, which can be configured through the Limelight settings page via a web browser,
- *   and the ip address the Limelight device assigned the Control Hub and which is displayed in small text
- *   below the name of the Limelight on the top level configuration screen.
- */
-@TeleOp(name = "Sensor: Limelight3A", group = "Sensor")
+@TeleOp(name = "LimelightDev")
 public class LimelightDev extends LinearOpMode {
+    private Pose2d targetPoint = null;
+    public static double llTx = 0;
+    public static double llTy = 0;
+    public static double llTangle = 0;
+    public static double lineUpY = 0;
+    public static double targetInches = 0;
 
-    private Limelight3A limelight;
+    private enum State {
+        DETECT,
+        LINEUP,
+        RETRACT
+    }
+
+    private State state = State.DETECT;
+    private boolean buttonClicked = false;
+
+    private SampleMecanumDrive drive;
+
+    private Intake intake;
+    private Pivot pivot;
+    private Telescope telescope;
+    private Wrist wrist;
+    private Limelight limelight;
+    private Sweeper sweeper;
+
+    private Command intakeCommand = () -> intake.intake();
+    private Command pivotUpIntake = () -> pivot.intakeUpPos();
+    private Command pivotGrabIntake = () -> pivot.autoIntakeGrabPos();
+    private Command sweepExtend = () -> sweeper.extendPos();
+    private Command sweepRetract = () -> sweeper.retractPos();
+    private Command telescopeRetract = () -> telescope.frontPos();
+    private Command wristRetract = () -> wrist.frontPos();
+    private Command wristIntakeScore = () -> wrist.autoIntakePos();
+    private Command setResult = () -> {
+        llTx = limelight.getTx();
+        llTy = limelight.getTy();
+        llTangle = limelight.getTangle();
+        lineUpY =  -(LimelightConstants.calcXDistance(llTx, llTy) - 6.5);
+        targetInches = LimelightConstants.calcYDistance(llTy) * 2 + 6;
+    };
+    private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
+            drive.getPoseEstimate().getY() + lineUpY,
+            drive.getPoseEstimate().getHeading());
+    private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX() + 3,
+            targetPoint.getY(), targetPoint.getHeading());
+    private Command driveStop = () -> {
+            targetPoint = null;
+            drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
+    };
+    private Command telescopeExtendInches = () -> telescope
+            .setTargetInches(targetInches);
+    private Command telescopeExtendABit = () -> telescope.frontIntakeAutoShortPos();
+
+    private CommandSequence detect = new CommandSequence()
+            .addCommand(setResult)
+            .build();
+    private CommandSequence lineUp = new CommandSequence()
+            .addCommand(lineUpP2P)
+            .addWaitCommand(0.4)
+            .addCommand(sweepExtend)
+            .addWaitCommand(0.2)
+            .addCommand(forwardP2P)
+            .addWaitCommand(0.4)
+            .addCommand(driveStop)
+            .addCommand(telescopeExtendABit)
+            .addCommand(intakeCommand)
+            .addCommand(pivotGrabIntake)
+            .addCommand(wristIntakeScore)
+            .addWaitCommand(0.6)
+            .addCommand(telescopeExtendInches)
+            .build();
+    private CommandSequence retract = new CommandSequence()
+            .addCommand(sweepRetract)
+            .addWaitCommand(0.9)
+            .addCommand(pivotUpIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(0.2)
+            .addCommand(telescopeRetract)
+            .build();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        intake = new Intake(this);
+        drive = new SampleMecanumDrive(hardwareMap);
+        telescope = new Telescope(this);
+        pivot = new Pivot(this, telescope);
+        wrist = new Wrist(this);
+        limelight = new Limelight(this);
+        sweeper = new Sweeper(this);
 
-        telemetry.setMsTransmissionInterval(11);
+        intake.init(hardwareMap);
+        pivot.init(hardwareMap);
+        wrist.init(hardwareMap);
+        telescope.init(hardwareMap);
+        limelight.init(hardwareMap);
+        sweeper.init(hardwareMap);
 
-        limelight.pipelineSwitch(7);
+        while (opModeInInit() && !isStopRequested()) {
+            drive.updatePoseEstimate();
+        }
 
-        /*
-         * Starts polling for data. If you neglect to call start(), getLatestResult()
-         * will return null.
-         */
-        limelight.start();
+        drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(90)));
 
-        telemetry.addData(">", "Robot Ready.  Press Play.");
-        telemetry.update();
         waitForStart();
 
-        while (opModeIsActive()) {
-            LLStatus status = limelight.getStatus();
-            telemetry.addData("Name", "%s",
-                    status.getName());
-            telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-                    status.getTemp(), status.getCpu(), (int) status.getFps());
-            telemetry.addData("Pipeline", "Index: %d, Type: %s",
-                    status.getPipelineIndex(), status.getPipelineType());
+        while (opModeIsActive() && !isStopRequested()) {
+            if (targetPoint != null) {
+                Drive.p2p(drive, targetPoint);
+            }
+            drive.update();
+            telescope.update();
+            pivot.update();
+            limelight.update();
 
-            LLResult result = limelight.getLatestResult();
-            if (result != null) {
-                // Access general information
-                Pose3D botpose = result.getBotpose();
-                double captureLatency = result.getCaptureLatency();
-                double targetingLatency = result.getTargetingLatency();
-                double parseLatency = result.getParseLatency();
-                telemetry.addData("LL Latency", captureLatency + targetingLatency);
-                telemetry.addData("Parse Latency", parseLatency);
-                telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
-                    telemetry.addData("tx", result.getTx());
-                    telemetry.addData("ty", result.getTy());
-                telemetry.addData("extend", LimelightConstants.calcYDistance(result.getTy()));
-
-                if (result.isValid()) {
-                    telemetry.addData("tx", result.getTx());
-                    telemetry.addData("txnc", result.getTxNC());
-                    telemetry.addData("ty", result.getTy());
-                    telemetry.addData("tync", result.getTyNC());
-
-                    telemetry.addData("Botpose", botpose.toString());
-
-                    // Access barcode results
-                    List<LLResultTypes.BarcodeResult> barcodeResults = result.getBarcodeResults();
-                    for (LLResultTypes.BarcodeResult br : barcodeResults) {
-                        telemetry.addData("Barcode", "Data: %s", br.getData());
-                    }
-
-                    // Access classifier results
-                    List<LLResultTypes.ClassifierResult> classifierResults = result.getClassifierResults();
-                    for (LLResultTypes.ClassifierResult cr : classifierResults) {
-                        telemetry.addData("Classifier", "Class: %s, Confidence: %.2f", cr.getClassName(),
-                                cr.getConfidence());
-                    }
-
-                    // Access detector results
-                    List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
-                    for (LLResultTypes.DetectorResult dr : detectorResults) {
-                        telemetry.addData("Detector", "Class: %s, Area: %.2f", dr.getClassName(), dr.getTargetArea());
-                    }
-
-                    // Access fiducial results
-                    List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-                    for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                        telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(),
-                                fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                    }
-
-                    // Access color results
-                    List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
-                    for (LLResultTypes.ColorResult cr : colorResults) {
-                        telemetry.addData("Color", "X: %.2f, Y: %.2f", cr.getTargetXDegrees(), cr.getTargetYDegrees());
-                    }
-                }
-            } else {
-                telemetry.addData("Limelight", "No data available");
+            if (buttonClicked) continue;
+            if (!GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
+                buttonClicked = false;
             }
 
+            switch (state) {
+                case DETECT:
+                    if (GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
+                        state = State.LINEUP;
+                        lineUp.trigger();
+                        buttonClicked = true;
+                    }
+                    break;
+                case LINEUP:
+                    if (GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
+                        state = State.RETRACT;
+                        retract.trigger();
+                        buttonClicked = true;
+                    }
+                    break;
+                case RETRACT:
+                    if (GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
+                        state = State.DETECT;
+                        detect.trigger();
+                        buttonClicked = true;
+                    }
+                    break;
+            }
+            telemetry.addData("limelight tx", llTx);
+            telemetry.addData("limelight ty", llTy);
+            telemetry.addData("limelight tangle", llTangle);
+            telemetry.addData("limelight strafe distance", lineUpY);
+            telemetry.addData("telescope extend dist", targetInches);
+            telemetry.addData("telescope extend ticks", targetInches / Telescope.INCH_PER_TICK);
+            telemetry.addData("target pose", targetPoint);
+            telemetry.addData("drive x", drive.getPoseEstimate().getX());
+            telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();
         }
+
         limelight.stop();
+        Thread.sleep(500);
     }
 }

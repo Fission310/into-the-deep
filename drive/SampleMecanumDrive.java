@@ -214,10 +214,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         updatePoseEstimate();
         getLocalizer().update();
 
-        Telemetry t = FtcDashboard.getInstance().getTelemetry();
-        t.addData("String", "status: ");
-        t.update();
-
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null)
             setDriveSignal(signal);

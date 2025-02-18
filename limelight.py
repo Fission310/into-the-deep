@@ -66,8 +66,23 @@ HSV_RED_RANGE_1 = ([0, 140, 50], [10, 255, 255])  # Red wraps around in HSV
 HSV_RED_RANGE_2 = ([160, 140, 50], [180, 255, 255])
 HSV_YELLOW_RANGE = ([6, 20, 100], [30, 255, 255])
 
+BLUE_SOBEL_CUTOFF = 50
+YELLOW_SOBEL_CUTOFF = 30
+RED_SOBEL_CUTOFF = 40
+
+BLUE_DILATION = 4
+YELLOW_DILATION = 0
+RED_DILATION = 3
+
+BLUE_INV_DILATION = 4
+YELLOW_INV_DILATION = 4
+RED_INV_DILATION = 3
+
 # Constants for filtering contours
 SMALL_CONTOUR_AREA = 100
+
+PERCENT_AREA = 0.65
+
 
 def calculate_angle(contour):
     if len(contour) < 5:
@@ -75,9 +90,67 @@ def calculate_angle(contour):
     (x, y), (MA, ma), angle = cv2.fitEllipse(contour)
     return angle
 
+
+def get_edges_color(
+    frame, hsv_denoised, sobel_cutoff, dilation, inv_dilation, *color_ranges
+):
+    color_mask = np.zeros((frame.shape[0], frame.shape[1]), dtype=np.uint8)
+    for color_range in color_ranges:
+        color_mask = cv2.bitwise_or(
+            color_mask,
+            cv2.inRange(
+                hsv_denoised, np.array(color_range[0]), np.array(color_range[1])
+            ),
+        )
+
+    sobel_kernel = SOBEL_KERNEL
+
+    kernel = np.ones((5, 5), np.uint8)
+    masked_frame = cv2.bitwise_and(frame, frame, mask=color_mask)
+    gray_masked = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2GRAY)
+    gray_masked = cv2.dilate(
+        gray_masked, np.ones((3, 3), np.uint8), iterations=dilation
+    )
+
+    sobelx = cv2.Sobel(gray_masked, cv2.CV_32F, 1, 0, ksize=sobel_kernel)
+    sobely = cv2.Sobel(gray_masked, cv2.CV_32F, 0, 1, ksize=sobel_kernel)
+
+    magnitude = np.sqrt(sobelx**2 + sobely**2)
+    magnitude = np.uint8(magnitude * 255 / np.max(magnitude))
+
+    _, edges = cv2.threshold(magnitude, sobel_cutoff, 255, cv2.THRESH_BINARY)
+
+    edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
+    edges = cv2.dilate(edges, np.ones((3, 3), np.uint8), iterations=inv_dilation)
+    edges = cv2.bitwise_not(edges)
+    edges = cv2.bitwise_and(edges, edges, mask=color_mask)
+
+    blurred = cv2.GaussianBlur(gray_masked, (5, 5), 0)
+    edges = cv2.Canny(blurred, 30, 100)
+    edges = cv2.dilate(edges, np.ones((3, 3), np.uint8), iterations=inv_dilation)
+    edges = cv2.bitwise_not(edges)
+    edges = cv2.bitwise_and(edges, edges, mask=color_mask)
+
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    return contours, masked_frame, edges
+
+
 def runPipeline(frame, llrobot):
     try:
         llpython = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        x = 95
+        rows, cols, _ = frame.shape
+        pts1 = np.float32([[0, 0], [0, cols], [rows, 0], [rows, cols]])
+        pts2 = np.float32([[0, 0], [x, cols], [rows, 0], [rows - x, cols]])
+        
+        # Calculate the perspective transformation matrix
+        M = cv2.getPerspectiveTransform(pts1, pts2)
+        
+        # Apply the perspective transformation
+        frame = cv2.warpPerspective(frame, M, (cols, rows))
+
 
         # Convert to HSV and denoise
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -85,59 +158,81 @@ def runPipeline(frame, llrobot):
         hsv_denoised = cv2.GaussianBlur(hsv, (5, 5), 0)
         hsv_denoised = hsv
 
-        # Create masks for each color
-        yellow_mask = cv2.inRange(
-            hsv_denoised, np.array(HSV_YELLOW_RANGE[0]), np.array(HSV_YELLOW_RANGE[1])
+        yellow_contours, yellow_masked, yellow_debug = get_edges_color(
+            frame,
+            hsv_denoised,
+            YELLOW_SOBEL_CUTOFF,
+            YELLOW_DILATION,
+            YELLOW_INV_DILATION,
+            HSV_YELLOW_RANGE,
+        )
+        blue_contours, blue_masked, blue_debug = get_edges_color(
+            frame,
+            hsv_denoised,
+            BLUE_SOBEL_CUTOFF,
+            BLUE_DILATION,
+            BLUE_INV_DILATION,
+            HSV_BLUE_RANGE_1,
+        )
+        red_contours, red_masked, red_debug = get_edges_color(
+            frame,
+            hsv_denoised,
+            RED_SOBEL_CUTOFF,
+            RED_DILATION,
+            RED_INV_DILATION,
+            HSV_RED_RANGE_1,
+            HSV_RED_RANGE_2,
         )
 
-        sobel_kernel = SOBEL_KERNEL
-    
-        kernel = np.ones((5, 5), np.uint8)
-        masked_frame = cv2.bitwise_and(frame, frame, mask=yellow_mask)
-        gray_masked = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2GRAY)
-    
-        sobelx = cv2.Sobel(gray_masked, cv2.CV_32F, 1, 0, ksize=sobel_kernel)
-        sobely = cv2.Sobel(gray_masked, cv2.CV_32F, 0, 1, ksize=sobel_kernel)
-    
-        magnitude = np.sqrt(sobelx**2 + sobely**2)
-        magnitude = np.uint8(magnitude * 255 / np.max(magnitude))
-    
-        _, edges = cv2.threshold(magnitude, 30, 255, cv2.THRESH_BINARY)
-    
-        edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
-        edges = cv2.dilate(edges, np.ones((3, 3), np.uint8), iterations=3)
-        edges = cv2.bitwise_not(edges)
-        edges = cv2.bitwise_and(edges, edges, mask=yellow_mask)
-    
-        contours, _ = cv2.findContours(
-            edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-        )
+        masked_frame = cv2.bitwise_or(yellow_masked, blue_masked)
+        masked_frame = cv2.bitwise_or(masked_frame, red_masked)
 
         game_pieces = []
-        for contour in contours:
-            area = cv2.contourArea(contour)
-            if area < SMALL_CONTOUR_AREA:
-                continue
+        for color, contours in [
+            ["yellow", yellow_contours],
+            ["blue", blue_contours],
+            ["red", red_contours],
+        ]:
+            for contour in contours:
+                area = cv2.contourArea(contour)
+                if area < SMALL_CONTOUR_AREA:
+                    continue
 
-            M = cv2.moments(contour)
-            if M["m00"] == 0:
-                continue
+                approx = cv2.approxPolyDP(contour, 0.02 * cv2.arcLength(contour, True), True)
+                #cv2.drawContours(masked_frame, [approx], 0, (0, 255, 0), 2)
+                rect = cv2.minAreaRect(contour)
+                rect_area = rect[1][0] * rect[1][1]
 
-            center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-            angle = calculate_angle(contour)
+                if area / rect_area < PERCENT_AREA:
+                    continue
 
-            cv2.drawContours(masked_frame, [contour], 0, (255, 255, 255), 2)
+                aspect_ratio = rect[1][0] / rect[1][1]
+                if aspect_ratio > 0.8 and aspect_ratio < 1.2:
+                    #cv2.drawContours(masked_frame, [contour], 0, (100, 100, 100), 2)
+                    continue
+                box = cv2.boxPoints(rect)
+                box = np.int0(box)
+                cv2.drawContours(masked_frame, [box], 0, (200, 200, 200), 2)
 
-            game_pieces.append(
-                {
-                    "color": "yellow",
-                    "position": center,
-                    "angle": angle,
-                    "area": area,
-                    "contour": contour,
-                    "difficulty": 0,
-                }
-            )
+                M = cv2.moments(contour)
+                if M["m00"] == 0:
+                    continue
+
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                angle = calculate_angle(contour)
+
+                #cv2.drawContours(masked_frame, [contour], 0, (255, 255, 255), 2)
+
+                game_pieces.append(
+                    {
+                        "color": color,
+                        "position": center,
+                        "angle": angle,
+                        "area": area,
+                        "contour": contour,
+                        "difficulty": 0,
+                    }
+                )
 
         # Edit these values please cookie monster
         CLOSE_DISTANCE = 0
@@ -153,15 +248,14 @@ def runPipeline(frame, llrobot):
         UPPER_MEDIUM_ANGLE = 80
         LOWER_MEDIUM_ANGLE = 60
 
-        
         good_angle = False
         medium_angle = False
         bad_angle = False
-        
+
         far_distance = False
         medium_distance = False
         close_distance = False
-        
+
         far_area = False
         medium_area = False
         close_area = False
@@ -231,14 +325,15 @@ def runPipeline(frame, llrobot):
                 else:
                     full_obstruction = True
 
-            
             # Calculate difficulty and points based on conditions
             if full_obstruction:
                 difficulty += 1000
             elif some_obstruction:
                 difficulty += 100
             elif no_obstruction:
-                difficulty += 10 - min(abs(area - expected_area), 10) # ensure this is smaller than the some obstruction case (100) (divide or subtract by a certain constant)
+                difficulty += 10 - min(
+                    abs(area - expected_area), 10
+                )  # ensure this is smaller than the some obstruction case (100) (divide or subtract by a certain constant)
 
             if bad_angle:
                 difficulty += 100
@@ -252,7 +347,9 @@ def runPipeline(frame, llrobot):
             elif medium_distance:
                 difficulty += 50
             elif close_distance:
-                difficulty += abs(CLOSE_DISTANCE - distance) # ensure this is smaller than the medium distance case (50) (divide or subtract by a certain constant)
+                difficulty += abs(
+                    CLOSE_DISTANCE - distance
+                )  # ensure this is smaller than the medium distance case (50) (divide or subtract by a certain constant)
 
             game_piece["difficulty"] = difficulty
 
@@ -261,7 +358,16 @@ def runPipeline(frame, llrobot):
         largest_contour = []
         if len(game_pieces) > 0:
             game_piece = game_pieces[0]
-            llpython = [1, game_piece["position"][0], game_piece["position"][1], game_piece["angle"], 0, 0, 0, 0]
+            llpython = [
+                1,
+                game_piece["position"][0],
+                game_piece["position"][1],
+                game_piece["angle"],
+                0,
+                0,
+                0,
+                0,
+            ]
             largest_contour = game_piece["contour"]
 
         return largest_contour, masked_frame, llpython
