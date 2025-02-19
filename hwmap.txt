@@ -8,9 +8,14 @@ Servos:
 1 - sweeperServo (Servo)
 2 - wristServoRight (Servo)
 Analog Input Devices:
+1 - intakeEncoder
 2 - pivotEncoder
 IC2 Bus 0:
 0 - imu (REV internal IMU (BHI260AP))
+IC2 Bus 1:
+0 - intakeSensor1 (REV Color Sensor V3)
+IC2 Bus 2:
+0 - intakeSensor2 (REV Color Sensor V3)
 
 Expansion Hub:
 Motors:
@@ -23,4 +28,3 @@ Servos:
 3 - intakeServo (Continuous Rotation Servo)
 IC2 Bus 0:
 0 - odo (goBILDA Pinpoint Odometry Computer)
-1 - intakeSensor (REV Color Sensor V3)
