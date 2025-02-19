@@ -12,7 +12,6 @@ import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.opmode.auton.BasketConstants;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
@@ -21,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 public class Pivot extends Mechanism {
     public static int ABIT = 1;
     public static int AUTO_BASKET_POS = 250;
-    public static int AUTO_INTAKE_GRAB_POS = 123;
+    public static int AUTO_INTAKE_GRAB_POS = 120;
     public static int RESET_POS = 136;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 180;

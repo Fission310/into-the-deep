@@ -58,7 +58,7 @@ public class BasketConstants {
             UP + 20.5);
     public static Constant WALL_SAMPLE_INT = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 15.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 3.75,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 2.75,
             UP + 25);
     public static Constant SUBMERSIBLE_1 = new Constant(
             -TILE_LENGTH,
