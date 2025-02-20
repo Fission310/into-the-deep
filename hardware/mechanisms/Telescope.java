@@ -18,13 +18,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Telescope extends Mechanism {
     public static int ABIT = 60;
     public static int UP_RETRACTION = -60;
-    public static int AUTO_INTAKE_FAR_POS = 383;
-    public static int AUTO_INTAKE_CENTER_POS = 325;
-    public static int AUTO_INTAKE_WALL_POS = 462;
+    public static int AUTO_INTAKE_FAR_POS = 320;
+    public static int AUTO_INTAKE_CENTER_POS = 255;
+    public static int AUTO_INTAKE_WALL_POS = 398;
     public static int AUTO_BASKET_POS = 635;
     public static int AUTO_SAMPLE_DROP = 300;
     public static int AUTO_INTAKE_SHORT_POS = 50;
-    public static int FRONT_POS = -50;
+    public static int FRONT_VERTICAL_POS = -80;
+    public static int FRONT_HORIZONTAL_POS = -50;
     public static int INTAKE_POS = 450;
     public static int INTAKE_SHORT_POS = 50;
     public static int WALL_POS = 100;
@@ -79,7 +80,7 @@ public class Telescope extends Mechanism {
         motors[0].setDirection(DcMotorEx.Direction.REVERSE);
         motors[1].setDirection(DcMotorEx.Direction.REVERSE);
 
-        frontPos();
+        frontHorizontalPos();
     }
 
     public void autoSampleDropPos() {
@@ -112,9 +113,13 @@ public class Telescope extends Mechanism {
         setTarget(UP_RETRACTION);
     }
 
-    public void frontPos() {
+    public void frontVerticalPos() {
+        controller = verticalController;
+        setTarget(FRONT_VERTICAL_POS);
+    }
+    public void frontHorizontalPos() {
         controller = horizontalController;
-        setTarget(FRONT_POS);
+        setTarget(FRONT_HORIZONTAL_POS);
     }
 
     public void frontIntakePos() {
@@ -231,7 +236,7 @@ public class Telescope extends Mechanism {
     public void loop(Gamepad gamepad) {
         update();
         if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
-            frontPos();
+            frontHorizontalPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_WALL)) {
             wallPos();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_BASKET)) {

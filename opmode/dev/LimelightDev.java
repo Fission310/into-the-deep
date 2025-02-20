@@ -51,7 +51,7 @@ public class LimelightDev extends LinearOpMode {
     private Command pivotGrabIntake = () -> pivot.autoIntakeGrabPos();
     private Command sweepExtend = () -> sweeper.extendPos();
     private Command sweepRetract = () -> sweeper.retractPos();
-    private Command telescopeRetract = () -> telescope.frontPos();
+    private Command telescopeRetract = () -> telescope.frontHorizontalPos();
     private Command wristRetract = () -> wrist.frontPos();
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command setResult = () -> {

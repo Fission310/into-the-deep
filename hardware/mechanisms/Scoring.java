@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.stuyfission.fissionlib.command.Command;
-import com.stuyfission.fissionlib.command.CommandMachine;
 import com.stuyfission.fissionlib.command.CommandSequence;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
@@ -70,7 +69,8 @@ public class Scoring extends Mechanism {
     private Command pivotUpIntake = () -> pivot.intakeUpPos();
     private Command pivotDownIntake = () -> pivot.intakeDownPos();
     private Command pivotGrabIntake = () -> pivot.intakeGrabPos();
-    private Command telescopeFront = () -> telescope.frontPos();
+    private Command telescopeVerticalFront = () -> telescope.frontVerticalPos();
+    private Command telescopeHorizontalFront = () -> telescope.frontHorizontalPos();
     private Command telescopeIntake = () -> telescope.frontIntakePos();
     private Command telescopeIntakeShort = () -> telescope.frontIntakeShortPos();
     private Command telescopeClimbDownPos = () -> telescope.climbDownPos();
@@ -79,7 +79,6 @@ public class Scoring extends Mechanism {
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
-    private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristIntakeMid = () -> wrist.intakeMitPos();
     private Command wristIntakeShortScore = () -> wrist.intakeShortPos();
@@ -102,7 +101,7 @@ public class Scoring extends Mechanism {
             .addCommand(wristIntakeScore)
             .addWaitCommand(BASKET_OUTTAKE_WAIT)
             .addCommand(stopIntake)
-            .addCommand(telescopeFront)
+            .addCommand(telescopeVerticalFront)
             .addWaitCommand(BASKET_RETRACT_WAIT)
             .addCommand(wristRetract)
             .addWaitCommand(UP_POS_WAIT)
@@ -120,7 +119,7 @@ public class Scoring extends Mechanism {
             .addWaitCommand(CLIP_RELEASE_WAIT)
             .addCommand(pivotFront)
             .addCommand(wristRetract)
-            .addCommand(telescopeFront)
+            .addCommand(telescopeHorizontalFront)
             .addCommand(setStateFront)
             .build();
 
@@ -153,7 +152,7 @@ public class Scoring extends Mechanism {
             .addCommand(pivotUpIntake)
             .addCommand(wristRetract)
             .addWaitCommand(TELESCOPE_RETRACT_WAIT)
-            .addCommand(telescopeRetract)
+            .addCommand(telescopeHorizontalFront)
             .addWaitCommand(PIVOT_UP_WAIT)
             .addCommand(pivotUp)
             .addCommand(setStateUp)
@@ -176,7 +175,7 @@ public class Scoring extends Mechanism {
     public void goFront() {
         state = State.FRONT;
         pivot.frontPos();
-        telescope.frontPos();
+        telescope.frontHorizontalPos();
         wrist.frontPos();
         wrist.defaultPos();
     }

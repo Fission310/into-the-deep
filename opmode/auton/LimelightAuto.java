@@ -52,7 +52,7 @@ public class LimelightAuto extends LinearOpMode {
     private Command pivotReset = () -> pivot.reset();
     private Command sweepExtend = () -> sweeper.extendPos();
     private Command sweepRetract = () -> sweeper.retractPos();
-    private Command telescopeRetract = () -> telescope.frontPos();
+    private Command telescopeRetract = () -> telescope.frontHorizontalPos();
     private Command wristRetract = () -> wrist.frontPos();
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command setResult = () -> {
