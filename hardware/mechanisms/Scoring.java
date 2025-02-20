@@ -81,6 +81,7 @@ public class Scoring extends Mechanism {
     private Command setStateUp = () -> state = State.UP;
     private Command telescopeRetract = () -> telescope.frontPos();
     private Command wristIntakeScore = () -> wrist.intakePos();
+    private Command wristIntakeMid = () -> wrist.intakeMitPos();
     private Command wristIntakeShortScore = () -> wrist.intakeShortPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristClimbPos = () -> wrist.climbPos();
@@ -124,25 +125,26 @@ public class Scoring extends Mechanism {
             .build();
 
     public CommandSequence frontIntake = new CommandSequence()
+            .addCommand(outakeCommand)
             .addCommand(pivotDownIntake)
             .addCommand(telescopeIntake)
+            .addCommand(wristIntakeMid)
             .addWaitCommand(PIVOT_DOWN_WAIT)
-            .addCommand(wristIntakeScore)
             .addCommand(setStateIntake)
-            .addCommand(outakeCommand)
             .build();
 
     public CommandSequence frontIntakeShort = new CommandSequence()
+            .addCommand(outakeCommand)
             .addCommand(pivotDownIntake)
             .addCommand(telescopeIntakeShort)
+            .addCommand(wristIntakeMid)
             .addWaitCommand(PIVOT_DOWN_WAIT)
-            .addCommand(wristIntakeShortScore)
             .addCommand(setStateIntake)
-            .addCommand(outakeCommand)
             .build();
 
     public CommandSequence grabIntake = new CommandSequence()
             .addCommand(pivotGrabIntake)
+            .addCommand(wristIntakeScore)
             .addWaitCommand(PIVOT_GRAB_WAIT)
             .addCommand(intakeCommand)
             .build();
