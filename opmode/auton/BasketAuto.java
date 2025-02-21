@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Sweeper;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Limelight.Location;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Drive;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.LimelightConstants;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -27,9 +28,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class BasketAuto extends LinearOpMode {
     private boolean commandBusy = false;
     private Pose2d targetPoint = null;
-    public static double llTx = 0;
-    public static double llTy = 0;
-    public static double llTangle = 0;
+    private Location loc = null;
     private TrajectorySequence basket1Traj;
     private TrajectorySequence farSampleTraj;
     private TrajectorySequence farSampleIntTraj;
@@ -100,22 +99,11 @@ public class BasketAuto extends LinearOpMode {
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristDown = () -> wrist.intakeABit();
     private Command setResult = () -> {
-        llTx = limelight.getTx();
-        llTy = limelight.getTy();
-        llTangle = limelight.getTangle();
-        /*Uif (llTangle > 90) {
-            llTangle = -8;
-        } else if (llTangle < 90) {
-            llTangle = 8;
-        } else {
-            llTangle = 0;
-        }*/
+        loc = limelight.getBest();
     };
     private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
-            drive.getPoseEstimate().getY() - (LimelightConstants.calcXDistance(llTx, llTy) - 6.5),
+            drive.getPoseEstimate().getY() - loc.translation,
             drive.getPoseEstimate().getHeading());
-    private Command sweepP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
-            drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading() + Math.toRadians(llTangle));
     private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX() + 3,
             targetPoint.getY(), targetPoint.getHeading());
     private Command driveStop = () -> {
@@ -123,7 +111,7 @@ public class BasketAuto extends LinearOpMode {
             drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
     };
     private Command telescopeExtendInches = () -> telescope
-            .setTargetInches(LimelightConstants.calcYDistance(llTy) * 2 + 6);
+            .setTargetInches(loc.extension);
     private Command telescopeExtendABit = () -> telescope.frontIntakeAutoShortPos();
 
     private CommandSequence basket1Sequence = new CommandSequence()
@@ -545,15 +533,8 @@ public class BasketAuto extends LinearOpMode {
             pivot.update();
             limelight.update();
             commandMachine.run(drive.isBusy() || commandBusy);
-            telemetry.addData("limelight tx", llTx);
-            telemetry.addData("limelight ty", llTy);
-            telemetry.addData("limelight tangle", llTangle);
-            telemetry.addData("limelight strafe distance",
-                    LimelightConstants.calcXDistance(llTx, llTy) - 6);
-            telemetry.addData("telescope extend dist",
-                    LimelightConstants.calcYDistance(llTy));
-            telemetry.addData("telescope extend ticks",
-                    (LimelightConstants.calcYDistance(llTy)) / Telescope.INCH_PER_TICK);
+            telemetry.addData("limelight strafe distance", loc.translation);
+            telemetry.addData("telescope extend dist", loc.extension);
             telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());

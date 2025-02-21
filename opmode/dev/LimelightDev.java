@@ -16,17 +16,14 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Pivot;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Sweeper;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Limelight.Location;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Drive;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.LimelightConstants;
 
 @TeleOp(name = "LimelightDev")
 public class LimelightDev extends LinearOpMode {
     private Pose2d targetPoint = null;
-    public static double llTx = 0;
-    public static double llTy = 0;
-    public static double llTangle = 0;
-    public static double lineUpY = 0;
-    public static double targetInches = 0;
+    private Location loc = null;
 
     private enum State {
         DETECT,
@@ -55,23 +52,18 @@ public class LimelightDev extends LinearOpMode {
     private Command wristRetract = () -> wrist.frontPos();
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command setResult = () -> {
-        llTx = limelight.getTx();
-        llTy = limelight.getTy();
-        llTangle = limelight.getTangle();
-        lineUpY =  -(LimelightConstants.calcXDistance(llTx, llTy) - 6.5);
-        targetInches = LimelightConstants.calcYDistance(llTy) * 2 + 6;
+        loc = limelight.getBest();
     };
     private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
-            drive.getPoseEstimate().getY() + lineUpY,
+            drive.getPoseEstimate().getY() + loc.translation,
             drive.getPoseEstimate().getHeading());
     private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX() + 3,
             targetPoint.getY(), targetPoint.getHeading());
     private Command driveStop = () -> {
-            targetPoint = null;
-            drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
+        targetPoint = null;
+        drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
     };
-    private Command telescopeExtendInches = () -> telescope
-            .setTargetInches(targetInches);
+    private Command telescopeExtendInches = () -> telescope.setTargetInches(loc.extension);
     private Command telescopeExtendABit = () -> telescope.frontIntakeAutoShortPos();
 
     private CommandSequence detect = new CommandSequence()
@@ -136,7 +128,8 @@ public class LimelightDev extends LinearOpMode {
             pivot.update();
             limelight.update();
 
-            if (buttonClicked) continue;
+            if (buttonClicked)
+                continue;
             if (!GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
                 buttonClicked = false;
             }
@@ -164,12 +157,8 @@ public class LimelightDev extends LinearOpMode {
                     }
                     break;
             }
-            telemetry.addData("limelight tx", llTx);
-            telemetry.addData("limelight ty", llTy);
-            telemetry.addData("limelight tangle", llTangle);
-            telemetry.addData("limelight strafe distance", lineUpY);
-            telemetry.addData("telescope extend dist", targetInches);
-            telemetry.addData("telescope extend ticks", targetInches / Telescope.INCH_PER_TICK);
+            telemetry.addData("limelight strafe distance", loc.translation);
+            telemetry.addData("telescope extend dist", loc.extension);
             telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
