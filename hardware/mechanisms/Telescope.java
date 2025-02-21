@@ -24,7 +24,7 @@ public class Telescope extends Mechanism {
     public static int AUTO_BASKET_POS = 635;
     public static int AUTO_SAMPLE_DROP = 300;
     public static int AUTO_INTAKE_SHORT_POS = 50;
-    public static int FRONT_VERTICAL_POS = -80;
+    public static int FRONT_VERTICAL_POS = -50;
     public static int FRONT_HORIZONTAL_POS = -50;
     public static int INTAKE_POS = 450;
     public static int INTAKE_SHORT_POS = 50;
@@ -114,7 +114,7 @@ public class Telescope extends Mechanism {
     }
 
     public void frontVerticalPos() {
-        controller = verticalController;
+        controller = horizontalController; // :)
         setTarget(FRONT_VERTICAL_POS);
     }
     public void frontHorizontalPos() {

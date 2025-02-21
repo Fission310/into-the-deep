@@ -56,6 +56,7 @@ public class Scoring extends Mechanism {
     private boolean frontClicked = false;
     private boolean dpadClicked = false;
     private boolean rightStickClicked = false;
+    private boolean shortIntake = false;
 
     public Scoring(LinearOpMode opMode, Color color) {
         this.opMode = opMode;
@@ -80,8 +81,14 @@ public class Scoring extends Mechanism {
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
     private Command wristIntakeScore = () -> wrist.intakePos();
+    private Command wristIntake = () -> {
+        if (shortIntake) {
+            wrist.intakeShortPos();
+        } else {
+            wrist.intakePos();
+        }
+    };
     private Command wristIntakeMid = () -> wrist.intakeMitPos();
-    private Command wristIntakeShortScore = () -> wrist.intakeShortPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristClimbPos = () -> wrist.climbPos();
     private Command wristRetract = () -> wrist.frontPos();
@@ -143,7 +150,7 @@ public class Scoring extends Mechanism {
 
     public CommandSequence grabIntake = new CommandSequence()
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
+            .addCommand(wristIntake)
             .addWaitCommand(PIVOT_GRAB_WAIT)
             .addCommand(intakeCommand)
             .build();
@@ -299,10 +306,12 @@ public class Scoring extends Mechanism {
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE_SHORT)) {
                     frontIntakeShort.trigger();
                     sweeper.extendPos();
+                    shortIntake = true;
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE)) {
                     if (!frontClicked) {
                         frontIntake.trigger();
+                        shortIntake = false;
                     }
                     frontClicked = true;
                 } else {

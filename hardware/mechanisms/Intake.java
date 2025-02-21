@@ -21,12 +21,12 @@ public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
     public static double OUTTAKE_POWER = -0.8;
     public static double SAMPLE_ROTATION = 200;
-    public static int SAMPLE1 = 19;
+    public static int SAMPLE1 = 22;
     public static int RED1 = 500;
     public static int BLUE1 = 600;
     public static int YELLOW1 = 1000;
 
-    public static int SAMPLE2 = 24;
+    public static int SAMPLE2 = 22;
     public static int RED2 = 1500;
     public static int BLUE2 = 1200;
     public static int YELLOW2 = 2500;

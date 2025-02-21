@@ -19,10 +19,10 @@ public class Wrist extends Mechanism {
 
     public static double INTAKE_DOWN_ABIT = 0.01;
     public static double BASKET_DOWN_ABIT = 0.12;
-    public static double[][] AUTO_INTAKE_POS =  { { 0.47, 0.47 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
-    public static double[][] INTAKE_POS = { { 0.47, 0.47 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_INTAKE_POS =  { { 0.46, 0.46 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] INTAKE_POS = { { 0.46, 0.46 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_MID_POS = { { 0.3, 0.3 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
-    public static double[][] INTAKE_SHORT_POS = { { 0.47, 0.47 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] INTAKE_SHORT_POS = { { 0.43, 0.43 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_DOWN_POS = { { 0.71, 0.48 }, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
     public static double[][] FRONT_POS = { { 0.23, 0.3 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] WALL_POS = { { 0.31, 0.3 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
