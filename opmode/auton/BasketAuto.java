@@ -136,7 +136,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(farSampleCommand)
             .addCommand(pivotFront)
-            .addWaitCommand(0.45)
+            .addWaitCommand(0.9)
             .addCommand(telescopeFar)
             .addCommand(pivotGrabIntake)
             .addWaitCommand(0.5)
@@ -155,7 +155,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addCommand(wristBasket)
             .addCommand(pivotBasket)
-            .addWaitCommand(0.3)
+            .addWaitCommand(0.7)
             .addCommand(telescopeBasket)
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
@@ -171,7 +171,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(centerSampleCommand)
             .addCommand(pivotFront)
-            .addWaitCommand(0.45)
+            .addWaitCommand(0.7)
             .addCommand(telescopeCenter)
             .addCommand(pivotGrabIntake)
             .addWaitCommand(0.5)
@@ -189,7 +189,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addCommand(wristBasket)
             .addCommand(pivotBasket)
-            .addWaitCommand(0.3)
+            .addWaitCommand(0.5)
             .addCommand(telescopeBasket)
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
@@ -224,7 +224,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addCommand(wristBasket)
             .addCommand(pivotBasket)
-            .addWaitCommand(0.6)
+            .addWaitCommand(0.7)
             .addCommand(telescopeBasket)
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
@@ -520,8 +520,10 @@ public class BasketAuto extends LinearOpMode {
             pivot.update();
             limelight.update();
             commandMachine.run(drive.isBusy() || commandBusy);
-            telemetry.addData("limelight strafe distance", loc.translation);
-            telemetry.addData("telescope extend dist", loc.extension);
+            if (loc != null) {
+                telemetry.addData("limelight strafe distance", loc.translation);
+                telemetry.addData("telescope extend dist", loc.extension);
+            }
             telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
