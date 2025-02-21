@@ -13,21 +13,21 @@ public class BasketConstants {
             -WALL_POS + BOT_LENGTH / 2,
             UP);
     public static Constant BASKET_1 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 19,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 1,
-            41);
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 21,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
+            39.5);
     public static Constant BASKET_2 = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 19.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 0.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
             37);
     public static Constant BASKET_3 = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 21.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 4.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 2.5,
             40);
     public static Constant BASKET_4 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 20,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 2,
-            39);
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 21,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 1.5,
+            38.5);
     public static Constant BASKET_5 = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 22.5,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 6,
@@ -46,11 +46,11 @@ public class BasketConstants {
             UP + 9.5);
     public static Constant CENTER_SAMPLE = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 16,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 0.5,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 3,
             UP + 3.5);
     public static Constant CENTER_SAMPLE_INT = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 16,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 7.75,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 4.75,
             UP + 11.5);
     public static Constant WALL_SAMPLE = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 15.5,

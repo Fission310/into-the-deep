@@ -88,7 +88,7 @@ public class Scoring extends Mechanism {
             wrist.intakePos();
         }
     };
-    private Command wristIntakeMid = () -> wrist.intakeMitPos();
+    private Command wristIntakeMid = () -> wrist.intakeMidPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristClimbPos = () -> wrist.climbPos();
     private Command wristRetract = () -> wrist.frontPos();

@@ -20,6 +20,8 @@ public class Wrist extends Mechanism {
     public static double INTAKE_DOWN_ABIT = 0.01;
     public static double BASKET_DOWN_ABIT = 0.12;
     public static double[][] AUTO_INTAKE_POS =  { { 0.46, 0.46 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_BASKET_POS =  { { 0.4, 0.4 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_MID_POS =  { { 0.43, 0.43 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_POS = { { 0.46, 0.46 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_MID_POS = { { 0.3, 0.3 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_SHORT_POS = { { 0.43, 0.43 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
@@ -98,7 +100,7 @@ public class Wrist extends Mechanism {
         setPosition();
     }
 
-    public void intakeMitPos() {
+    public void intakeMidPos() {
         currPos = INTAKE_MID_POS;
         setPosition();
     }
@@ -110,6 +112,16 @@ public class Wrist extends Mechanism {
 
     public void autoIntakePos() {
         currPos = AUTO_INTAKE_POS;
+        setPosition();
+    }
+
+    public void autoBasketPos() {
+        currPos = AUTO_BASKET_POS;
+        setPosition();
+    }
+
+    public void autoMidPos() {
+        currPos = AUTO_MID_POS;
         setPosition();
     }
 
