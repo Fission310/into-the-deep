@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Limelight.Location;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Drive;
-import org.firstinspires.ftc.teamcode.opmode.auton.util.LimelightConstants;
 
 @TeleOp(name = "LimelightDev")
 public class LimelightDev extends LinearOpMode {
@@ -31,7 +30,7 @@ public class LimelightDev extends LinearOpMode {
         RETRACT
     }
 
-    private State state = State.DETECT;
+    private State state = State.RETRACT;
     private boolean buttonClicked = false;
 
     private SampleMecanumDrive drive;
@@ -122,6 +121,8 @@ public class LimelightDev extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             if (targetPoint != null) {
                 Drive.p2p(drive, targetPoint);
+            } else {
+                drive.setMotorPowers(0, 0, 0, 0);
             }
             drive.update();
             telescope.update();
@@ -137,28 +138,27 @@ public class LimelightDev extends LinearOpMode {
             switch (state) {
                 case DETECT:
                     if (GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
-                        state = State.LINEUP;
                         lineUp.trigger();
                         buttonClicked = true;
                     }
                     break;
                 case LINEUP:
                     if (GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
-                        state = State.RETRACT;
                         retract.trigger();
                         buttonClicked = true;
                     }
                     break;
                 case RETRACT:
                     if (GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
-                        state = State.DETECT;
                         detect.trigger();
                         buttonClicked = true;
                     }
                     break;
             }
-            telemetry.addData("limelight strafe distance", loc.translation);
-            telemetry.addData("telescope extend dist", loc.extension);
+            if (loc != null) {
+                telemetry.addData("limelight strafe distance", loc.translation);
+                telemetry.addData("telescope extend dist", loc.extension);
+            }
             telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
