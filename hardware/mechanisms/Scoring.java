@@ -321,16 +321,16 @@ public class Scoring extends Mechanism {
             case INTAKE:
                 drivetrain.setIntake();
                 // wrist.loop(gamepad);
-                if (intake.hasSample()) {
-                    if (intake.hasWrongColor(color)) {
-                        //intake.outtake();
-                    } else {
-                        intake.intake();
-                    }
-                    if (intake.hasColor(color)) {
-                        retractTele.trigger();
-                    }
-                }
+//                if (intake.hasSample()) {
+//                    if (intake.hasWrongColor(color)) {
+//                        //intake.outtake();
+//                    } else {
+//                        intake.intake();
+//                    }
+//                    if (intake.hasColor(color)) {
+//                        retractTele.trigger();
+//                    }
+//                }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
                         retractTele.trigger();
