@@ -21,6 +21,7 @@ public class Scoring extends Mechanism {
     public Pivot pivot = new Pivot(opMode, telescope);
     private Wrist wrist = new Wrist(opMode);
     private Sweeper sweeper = new Sweeper(opMode);
+    private Climb climb = new Climb(opMode);
 
     private State state = State.FRONT;
     private Color color;
@@ -51,6 +52,7 @@ public class Scoring extends Mechanism {
     public static double CLIP_PIVOT_WAIT = 0.1;
     public static double CLIMB_UP_WAIT = 0.5;
     public static double CLIMB_DOWN_WAIT = 1;
+    public static double CLIMB_ENGAGE_WAIT = 1;
 
     private boolean climbPressed = false;
     private boolean frontClicked = false;
@@ -77,6 +79,8 @@ public class Scoring extends Mechanism {
     private Command telescopeClimbDownPos = () -> telescope.climbDownPos();
     private Command telescopeClimbUpPos = () -> telescope.climbUpPos1();
     private Command telescopeClimbUpPos2 = () -> telescope.climbUpPos2();
+    private Command climbDisengage = () -> climb.disengage();
+    private Command climbEngage = () -> climb.engage();
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
@@ -178,6 +182,11 @@ public class Scoring extends Mechanism {
             .addCommand(telescopeClimbDownPos)
             .addCommand(pivotClimbDownPos)
             .build();
+    public CommandSequence climb2 = new CommandSequence()
+            .addCommand(climbDisengage)
+            .addWaitCommand(CLIMB_ENGAGE_WAIT)
+            .addCommand(climbEngage)
+            .build();
 
     public void goFront() {
         state = State.FRONT;
@@ -234,6 +243,7 @@ public class Scoring extends Mechanism {
         telescope.telemetry(telemetry);
         wrist.telemetry(telemetry);
         sweeper.telemetry(telemetry);
+        climb.telemetry(telemetry);
     }
 
     @Override
@@ -279,10 +289,12 @@ public class Scoring extends Mechanism {
             }
             climbPressed = true;
         }
+        else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_2) && state == State.CLIMB_DOWN) {
+            climb2.trigger();
+        }
         if (!GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
             climbPressed = false;
         }
-
         if (GamepadStatic.isButtonPressed(gamepad, Controls.SWEEP)) {
             if (!rightStickClicked) {
                 sweeper.toggle();

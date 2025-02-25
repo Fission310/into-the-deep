@@ -70,20 +70,24 @@ public class Limelight extends Mechanism {
 
             // Calculate distance (approximation based on angles)
             double actualYAngle = LIME_LIGHT_MOUNT_ANGLE - detection.getTargetYDegrees();
-            double yDistance = LIME_LIGHT_LENS_HEIGHT_INCHES * Math.tan(Math.toRadians(actualYAngle));
-            double xDistance = Math.tan(Math.toRadians(detection.getTargetXDegrees())) * yDistance;
+            double yDistance = (LIME_LIGHT_LENS_HEIGHT_INCHES - SAMPLE_HEIGHT_INCHES)
+                    / Math.tan(Math.toRadians(actualYAngle));
+            double xDistance = Math.tan(Math.toRadians(detection.getTargetXDegrees())) * yDistance - LIME_LIGHT_OFFSET;
 
             // If color matches unwanted sample, skip the rest of the current iteration
-            //if (Arrays.stream(unwantedSamples).anyMatch(sample -> sample == color)) {
-            //    continue;
-            //}
+            // if (Arrays.stream(unwantedSamples).anyMatch(sample -> sample == color)) {
+            // continue;
+            // }
 
             // Add the scored detection to the list
-            locations.add(new Location(yDistance, xDistance, rotationScore));
+            locations.add(new Location(xDistance, yDistance, rotationScore));
         }
     }
 
     public Location getBest() {
+        if (locations.size() == 0) {
+            return new Location(0, 0, 0);
+        }
         // TODO
         return locations.get(0);
     }

@@ -30,10 +30,13 @@ public class P2PDev extends LinearOpMode {
 
         waitForStart();
 
+        Thread thread = new Thread(() -> {
+            Drive.p2p(drive, new Pose2d(X, Y, Math.toRadians(HEADING)));
+        });
+        thread.start();
         while (opModeIsActive() && !isStopRequested()) {
             drive.update();
             telescope.update();
-            Drive.p2p(drive, new Pose2d(X, Y, Math.toRadians(HEADING)));
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();

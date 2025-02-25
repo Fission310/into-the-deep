@@ -54,9 +54,9 @@ public class LimelightDev extends LinearOpMode {
         loc = limelight.getBest();
     };
     private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
-            drive.getPoseEstimate().getY() + loc.translation,
+            drive.getPoseEstimate().getY() - loc.translation,
             drive.getPoseEstimate().getHeading());
-    private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX() + 3,
+    private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX(),
             targetPoint.getY(), targetPoint.getHeading());
     private Command driveStop = () -> {
         targetPoint = null;
@@ -64,24 +64,30 @@ public class LimelightDev extends LinearOpMode {
     };
     private Command telescopeExtendInches = () -> telescope.setTargetInches(loc.extension);
     private Command telescopeExtendABit = () -> telescope.frontIntakeAutoShortPos();
+    private Command setDetect = () -> state = State.DETECT;
+    private Command setLineup = () -> state = State.LINEUP;
+    private Command setRetract = () -> state = State.RETRACT;
 
     private CommandSequence detect = new CommandSequence()
             .addCommand(setResult)
+            .addCommand(setLineup)
             .build();
     private CommandSequence lineUp = new CommandSequence()
             .addCommand(lineUpP2P)
-            .addWaitCommand(0.4)
+            .addWaitCommand(4)
+            .addCommand(driveStop)
             .addCommand(sweepExtend)
             .addWaitCommand(0.2)
-            .addCommand(forwardP2P)
-            .addWaitCommand(0.4)
-            .addCommand(driveStop)
+            //.addCommand(forwardP2P)
+            //.addWaitCommand(0.4)
+            //.addCommand(driveStop)
             .addCommand(telescopeExtendABit)
             .addCommand(intakeCommand)
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeScore)
             .addWaitCommand(0.6)
             .addCommand(telescopeExtendInches)
+            .addCommand(setRetract)
             .build();
     private CommandSequence retract = new CommandSequence()
             .addCommand(sweepRetract)
@@ -90,6 +96,7 @@ public class LimelightDev extends LinearOpMode {
             .addCommand(wristRetract)
             .addWaitCommand(0.2)
             .addCommand(telescopeRetract)
+            .addCommand(setDetect)
             .build();
 
     @Override
@@ -129,11 +136,11 @@ public class LimelightDev extends LinearOpMode {
             pivot.update();
             limelight.update();
 
-            if (buttonClicked)
-                continue;
             if (!GamepadStatic.isButtonPressed(gamepad1, GamepadStatic.Input.LEFT_BUMPER)) {
                 buttonClicked = false;
             }
+            if (buttonClicked)
+                continue;
 
             switch (state) {
                 case DETECT:
