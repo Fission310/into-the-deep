@@ -205,7 +205,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(wallSampleCommand)
             .addCommand(pivotFront)
-            .addWaitCommand(0.75)
+            .addWaitCommand(BasketConstants.WALL_SAMPLE_DELAY)
             .addCommand(telescopeWall)
             .addCommand(pivotGrabIntake)
             .addWaitCommand(0.45)
@@ -223,7 +223,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(intakeCommand)
             .addCommand(wristBasket)
             .addCommand(pivotBasket)
-            .addWaitCommand(0.7)
+            .addWaitCommand(BasketConstants.BASKET_WALL_DELAY)
             .addCommand(telescopeBasket)
             .addCommand(intakeCommand)
             .addWaitCommand(0.6)
@@ -440,22 +440,21 @@ public class BasketAuto extends LinearOpMode {
         wallSampleTraj = drive
                 .trajectorySequenceBuilder(basket3Traj.end())
                 .setReversed(false)
-                .splineToLinearHeading(BasketConstants.WALL_SAMPLE.getPose(), Math.PI / 2)
+                .lineToLinearHeading(BasketConstants.WALL_SAMPLE.getPose())
                 .build();
         telemetry.addLine("Built wallSampleTraj");
         telemetry.update();
         wallSampleIntTraj = drive
                 .trajectorySequenceBuilder(wallSampleTraj.end())
                 .setReversed(false)
-                .splineToLinearHeading(BasketConstants.WALL_SAMPLE_INT.getPose(),
-                        BasketConstants.WALL_SAMPLE_INT.getH())
+                .lineToLinearHeading(BasketConstants.WALL_SAMPLE_INT.getPose())
                 .build();
         telemetry.addLine("Built wallSampleIntTraj");
         telemetry.update();
         basket4Traj = drive
                 .trajectorySequenceBuilder(wallSampleIntTraj.end())
                 .setReversed(true)
-                .splineToLinearHeading(BasketConstants.BASKET_4.getPose(), 5 * Math.PI / 4)
+                .lineToLinearHeading(BasketConstants.BASKET_4.getPose())
                 .build();
         telemetry.addLine("Built basket4Traj");
         telemetry.update();

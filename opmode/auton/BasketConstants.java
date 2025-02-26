@@ -13,13 +13,13 @@ public class BasketConstants {
             -WALL_POS + BOT_LENGTH / 2,
             UP);
     public static Constant BASKET_1 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 21,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 20,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
-            39.5);
+            38.5);
     public static Constant BASKET_2 = new Constant(
-            -52,
-            -54,
-            36.5);
+            -54.5,
+            -54.5,
+            33);
     public static Constant BASKET_3 = new Constant(
             -52.5,
             -54,
@@ -37,11 +37,11 @@ public class BasketConstants {
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 6,
             39);
     public static Constant FAR_SAMPLE = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 26.5,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 27,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
-            UP + 1.5);
+            UP + 1);
     public static Constant FAR_SAMPLE_INT = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 26.5,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 27,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 4.25,
             UP + 12.5);
     public static Constant CENTER_SAMPLE = new Constant(
@@ -53,13 +53,13 @@ public class BasketConstants {
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 4.75,
             UP + 13.5);
     public static Constant WALL_SAMPLE = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 20.5,
-            -57,
-            119);
+            -43,
+            -30,
+            170);
     public static Constant WALL_SAMPLE_INT = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 13.5,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 2.5,
-            122.5);
+            -48,
+            -30,
+            170);
     public static Constant SUBMERSIBLE_1 = new Constant(
             -TILE_LENGTH,
             -TILE_LENGTH / 2,
@@ -68,4 +68,6 @@ public class BasketConstants {
             -TILE_LENGTH,
             -TILE_LENGTH / 2 + 6,
             0);
+    public static double WALL_SAMPLE_DELAY = 0.9;
+    public static double BASKET_WALL_DELAY = 1.3;
 }
