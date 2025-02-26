@@ -20,4 +20,5 @@ public class Controls {
     public static final Input WRIST_RIGHT = Input.DPAD_RIGHT;
     public static final Input CLIMB_1 = Input.DPAD_UP;
     public static final Input CLIMB_2 = Input.DPAD_DOWN;
+    public static final Input DISENGAGE = Input.LEFT_BUMPER;
 }

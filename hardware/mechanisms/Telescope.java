@@ -37,7 +37,7 @@ public class Telescope extends Mechanism {
     public static double BACK_POS = 300;
     public static double CLIMB_UP_1_POS = 500;
     public static double CLIMB_UP_2_POS = 200;
-    public static double CLIMB_DOWN_POS = -500000;
+    public static double CLIMB_DOWN_POS = -4000;
     public static double MAX_EXTENSION = 750;
     public static double MIN_LENGTH = 15;
     public static double DOWN_MULTIPLIER = 0.15;

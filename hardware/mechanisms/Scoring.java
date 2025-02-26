@@ -52,7 +52,7 @@ public class Scoring extends Mechanism {
     public static double CLIP_PIVOT_WAIT = 0.1;
     public static double CLIMB_UP_WAIT = 0.5;
     public static double CLIMB_DOWN_WAIT = 1;
-    public static double CLIMB_ENGAGE_WAIT = 1;
+    public static double CLIMB_UNLOCK_WAIT = 2;
 
     private boolean climbPressed = false;
     private boolean frontClicked = false;
@@ -79,8 +79,9 @@ public class Scoring extends Mechanism {
     private Command telescopeClimbDownPos = () -> telescope.climbDownPos();
     private Command telescopeClimbUpPos = () -> telescope.climbUpPos1();
     private Command telescopeClimbUpPos2 = () -> telescope.climbUpPos2();
-    private Command climbDisengage = () -> climb.disengage();
+    private Command climbUnlock = () -> climb.unlock();
     private Command climbEngage = () -> climb.engage();
+    private Command climbCommand = () -> climb.climb();
     private Command setStateFront = () -> state = State.FRONT;
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
@@ -183,9 +184,10 @@ public class Scoring extends Mechanism {
             .addCommand(pivotClimbDownPos)
             .build();
     public CommandSequence climb2 = new CommandSequence()
-            .addCommand(climbDisengage)
-            .addWaitCommand(CLIMB_ENGAGE_WAIT)
             .addCommand(climbEngage)
+            .addCommand(climbUnlock)
+            .addWaitCommand(CLIMB_UNLOCK_WAIT)
+            .addCommand(climbCommand)
             .build();
 
     public void goFront() {
@@ -232,6 +234,7 @@ public class Scoring extends Mechanism {
         telescope.init(hwMap);
         wrist.init(hwMap);
         sweeper.init(hwMap);
+        climb.init(hwMap);
     }
 
     @Override

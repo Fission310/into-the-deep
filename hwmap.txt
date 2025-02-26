@@ -5,6 +5,7 @@ Motors:
 2 - leftRear (GoBILDA 5202/3/4 series)
 3 - leftFront (GoBILDA 5202/3/4 series)
 Servos:
+0 - climbRightServo (Servo)
 1 - sweeperServo (Servo)
 2 - wristServoRight (Servo)
 Analog Input Devices:
@@ -26,5 +27,6 @@ Motors:
 Servos:
 2 - wristServoLeft (Servo)
 3 - intakeServo (Continuous Rotation Servo)
+5 - climbLeftServo (Servo)
 IC2 Bus 0:
 0 - odo (goBILDA Pinpoint Odometry Computer)
