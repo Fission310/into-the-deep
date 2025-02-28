@@ -59,6 +59,7 @@ public class Scoring extends Mechanism {
     private boolean dpadClicked = false;
     private boolean rightStickClicked = false;
     private boolean shortIntake = false;
+    private boolean scoreClicked = false;
 
     public Scoring(LinearOpMode opMode, Color color) {
         this.opMode = opMode;
@@ -240,6 +241,7 @@ public class Scoring extends Mechanism {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("state", state);
+        telemetry.addData("scoreClicked", scoreClicked);
         drivetrain.telemetry(telemetry);
         intake.telemetry(telemetry);
         pivot.telemetry(telemetry);
@@ -314,6 +316,7 @@ public class Scoring extends Mechanism {
                 intake.intake();
                 break;
             case FRONT:
+                scoreClicked = false;
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtake();
                 }
@@ -381,6 +384,7 @@ public class Scoring extends Mechanism {
             case BASKET:
                 drivetrain.setScore();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+                    scoreClicked = true;
                     scoreBasket.trigger();
                 }
                 break;
