@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.opmode.auton.util.Drive;
 @TeleOp(name = "LimelightDev")
 public class LimelightDev extends LinearOpMode {
     private Pose2d targetPoint = null;
+    private Pose2d botPos = null;
     private Location loc = null;
 
     private enum State {
@@ -52,9 +53,10 @@ public class LimelightDev extends LinearOpMode {
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command setResult = () -> {
         loc = limelight.getBest();
+        botPos = drive.getPoseEstimate();
     };
-    private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
-            drive.getPoseEstimate().getY() - loc.translation,
+    private Command lineUpP2P = () -> targetPoint = new Pose2d(botPos.getX(),
+            botPos.getY() - loc.translation,
             drive.getPoseEstimate().getHeading());
     private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX(),
             targetPoint.getY(), targetPoint.getHeading());
@@ -78,9 +80,9 @@ public class LimelightDev extends LinearOpMode {
             .addCommand(driveStop)
             .addCommand(sweepExtend)
             .addWaitCommand(0.2)
-            //.addCommand(forwardP2P)
-            //.addWaitCommand(0.4)
-            //.addCommand(driveStop)
+            // .addCommand(forwardP2P)
+            // .addWaitCommand(0.4)
+            // .addCommand(driveStop)
             .addCommand(telescopeExtendABit)
             .addCommand(intakeCommand)
             .addCommand(pivotGrabIntake)

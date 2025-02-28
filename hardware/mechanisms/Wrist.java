@@ -19,8 +19,8 @@ public class Wrist extends Mechanism {
 
     public static double INTAKE_DOWN_ABIT = 0.01;
     public static double BASKET_DOWN_ABIT = 0.12;
-    public static double[][] AUTO_INTAKE_POS =  { { 0.465, 0.465 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
-    public static double[][] AUTO_BASKET_POS =  { { 0.390, 0.390 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_INTAKE_POS =  { { 0.475, 0.475 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_BASKET_POS =  { { 0.37, 0.37 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_MID_POS =  { { 0.460, 0.460 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_POS = { { 0.480, 0.480 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_MID_POS = { { 0.330, 0.330 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };

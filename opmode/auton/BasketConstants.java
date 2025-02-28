@@ -13,20 +13,20 @@ public class BasketConstants {
             -WALL_POS + BOT_LENGTH / 2,
             UP);
     public static Constant BASKET_1 = new Constant(
-            -55,
-            -53,
+            -54.5,
+            -52.5,
             40);
     public static Constant BASKET_2 = new Constant(
-            -54.5,
-            -54.5,
+            -53.5,
+            -53.5,
             33);
     public static Constant BASKET_3 = new Constant(
-            -52.5,
-            -54,
+            -53,
+            -54.5,
             43);
     public static Constant BASKET_4 = new Constant(
-            -54,
-            -55.5,
+            -56,
+            -53,
             36);
     public static Constant BASKET_5 = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 22.5,
@@ -69,5 +69,5 @@ public class BasketConstants {
             -TILE_LENGTH / 2 + 6,
             0);
     public static double WALL_SAMPLE_DELAY = 0.9;
-    public static double BASKET_WALL_DELAY = 1.3;
+    public static double BASKET_WALL_DELAY = 0.7;
 }

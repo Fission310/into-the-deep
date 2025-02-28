@@ -47,6 +47,7 @@ public class Limelight extends Mechanism {
     public void update() {
         // thanks 20077 :)
         LLResult result = limelight.getLatestResult();
+        if (result == null) return;
         List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
 
         // List to hold scored detections
