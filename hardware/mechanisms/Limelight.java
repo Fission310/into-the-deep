@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
@@ -17,21 +18,26 @@ import com.stuyfission.fissionlib.util.Mechanism;
 public class Limelight extends Mechanism {
     private Limelight3A limelight;
     private ArrayList<Location> locations = new ArrayList<>();
+    private Color targetColor;
 
     public class Location {
         public double translation;
         public double extension;
         public double rotation;
+        public double score;
+        public Color color;
 
-        public Location(double trans, double extension, double rotation) {
+        public Location(double trans, double extension, double rotation, Color color) {
             this.translation = trans;
             this.extension = extension;
             this.rotation = rotation;
+            this.color = color;
         }
     }
 
-    public Limelight(LinearOpMode opMode) {
+    public Limelight(LinearOpMode opMode, Color targetColor) {
         this.opMode = opMode;
+        this.targetColor = targetColor;
     }
 
     @Override
@@ -47,14 +53,29 @@ public class Limelight extends Mechanism {
     public void update() {
         // thanks 20077 :)
         LLResult result = limelight.getLatestResult();
-        if (result == null) return;
+        if (result == null)
+            return;
         List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
 
         // List to hold scored detections
         locations = new ArrayList<>();
 
         for (LLResultTypes.DetectorResult detection : detections) {
-            int color = detection.getClassId(); // Detected class (color)
+            Color color; // Detected class (color)
+            switch (detection.getClassId()) {
+                case 0:
+                    color = Color.BLUE;
+                    break;
+                case 1:
+                    color = Color.RED;
+                    break;
+                case 2:
+                    color = Color.YELLOW;
+                    break;
+                default:
+                    color = Color.YELLOW;
+                    break;
+            }
 
             // Calculate bounding box dimensions
             List<List<Double>> corners = detection.getTargetCorners();
@@ -67,7 +88,7 @@ public class Limelight extends Mechanism {
 
             // Calculate aspect ratio and rotation score
             double aspectRatio = width / height;
-            double rotationScore = -Math.abs(aspectRatio - IDEAL_ASPECT_RATIO); // Closer to ideal is better
+            double rotationScore = Math.abs(aspectRatio - IDEAL_ASPECT_RATIO); // Closer to ideal is better
 
             // Calculate distance (approximation based on angles)
             double actualYAngle = LIME_LIGHT_MOUNT_ANGLE - detection.getTargetYDegrees();
@@ -75,21 +96,42 @@ public class Limelight extends Mechanism {
                     / Math.tan(Math.toRadians(actualYAngle)) + TELESCOPE_OFFSET;
             double xDistance = Math.tan(Math.toRadians(detection.getTargetXDegrees())) * yDistance - LIME_LIGHT_OFFSET;
 
-            // If color matches unwanted sample, skip the rest of the current iteration
-            // if (Arrays.stream(unwantedSamples).anyMatch(sample -> sample == color)) {
-            // continue;
-            // }
-
             // Add the scored detection to the list
-            locations.add(new Location(xDistance, yDistance, rotationScore));
+            locations.add(new Location(xDistance, yDistance, rotationScore, color));
         }
+    }
+
+    private boolean isColor(Color color) {
+        return targetColor == color || targetColor == Color.YELLOW;
     }
 
     public Location getBest() {
         if (locations.size() == 0) {
-            return new Location(0, 0, 0);
+            return new Location(0, 0, 0, Color.YELLOW);
         }
-        // TODO
+
+        locations.sort((a, b) -> Double.compare(b.translation, a.translation));
+        for (int i = 1; i < locations.size() - 1; i++) {
+            if (!isColor(locations.get(i).color)) {
+                continue;
+            }
+            Location left = locations.get(i - 1);
+            Location right = locations.get(i + 1);
+            Location current = locations.get(i);
+            double leftDist = Math.abs(current.translation - left.translation);
+            double rightDist = Math.abs(current.translation - right.translation);
+            if (!isColor(left.color)) {
+                current.score -= X_WEIGHT / leftDist;
+            }
+            if (!isColor(right.color)) {
+                current.score -= X_WEIGHT / rightDist;
+            }
+            current.score += X_WEIGHT * (leftDist + rightDist) - ROT_WEIGHT * current.rotation
+                    - Y_WEIGHT * Math.abs(current.extension - IDEAL_Y);
+        }
+
+        locations.sort((a, b) -> Double.compare(b.score, a.score));
+
         return locations.get(0);
     }
 
