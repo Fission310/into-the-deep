@@ -27,6 +27,10 @@ public class Limelight extends Mechanism {
         public double score;
         public Color color;
 
+        public double rotScore;
+        public double distScore;
+        public double yScore;
+
         public Location(double trans, double extension, double rotation, Color color) {
             this.translation = trans;
             this.extension = extension;
@@ -102,7 +106,7 @@ public class Limelight extends Mechanism {
     }
 
     private boolean isColor(Color color) {
-        return targetColor == color || targetColor == Color.YELLOW;
+        return targetColor == color || color == Color.YELLOW;
     }
 
     public Location getBest() {
@@ -111,23 +115,34 @@ public class Limelight extends Mechanism {
         }
 
         locations.sort((a, b) -> Double.compare(b.translation, a.translation));
-        for (int i = 1; i < locations.size() - 1; i++) {
-            if (!isColor(locations.get(i).color)) {
+        for (int i = 0; i < locations.size(); i++) {
+            Location current = locations.get(i);
+            if (!isColor(current.color)) {
+                current.score = Integer.MIN_VALUE;
                 continue;
             }
-            Location left = locations.get(i - 1);
-            Location right = locations.get(i + 1);
-            Location current = locations.get(i);
+            Location left = new Location(Integer.MIN_VALUE, 0, 0, Color.YELLOW);
+            Location right = new Location(Integer.MAX_VALUE, 0, 0, Color.YELLOW);
+            if (i > 0) {
+                left = locations.get(i - 1);
+            }
+            if (i < locations.size() - 1) {
+                right = locations.get(i + 1);
+            }
+
             double leftDist = Math.abs(current.translation - left.translation);
             double rightDist = Math.abs(current.translation - right.translation);
+            current.distScore = 0;
             if (!isColor(left.color)) {
-                current.score -= X_WEIGHT / leftDist;
+                current.distScore -= X_WEIGHT / leftDist;
             }
             if (!isColor(right.color)) {
-                current.score -= X_WEIGHT / rightDist;
+                current.distScore -= X_WEIGHT / rightDist;
             }
-            current.score += X_WEIGHT * (leftDist + rightDist) - ROT_WEIGHT * current.rotation
-                    - Y_WEIGHT * Math.abs(current.extension - IDEAL_Y);
+            current.distScore += X_WEIGHT * (leftDist + rightDist);
+            current.rotScore = -ROT_WEIGHT * current.rotation;
+            current.yScore = -Y_WEIGHT * Math.abs(current.extension - IDEAL_Y);
+            current.score = current.distScore + current.rotScore + current.yScore;
         }
 
         locations.sort((a, b) -> Double.compare(b.score, a.score));
@@ -143,6 +158,16 @@ public class Limelight extends Mechanism {
 
     @Override
     public void telemetry(Telemetry telemetry) {
+        Location best = getBest();
+        telemetry.addData("rotScore", Math.round(best.rotScore * 100.0) / 100.0);
+        telemetry.addData("yScore", Math.round(best.yScore * 100.0) / 100.0);
+        telemetry.addData("distScore", Math.round(best.distScore * 100.0) / 100.0);
+        telemetry.addData("totalScore", Math.round(best.score * 100.0) / 100.0);
+        telemetry.addData("numSamples", locations.size());
+        for (int i = 0; i < locations.size(); i++) {
+            telemetry.addData(String.valueOf(i), locations.get(i).color);
+        }
+        telemetry.update();
     }
 
     public void stop() {

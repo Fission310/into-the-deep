@@ -100,6 +100,7 @@ public class BasketAuto extends LinearOpMode {
     private Command wristMid = () -> wrist.autoMidPos();
     private Command wristRetractFirst = () -> wrist.retractPos();
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
+    private Command wristIntakeLL = () -> wrist.autoIntakeLLPos();
     private Command setResult = () -> {
         loc = limelight.getBest();
         drivePos = drive.getPoseEstimate();
@@ -261,8 +262,8 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(telescopeExtendABit)
             .addCommand(intakeCommand)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
-            .addWaitCommand(0.6)
+            .addCommand(wristIntakeLL)
+            .addWaitCommand(0.2)
             .addCommand(telescopeExtendInches)
             .addCommand(sweepRetract)
             // .addCommand(sweepP2P)
@@ -306,17 +307,17 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(2.1)
             .addCommand(setResult)
             .addCommand(lineUpP2P)
-            .addWaitCommand(1)
-            .addCommand(driveStop)
+            .addWaitCommand(0.4)
             .addCommand(sweepExtend)
             .addWaitCommand(0.2)
             // .addCommand(forwardP2P)
             // .addWaitCommand(0.4)
+            .addCommand(driveStop)
             .addCommand(telescopeExtendABit)
             .addCommand(intakeCommand)
             .addCommand(pivotGrabIntake)
-            .addCommand(wristIntakeScore)
-            .addWaitCommand(0.6)
+            .addCommand(wristIntakeLL)
+            .addWaitCommand(0.2)
             .addCommand(telescopeExtendInches)
             .addCommand(sweepRetract)
             // .addCommand(sweepP2P)

@@ -117,6 +117,7 @@ public class LimelightDevNoTele extends LinearOpMode {
             Location l = limelight.getBest();
             telemetry.addData("limelight strafe distance", l.translation);
             telemetry.addData("telescope extend dist", l.extension);
+            limelight.telemetry(telemetry);
         }
 
         drive.setPoseEstimate(new Pose2d(0, 0, 0));

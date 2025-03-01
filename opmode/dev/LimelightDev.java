@@ -202,6 +202,8 @@ public class LimelightDev extends LinearOpMode {
                 telemetry.addData("limelight strafe distance", loc.translation);
                 telemetry.addData("telescope extend dist", loc.extension);
             }
+
+            limelight.telemetry(telemetry);
             telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());

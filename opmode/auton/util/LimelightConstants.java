@@ -6,14 +6,14 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class LimelightConstants {
     public static double IDEAL_ASPECT_RATIO = 3.5 / 1.5; // Expected width:height ratio for a properly aligned sample
-    public static double IDEAL_Y = 10;
+    public static double IDEAL_Y = 6.2;
     public static int PIPELINE = 0;
     public static double LIME_LIGHT_MOUNT_ANGLE = 35; // a1
     public static double LIME_LIGHT_LENS_HEIGHT_INCHES = 7.00525945; // h1
-    public static double LIME_LIGHT_OFFSET = 6; // h1
+    public static double LIME_LIGHT_OFFSET = 6.5; // h1
     public static double SAMPLE_HEIGHT_INCHES = 0; // h2
-    public static double TELESCOPE_OFFSET = 1; // h2
-    public static double X_WEIGHT = 3;
+    public static double TELESCOPE_OFFSET = 0; // h2
+    public static double X_WEIGHT = 4;
     public static double Y_WEIGHT = 0.4;
-    public static double ROT_WEIGHT = 0.6;
+    public static double ROT_WEIGHT = 1;
 }
