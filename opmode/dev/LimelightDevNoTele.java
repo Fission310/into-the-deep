@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Sweeper;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Wrist;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Limelight.Location;
+import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Drive;
 
 @Autonomous(name = "LimelightDev No Tele")
@@ -100,7 +101,7 @@ public class LimelightDevNoTele extends LinearOpMode {
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
-        limelight = new Limelight(this);
+        limelight = new Limelight(this, Color.BLUE);
         sweeper = new Sweeper(this);
 
         intake.init(hardwareMap);
