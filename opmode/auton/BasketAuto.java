@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.stuyfission.fissionlib.command.AutoCommandMachine;
 import com.stuyfission.fissionlib.command.Command;
 import com.stuyfission.fissionlib.command.CommandSequence;
@@ -369,6 +370,7 @@ public class BasketAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        VoltageSensor voltage = hardwareMap.voltageSensor.iterator().next();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         intake = new Intake(this);
         drive = new SampleMecanumDrive(hardwareMap);
@@ -515,7 +517,7 @@ public class BasketAuto extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested() && !commandMachine.hasCompleted()) {
             if (targetPoint != null) {
-                Drive.p2p(drive, targetPoint);
+                Drive.p2p(drive, targetPoint, voltage.getVoltage());
             }
             drive.update();
             telescope.update();

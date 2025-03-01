@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Telescope;
@@ -23,6 +24,7 @@ public class P2PDev extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        VoltageSensor voltage = hardwareMap.voltageSensor.iterator().next();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         drive = new SampleMecanumDrive(hardwareMap);
         telescope = new Telescope(this);
@@ -33,7 +35,7 @@ public class P2PDev extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            Drive.p2p(drive, new Pose2d(X, Y, Math.toRadians(HEADING)));
+            Drive.p2p(drive, new Pose2d(X, Y, Math.toRadians(HEADING)), voltage.getVoltage());
             drive.update();
             telescope.update();
             telemetry.addData("drive x", drive.getPoseEstimate().getX());

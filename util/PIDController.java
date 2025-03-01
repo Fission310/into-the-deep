@@ -22,6 +22,9 @@ public class PIDController {
     public void setkD(double kD) {
         this.kD = kD;
     }
+    public void setkI(double kI) {
+        this.kI = kI;
+    }
 
 
     public void setTarget(double target) {

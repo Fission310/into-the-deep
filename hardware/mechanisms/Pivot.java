@@ -25,9 +25,9 @@ public class Pivot extends Mechanism {
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 132;
     public static int FRONT_POS = 79;
-    public static int INTAKE_UP_POS = 72;
-    public static int INTAKE_DOWN_POS = 72;
-    public static int INTAKE_GRAB_POS = 72;
+    public static int INTAKE_UP_POS = 68;
+    public static int INTAKE_DOWN_POS = 68;
+    public static int INTAKE_GRAB_POS = 68;
     public static int WALL_POS = 189;
     public static int BASKET_POS = 174;
     public static int CLIP_POS = 152;
