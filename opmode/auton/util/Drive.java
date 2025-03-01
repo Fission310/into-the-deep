@@ -10,30 +10,26 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 public class Drive {
     public static double HEADING_P = 0.3;
     public static double HEADING_D = 0.045;
-    public static double TRANS_P = 0.000015;
-    public static double TRANS_D = 0.00000045;
-    public static double TRANS_P_SHORT = 0.2;
-    public static double TRANS_D_SHORT = 0.0000004;
-    public static double TRANS_P_MID = 0.2;
-    public static double TRANS_D_MID = 0.0000004;
+    public static double Y_P = 0.1;
+    public static double Y_I = 0;
+    public static double Y_D = 0.0001;
+    public static double Y_S = 0.15;
+    public static double X_P = 0.2;
+    public static double X_D = 0.0000009;
 
     private static PIDController headingPid = new PIDController(HEADING_P, 0, HEADING_D);
-    private static PIDController translationPid = new PIDController(TRANS_P, 0, TRANS_D);
+    private static PIDController xPid = new PIDController(X_P, 0, X_D);
+    private static PIDController yPid = new PIDController(Y_P, Y_I, Y_D);
 
     public static void p2p(SampleMecanumDrive drive, Pose2d target, double voltage) {
         Pose2d currentPose = drive.getPoseEstimate();
-        double diff = Math.abs(currentPose.getX() - target.getX()) + Math.abs(currentPose.getY() - target.getY());
 
-        if (diff < 2) {
-            translationPid.setkD(TRANS_P_SHORT);
-            translationPid.setkP(TRANS_P_SHORT);
-        } else if (diff < 6) {
-            translationPid.setkD(TRANS_P_MID);
-            translationPid.setkP(TRANS_P_MID);
-        } else {
-            translationPid.setkD(TRANS_D);
-            translationPid.setkP(TRANS_P);
-        }
+        xPid.setkD(X_D);
+        xPid.setkP(X_P);
+
+        yPid.setkD(Y_D);
+        yPid.setkI(Y_I);
+        yPid.setkP(Y_P);
 
         headingPid.setkD(HEADING_D);
         headingPid.setkP(HEADING_P);
@@ -49,11 +45,12 @@ public class Drive {
         }
         headingPid.setTarget(targetHeading);
         double headingCorrection = headingPid.calculate(currentHeading);
-        translationPid.setTarget(target.getX());
-        double xCorrection = translationPid.calculate(currentPose.getX()) / voltage * 12.0;
-        translationPid.setTarget(target.getY());
-        double yCorrection = translationPid.calculate(currentPose.getY()) / voltage * 12.0;
+        xPid.setTarget(target.getX());
+        double xCorrection = xPid.calculate(currentPose.getX()) / voltage * 12.0;
+        yPid.setTarget(target.getY());
+        double yCorrection = yPid.calculate(currentPose.getY()) / voltage * 12.0;
 
-        drive.setWeightedDrivePower(new Pose2d(xCorrection, yCorrection, headingCorrection));
+        drive.setWeightedDrivePower(
+                new Pose2d(xCorrection, yCorrection + (yCorrection / Math.abs(yCorrection)) * Y_S, headingCorrection));
     }
 }

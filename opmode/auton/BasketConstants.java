@@ -58,14 +58,14 @@ public class BasketConstants {
             160);
     public static Constant WALL_SAMPLE_INT = new Constant(
             -48,
-            -30,
+            -33,
             160);
     public static Constant SUBMERSIBLE_1 = new Constant(
-            -TILE_LENGTH,
+            -TILE_LENGTH - 2,
             -TILE_LENGTH / 2,
             0);
     public static Constant SUBMERSIBLE_2 = new Constant(
-            -TILE_LENGTH,
+            -TILE_LENGTH - 2,
             -TILE_LENGTH / 2 + 6,
             0);
     public static double WALL_SAMPLE_DELAY = 0.9;

@@ -242,7 +242,7 @@ public class Scoring extends Mechanism {
         telescope.init(hwMap);
         wrist.init(hwMap);
         sweeper.init(hwMap);
-        climb.init(hwMap);
+        //climb.init(hwMap);
     }
 
     @Override

@@ -9,6 +9,7 @@ public class LimelightConstants {
     public static int PIPELINE = 0;
     public static double LIME_LIGHT_MOUNT_ANGLE = 35; // a1
     public static double LIME_LIGHT_LENS_HEIGHT_INCHES = 7.00525945; // h1
-    public static double LIME_LIGHT_OFFSET = 5.5; // h1
+    public static double LIME_LIGHT_OFFSET = 6; // h1
     public static double SAMPLE_HEIGHT_INCHES = 0; // h2
+    public static double TELESCOPE_OFFSET = 1; // h2
 }

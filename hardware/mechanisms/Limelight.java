@@ -16,7 +16,7 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 public class Limelight extends Mechanism {
     private Limelight3A limelight;
-    private ArrayList<Location> locations;
+    private ArrayList<Location> locations = new ArrayList<>();
 
     public class Location {
         public double translation;
@@ -72,7 +72,7 @@ public class Limelight extends Mechanism {
             // Calculate distance (approximation based on angles)
             double actualYAngle = LIME_LIGHT_MOUNT_ANGLE - detection.getTargetYDegrees();
             double yDistance = (LIME_LIGHT_LENS_HEIGHT_INCHES - SAMPLE_HEIGHT_INCHES)
-                    / Math.tan(Math.toRadians(actualYAngle));
+                    / Math.tan(Math.toRadians(actualYAngle)) + TELESCOPE_OFFSET;
             double xDistance = Math.tan(Math.toRadians(detection.getTargetXDegrees())) * yDistance - LIME_LIGHT_OFFSET;
 
             // If color matches unwanted sample, skip the rest of the current iteration

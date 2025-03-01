@@ -29,6 +29,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class BasketAuto extends LinearOpMode {
     private boolean commandBusy = false;
     private Pose2d targetPoint = null;
+    private Pose2d drivePos = null;
     private Location loc = null;
     private TrajectorySequence basket1Traj;
     private TrajectorySequence farSampleTraj;
@@ -100,15 +101,16 @@ public class BasketAuto extends LinearOpMode {
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command setResult = () -> {
         loc = limelight.getBest();
+        drivePos = drive.getPoseEstimate();
     };
-    private Command lineUpP2P = () -> targetPoint = new Pose2d(drive.getPoseEstimate().getX(),
-            drive.getPoseEstimate().getY() - loc.translation,
-            drive.getPoseEstimate().getHeading());
-    private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX() + 3,
+    private Command lineUpP2P = () -> targetPoint = new Pose2d(drivePos.getX(),
+            drivePos.getY() - loc.translation,
+            drivePos.getHeading());
+    private Command forwardP2P = () -> targetPoint = new Pose2d(targetPoint.getX() + 1,
             targetPoint.getY(), targetPoint.getHeading());
     private Command driveStop = () -> {
-            targetPoint = null;
-            drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
+        targetPoint = null;
+        drive.setWeightedDrivePower(new Pose2d(0, 0, 0));
     };
     private Command telescopeExtendInches = () -> telescope
             .setTargetInches(loc.extension);
@@ -250,8 +252,8 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(0.4)
             .addCommand(sweepExtend)
             .addWaitCommand(0.2)
-            .addCommand(forwardP2P)
-            .addWaitCommand(0.4)
+            // .addCommand(forwardP2P)
+            // .addWaitCommand(0.4)
             .addCommand(driveStop)
             .addCommand(telescopeExtendABit)
             .addCommand(intakeCommand)
@@ -260,9 +262,9 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(0.6)
             .addCommand(telescopeExtendInches)
             .addCommand(sweepRetract)
-            //.addCommand(sweepP2P)
+            // .addCommand(sweepP2P)
             .addWaitCommand(0.9)
-            //.addCommand(driveStop)
+            // .addCommand(driveStop)
             .addCommand(pivotUpIntake)
             .addCommand(wristRetract)
             .addWaitCommand(0.2)
@@ -301,12 +303,12 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(2.1)
             .addCommand(setResult)
             .addCommand(lineUpP2P)
-            .addWaitCommand(0.4)
+            .addWaitCommand(1)
+            .addCommand(driveStop)
             .addCommand(sweepExtend)
             .addWaitCommand(0.2)
-            .addCommand(forwardP2P)
-            .addWaitCommand(0.4)
-            .addCommand(driveStop)
+            // .addCommand(forwardP2P)
+            // .addWaitCommand(0.4)
             .addCommand(telescopeExtendABit)
             .addCommand(intakeCommand)
             .addCommand(pivotGrabIntake)
@@ -314,9 +316,9 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(0.6)
             .addCommand(telescopeExtendInches)
             .addCommand(sweepRetract)
-            //.addCommand(sweepP2P)
+            // .addCommand(sweepP2P)
             .addWaitCommand(0.9)
-            //.addCommand(driveStop)
+            // .addCommand(driveStop)
             .addCommand(pivotUpIntake)
             .addCommand(wristRetract)
             .addWaitCommand(0.2)
@@ -360,10 +362,10 @@ public class BasketAuto extends LinearOpMode {
             .addCommandSequence(basket3Sequence)
             .addCommandSequence(wallSampleSequence)
             .addCommandSequence(basket4Sequence)
-//            .addCommandSequence(sub1Sequence)
-//            .addCommandSequence(basket5Sequence)
-//            .addCommandSequence(sub2Sequence)
-//            .addCommandSequence(basket6Sequence)
+            .addCommandSequence(sub1Sequence)
+            .addCommandSequence(basket5Sequence)
+            .addCommandSequence(sub2Sequence)
+            .addCommandSequence(basket6Sequence)
             .addCommandSequence(resetPivot)
             .addCommandSequence(doNothing)
             .build();
@@ -377,7 +379,7 @@ public class BasketAuto extends LinearOpMode {
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
-//        limelight = new Limelight(this);
+        limelight = new Limelight(this);
         sweeper = new Sweeper(this);
 
         intake.init(hardwareMap);
@@ -385,7 +387,7 @@ public class BasketAuto extends LinearOpMode {
         pivot.initPos();
         wrist.init(hardwareMap);
         telescope.init(hardwareMap);
-//        limelight.init(hardwareMap);
+        limelight.init(hardwareMap);
         sweeper.init(hardwareMap);
 
         TrajectoryVelocityConstraint fastDT = SampleMecanumDrive.getVelocityConstraint(70, DriveConstants.MAX_ANG_VEL,
@@ -470,7 +472,7 @@ public class BasketAuto extends LinearOpMode {
                 .setVelConstraint(fastDT)
                 .setAccelConstraint(fastDTA)
                 .setReversed(false)
-                .lineToLinearHeading(BasketConstants.SUBMERSIBLE_1.getPose())
+                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_1.getPose(), BasketConstants.SUBMERSIBLE_1.getH())
                 .build();
         telemetry.addLine("Built sub1Traj");
         telemetry.update();
@@ -522,19 +524,23 @@ public class BasketAuto extends LinearOpMode {
             drive.update();
             telescope.update();
             pivot.update();
-//            limelight.update();
+            limelight.update();
             commandMachine.run(drive.isBusy() || commandBusy);
-//            if (loc != null) {
-//                telemetry.addData("limelight strafe distance", loc.translation);
-//                telemetry.addData("telescope extend dist", loc.extension);
-//            }
+            if (loc != null) {
+                telemetry.addData("limelight strafe distance", loc.translation);
+                telemetry.addData("telescope extend dist", loc.extension);
+            } else {
+                Location l = limelight.getBest();
+                telemetry.addData("limelight strafe distance", l.translation);
+                telemetry.addData("telescope extend dist", l.extension);
+            }
             telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
             telemetry.addData("drive y", drive.getPoseEstimate().getY());
             telemetry.update();
         }
 
-//        limelight.stop();
+        limelight.stop();
         Thread.sleep(500);
     }
 }
