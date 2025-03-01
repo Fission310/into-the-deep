@@ -87,6 +87,8 @@ public class Scoring extends Mechanism {
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
     private Command wristIntakeScore = () -> wrist.intakePos();
+    private Command telescopeGrant = () -> telescope.climbGrant();
+    private Command pivotGrant = () -> pivot.climbGrantPos();
     private Command wristIntake = () -> {
         if (shortIntake) {
             wrist.intakeShortPos();
@@ -191,6 +193,11 @@ public class Scoring extends Mechanism {
             .addCommand(climbCommand)
             .build();
 
+    public CommandSequence climbGrant = new CommandSequence()
+            .addCommand(pivotGrant)
+            .addCommand(telescopeGrant)
+            .build();
+
     public void goFront() {
         state = State.FRONT;
         pivot.frontPos();
@@ -293,9 +300,10 @@ public class Scoring extends Mechanism {
                 climbDown.trigger();
             }
             climbPressed = true;
-        }
-        else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_2) && state == State.CLIMB_DOWN) {
+        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_2) && state == State.CLIMB_DOWN) {
             climb2.trigger();
+        } else if(GamepadStatic.isButtonPressed(gamepad, Controls.GRANT) && state == State.CLIMB_DOWN){
+            climbGrant.trigger();
         }
         if (!GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
             climbPressed = false;

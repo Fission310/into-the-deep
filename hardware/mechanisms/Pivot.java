@@ -24,21 +24,22 @@ public class Pivot extends Mechanism {
     public static int RESET_POS = 88;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 132;
-    public static int FRONT_POS = 70;
-    public static int INTAKE_UP_POS = 70;
-    public static int INTAKE_DOWN_POS = 70;
-    public static int INTAKE_GRAB_POS = 70;
+    public static int FRONT_POS = 79;
+    public static int INTAKE_UP_POS = 72;
+    public static int INTAKE_DOWN_POS = 72;
+    public static int INTAKE_GRAB_POS = 72;
     public static int WALL_POS = 189;
-    public static int BASKET_POS = 170;
+    public static int BASKET_POS = 174;
     public static int CLIP_POS = 152;
     public static int CLIP_DOWN_POS = 145;
     public static int CLIP_BACK_POS = 184;
     public static int CLIP_BACK_DOWN_POS = 187;
     public static int BACK_POS = 294;
-    public static int UP_POS = 185;
+    public static int UP_POS = 174;
     public static int HIGHEST = 154;
     public static int CLIMB_UP_POS = 185;
-    public static int CLIMB_DOWN_POS = 105;
+    public static int CLIMB_DOWN_POS = 80;
+    public static int CLIMB_GRANT_POS = 165;
     public static int TICKS_PER_REV = 360;
 
     public static double KP = 0.012;
@@ -171,6 +172,9 @@ public class Pivot extends Mechanism {
 
     public void climbDownPos() {
         setTarget(CLIMB_DOWN_POS);
+    }
+    public void climbGrantPos(){
+        setTarget(CLIMB_GRANT_POS);
     }
 
     public void setTarget(double target) {
