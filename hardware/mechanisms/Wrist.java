@@ -19,11 +19,11 @@ public class Wrist extends Mechanism {
 
     public static double INTAKE_DOWN_ABIT = 0.01;
     public static double BASKET_DOWN_ABIT = 0.12;
-    public static double[][] AUTO_INTAKE_POS =  { { 0.49, 0.49 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_INTAKE_POS =  { { 0.485, 0.485 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_INTAKE_LL_POS =  { { 0.48, 0.48 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_BASKET_POS =  { { 0.315, 0.315 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_MID_POS =  { { 0.460, 0.460 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
-    public static double[][] INTAKE_POS = { { 0.505, 0.505 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] INTAKE_POS = { { 0.49, 0.49 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_MID_POS = { { 0.330, 0.330 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_SHORT_POS = { { 0.460, 0.460 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_DOWN_POS = { { 0.740, 0.510 }, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
@@ -49,7 +49,7 @@ public class Wrist extends Mechanism {
         wristServoRight = hwMap.get(Servo.class, "wristServoRight");
         wristServoLeft = hwMap.get(Servo.class, "wristServoLeft");
         wristServoLeft.setDirection(Direction.REVERSE);
-        frontPos();
+        currPos = FRONT_POS;
     }
     public void intakeABit(){
         wristServoRight.setPosition(currPos[wristPos][0] + INTAKE_DOWN_ABIT);
