@@ -52,11 +52,6 @@ public class LimelightDevNoTele extends LinearOpMode {
         loc = limelight.getBest();
         botPos = drive.getPoseEstimate();
     };
-    private Command outtake = () -> {
-        if (intake.hasWrongColor(Color.BLUE)) {
-            intake.outtake();
-        }
-    };
     private Command lineUpP2P = () -> targetPoint = new Pose2d(botPos.getX(),
             botPos.getY() - loc.translation,
             botPos.getHeading());
@@ -87,7 +82,6 @@ public class LimelightDevNoTele extends LinearOpMode {
             .addWaitCommand(0.6)
             .addCommand(telescopeExtendInches)
             .addWaitCommand(2)
-            .addCommand(outtake)
             .addCommand(sweepRetract)
             .addWaitCommand(0.9)
             .addCommand(pivotUpIntake)

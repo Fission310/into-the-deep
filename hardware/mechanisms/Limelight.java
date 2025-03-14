@@ -121,8 +121,8 @@ public class Limelight extends Mechanism {
                 current.score = Integer.MIN_VALUE;
                 continue;
             }
-            Location left = new Location(current.translation, 0, 0, Color.YELLOW);
-            Location right = new Location(current.translation, 0, 0, Color.YELLOW);
+            Location left = new Location(Integer.MIN_VALUE, 0, 0, Color.YELLOW);
+            Location right = new Location(Integer.MAX_VALUE, 0, 0, Color.YELLOW);
             if (i > 0) {
                 left = locations.get(i - 1);
             }
@@ -134,19 +134,13 @@ public class Limelight extends Mechanism {
             double rightDist = Math.abs(current.translation - right.translation);
             current.distScore = 0;
             if (!isColor(left.color)) {
-                if (leftDist == 0) {
-                    leftDist = 0.00001;
-                }
                 current.distScore -= X_WEIGHT / leftDist;
             }
             if (!isColor(right.color)) {
-                if (rightDist == 0) {
-                    rightDist = 0.00001;
-                }
                 current.distScore -= X_WEIGHT / rightDist;
             }
             current.distScore += X_WEIGHT * (leftDist + rightDist);
-            current.rotScore = -ROT_WEIGHT * current.rotation * current.rotation * current.rotation;
+            current.rotScore = -ROT_WEIGHT * current.rotation;
             current.yScore = -Y_WEIGHT * Math.abs(current.extension - IDEAL_Y);
             current.score = current.distScore + current.rotScore + current.yScore;
         }
@@ -170,6 +164,9 @@ public class Limelight extends Mechanism {
         telemetry.addData("distScore", Math.round(best.distScore * 100.0) / 100.0);
         telemetry.addData("totalScore", Math.round(best.score * 100.0) / 100.0);
         telemetry.addData("numSamples", locations.size());
+        for (int i = 0; i < locations.size(); i++) {
+            telemetry.addData(String.valueOf(i), locations.get(i).color);
+        }
         telemetry.update();
     }
 
