@@ -83,7 +83,7 @@ public class Intake extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         intakeServo = hwMap.get(CRServo.class, "intakeServo");
-        intakeServo.setDirection(Direction.REVERSE);
+        intakeServo.setDirection(Direction.FORWARD);
 
         sampleSensor1.init(hwMap);
         sampleSensor2.init(hwMap);

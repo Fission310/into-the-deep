@@ -26,7 +26,7 @@ Motors:
 3 - rightFront (GoBILDA 5202/3/4 series)
 Servos:
 2 - wristServoLeft (Servo)
-3 - intakeServo (Continuous Rotation Servo)
+4 - intakeServo (Continuous Rotation Servo)
 5 - climbLeftServo (Servo)
 IC2 Bus 0:
 0 - odo (goBILDA Pinpoint Odometry Computer)

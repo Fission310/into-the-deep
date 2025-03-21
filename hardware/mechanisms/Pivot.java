@@ -24,23 +24,23 @@ public class Pivot extends Mechanism {
     public static int AUTO_INTAKE_GRAB_POS = 60;
     public static int RESET_POS = 88;
     public static int RESET_WAIT = 1;
-    public static int INIT_POS = 132;
-    public static int FRONT_POS = 20;
-    public static int INTAKE_UP_POS = 5;
-    public static int INTAKE_DOWN_POS = 5;
-    public static int INTAKE_GRAB_POS = 5;
-    public static int WALL_POS = 139;
-    public static int BASKET_POS = 120;
-    public static int CLIP_POS = 102;
-    public static int CLIP_DOWN_POS = 95;
-    public static int CLIP_BACK_POS = 134;
-    public static int CLIP_BACK_DOWN_POS = 137;
-    public static int BACK_POS = 244;
-    public static int UP_POS = 100;
-    public static int HIGHEST = 104;
-    public static int CLIMB_UP_POS = 135;
-    public static int CLIMB_DOWN_POS = 30;
-    public static int CLIMB_GRANT_POS = 115;
+    public static int INIT_POS = 72;
+    public static int FRONT_POS = 19;
+    public static int INTAKE_UP_POS = 8;
+    public static int INTAKE_DOWN_POS = 8;
+    public static int INTAKE_GRAB_POS = 8;
+    public static int WALL_POS = 129;
+    public static int BASKET_POS = 114;
+    public static int CLIP_POS = 92;
+    public static int CLIP_DOWN_POS = 85;
+    public static int CLIP_BACK_POS = 124;
+    public static int CLIP_BACK_DOWN_POS = 127;
+    public static int BACK_POS = 294; //we dont use
+    public static int UP_POS = 114;
+    public static int HIGHEST = 94;
+    public static int CLIMB_UP_POS = 125;
+    public static int CLIMB_DOWN_POS = 20;
+    public static int CLIMB_GRANT_POS = 145;
     public static int TICKS_PER_REV = 360;
 
     public static double KP = 0.012;
@@ -88,7 +88,7 @@ public class Pivot extends Mechanism {
         motors[1].setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         motors[0].setDirection(DcMotorEx.Direction.REVERSE);
-        motors[1].setDirection(DcMotorEx.Direction.REVERSE);
+        motors[1].setDirection(DcMotorEx.Direction.FORWARD);
 
         frontPos();
     }
