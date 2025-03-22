@@ -28,6 +28,11 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "BasketAuto", preselectTeleOp = "Main")
 public class BasketAuto extends LinearOpMode {
+    public BasketAuto(Color color) {
+        this.color = color;
+    }
+
+    private Color color;
     private boolean commandBusy = false;
     private Pose2d targetPoint = null;
     private Pose2d drivePos = null;
@@ -383,7 +388,7 @@ public class BasketAuto extends LinearOpMode {
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
-        limelight = new Limelight(this, Color.BLUE);
+        limelight = new Limelight(this, color);
         sweeper = new Sweeper(this);
 
         intake.init(hardwareMap);
