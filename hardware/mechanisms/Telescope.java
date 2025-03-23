@@ -19,11 +19,11 @@ public class Telescope extends Mechanism {
     public static double ABIT = 60;
     public static double UP_RETRACTION = -60;
     public static double AUTO_INTAKE_FAR_POS = 316;
-    public static double AUTO_INTAKE_CENTER_POS = 348;
+    public static double AUTO_INTAKE_CENTER_POS = 351;
     public static double AUTO_INTAKE_WALL_POS = 346;
     public static double AUTO_BASKET_POS = 630;
     public static double AUTO_SAMPLE_DROP = 300;
-    public static double AUTO_INTAKE_SHORT_POS = 50;
+    public static double AUTO_INTAKE_SHORT_POS = 51;
     public static double FRONT_VERTICAL_POS = -50;
     public static double FRONT_HORIZONTAL_POS = -50;
     public static double INTAKE_POS = 450;
