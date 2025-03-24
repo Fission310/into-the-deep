@@ -132,7 +132,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(pivotBasket)
             .addWaitCommand(0.2)
             .addCommand(telescopeBasket)
-            .addWaitCommand(0.4)
+            .addWaitCommand(0.5)
             .addCommand(wristBasket)
             .addWaitCommand(0.2)
             .addCommand(outtake)
