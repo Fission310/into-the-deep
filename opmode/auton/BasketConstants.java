@@ -36,6 +36,11 @@ public class BasketConstants {
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 24,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 7.5,
             39);
+    public static Constant STEP_BACK = new Constant(
+            0,
+            20,
+            39
+    );
     public static Constant FAR_SAMPLE = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 27,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
@@ -64,9 +69,10 @@ public class BasketConstants {
             -TILE_LENGTH - 2,
             -TILE_LENGTH / 2,
             0);
+
     public static Constant SUBMERSIBLE_2 = new Constant(
             -25,
-            -TILE_LENGTH / 2 + 6,
+            -TILE_LENGTH / 2 - 14,
             0);
     public static double WALL_SAMPLE_DELAY = 1;
     public static double BASKET_WALL_DELAY = 0.7;

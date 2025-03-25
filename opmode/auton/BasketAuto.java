@@ -51,6 +51,7 @@ public class BasketAuto extends LinearOpMode {
     private TrajectorySequence basket5Traj;
     private TrajectorySequence sub2Traj;
     private TrajectorySequence basket6Traj;
+    private TrajectorySequence stepBackTraj;
 
     private SampleMecanumDrive drive;
 
@@ -68,6 +69,7 @@ public class BasketAuto extends LinearOpMode {
     private Command basket5Command = () -> drive.followTrajectorySequenceAsync(basket5Traj);
     private Command sub2Command = () -> drive.followTrajectorySequenceAsync(sub2Traj);
     private Command basket6Command = () -> drive.followTrajectorySequenceAsync(basket6Traj);
+    private Command stepBackCommand = () -> drive.followTrajectorySequenceAsync(stepBackTraj);
 
     private Intake intake;
     private Pivot pivot;
@@ -100,6 +102,7 @@ public class BasketAuto extends LinearOpMode {
     private Command telescopeWall = () -> telescope.autoWallPos();
     private Command telescopeHorizontalRetract = () -> telescope.frontHorizontalPos();
     private Command telescopeVerticalRetract = () -> telescope.frontVerticalPos();
+    private Command telescopeUpABit = () -> telescope.upExtra();
     private Command wristRetract = () -> wrist.frontPos();
     private Command wristBasket = () -> wrist.autoBasketPos();
     private Command wristMid = () -> wrist.autoMidPos();
@@ -296,9 +299,13 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(0.3)
             .addCommand(outtake)
             .addWaitCommand(0.2)
-            .addCommand(wristRetractFirst)
+            .addCommand(telescopeUpABit)
+            .addCommand(stepBackCommand)
             .addWaitCommand(0.2)
             .addCommand(wristRetractFirst)
+            .addWaitCommand(0.2)
+            //.addCommand(wristRetractFirst)
+            .addCommand(wristRetract)
             .addCommand(telescopeVerticalRetract)
             .addWaitCommand(0.3)
             .addCommand(wristRetract)
@@ -339,7 +346,7 @@ public class BasketAuto extends LinearOpMode {
 
     private CommandSequence basket6Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
-            .addCommand(basket6Command)
+            .addCommand(basket5Command)
             .addCommand(intakeCommand)
             .addCommand(pivotBasket)
             .addWaitCommand(1.3)
@@ -350,6 +357,8 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(0.3)
             .addCommand(outtake)
             .addWaitCommand(0.2)
+            .addCommand(telescopeUpABit)
+            .addCommand(stepBackCommand )
             .addCommand(wristRetractFirst)
             .addWaitCommand(0.2)
             .addCommand(wristRetractFirst)
@@ -512,6 +521,14 @@ public class BasketAuto extends LinearOpMode {
                 .splineToLinearHeading(BasketConstants.BASKET_6.getPose(), 5 * Math.PI / 4)
                 .build();
         telemetry.addLine("Built basket6Traj");
+        telemetry.update();
+        stepBackTraj = drive
+                .trajectorySequenceBuilder(basket6Traj.end())
+                .setVelConstraint(fastDT)
+                .setAccelConstraint(fastDTA)
+                .splineToLinearHeading(BasketConstants.STEP_BACK.getPose(), 5 * Math.PI / 4)
+                .build();
+        telemetry.addLine("Built stepBackTraj");
         telemetry.update();
 
         while (opModeInInit() && !isStopRequested()) {
