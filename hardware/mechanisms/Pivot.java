@@ -20,27 +20,27 @@ import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 @Config
 public class Pivot extends Mechanism {
     public static int ABIT = 1;
-    public static int AUTO_BASKET_POS = 170;
-    public static int AUTO_INTAKE_GRAB_POS = 60;
+    public static int AUTO_BASKET_POS = 105;
+    public static int AUTO_INTAKE_GRAB_POS = 0;
     public static int RESET_POS = 88;
     public static int RESET_WAIT = 1;
-    public static int INIT_POS = 112;
-    public static int FRONT_POS = 79;
-    public static int INTAKE_UP_POS = 68;
-    public static int INTAKE_DOWN_POS = 68;
-    public static int INTAKE_GRAB_POS = 68;
-    public static int WALL_POS = 189;
-    public static int BASKET_POS = 174;
-    public static int CLIP_POS = 152;
-    public static int CLIP_DOWN_POS = 145;
-    public static int CLIP_BACK_POS = 184;
-    public static int CLIP_BACK_DOWN_POS = 187;
-    public static int BACK_POS = 294;
-    public static int UP_POS = 174;
-    public static int HIGHEST = 154;
-    public static int CLIMB_UP_POS = 185;
-    public static int CLIMB_DOWN_POS = 0;
-    public static int CLIMB_GRANT_POS = 165;
+    public static int INIT_POS = 72;
+    public static int FRONT_POS = 25;
+    public static int INTAKE_UP_POS = 7;
+    public static int INTAKE_DOWN_POS = 7;
+    public static int INTAKE_GRAB_POS = 7;
+    public static int WALL_POS = 15;
+    public static int BASKET_POS = 114;
+    public static int CLIP_POS = 92;
+    public static int CLIP_DOWN_POS = 85;
+    public static int CLIP_BACK_POS = 124;
+    public static int CLIP_BACK_DOWN_POS = 127;
+    public static int BACK_POS = 294; //we dont use
+    public static int UP_POS = 114;
+    public static int HIGHEST = 94;
+    public static int CLIMB_UP_POS = 125;
+    public static int CLIMB_DOWN_POS = 20;
+    public static int CLIMB_GRANT_POS = 145;
     public static int TICKS_PER_REV = 360;
 
     public static double KP = 0.012;

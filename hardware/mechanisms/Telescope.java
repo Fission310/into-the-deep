@@ -19,10 +19,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Telescope extends Mechanism {
     public static double ABIT = 60;
     public static double UP_RETRACTION = -60;
-    public static double AUTO_INTAKE_FAR_POS = 320;
-    public static double AUTO_INTAKE_CENTER_POS = 378;
-    public static double AUTO_INTAKE_WALL_POS = 327;
-    public static double AUTO_BASKET_POS = 630;
+    public static double AUTO_INTAKE_FAR_POS = 358;
+    public static double AUTO_INTAKE_CENTER_POS = 414;
+    public static double AUTO_INTAKE_WALL_POS = 352;
+    public static double AUTO_BASKET_POS = 645;
+    public static double AUTO_LIMELIGHT_POS = 665;
     public static double AUTO_BASKET_FIRST_POS = 690;
     public static double AUTO_SAMPLE_DROP = 300;
     public static double AUTO_INTAKE_SHORT_POS = 50;
@@ -109,6 +110,11 @@ public class Telescope extends Mechanism {
     public void autoBasketPos(){
         controller = verticalController;
         setTarget(AUTO_BASKET_POS);
+    }
+
+    public void autoLimelightBasketPos(){
+        controller = verticalController;
+        setTarget(AUTO_LIMELIGHT_POS);
     }
 
     public void autoBasketFirstPos(){

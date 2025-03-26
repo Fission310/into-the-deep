@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Intake extends Mechanism {
-    public static double INTAKE_POWER = 1;
-    public static double OUTTAKE_POWER = -0.8;
+    public static double INTAKE_POWER = -1;
+    public static double OUTTAKE_POWER = 0.8;
     public static double SAMPLE_ROTATION = 200;
     public static int SAMPLE1 = 22;
     public static int RED1 = 500;
@@ -83,7 +83,7 @@ public class Intake extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         intakeServo = hwMap.get(CRServo.class, "intakeServo");
-        intakeServo.setDirection(Direction.REVERSE);
+        intakeServo.setDirection(Direction.FORWARD);
 
         sampleSensor1.init(hwMap);
         sampleSensor2.init(hwMap);

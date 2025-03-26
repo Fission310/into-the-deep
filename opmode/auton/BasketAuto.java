@@ -93,6 +93,7 @@ public class BasketAuto extends LinearOpMode {
     private Command sweepExtend = () -> sweeper.extendPos();
     private Command sweepRetract = () -> sweeper.retractPos();
     private Command telescopeBasket = () -> telescope.autoBasketPos();
+    private Command telescopeLimelightBasket = () -> telescope.autoLimelightBasketPos();
     private Command telescopeBasketFirst = () -> telescope.autoBasketFirstPos();
     private Command telescopeFar = () -> telescope.autoFarPos();
     private Command telescopeCenter = () -> telescope.autoCenterPos();
@@ -297,7 +298,7 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(0.6)
             .addCommand(pivotBasket)
             .addWaitCommand(0.7)
-            .addCommand(telescopeBasket)
+            .addCommand(telescopeLimelightBasket)
             .addWaitCommand(0.3)
             .addCommand(wristBasket)
             .addCommand(intakeCommand)
@@ -351,7 +352,7 @@ public class BasketAuto extends LinearOpMode {
             .addWaitCommand(0.6)
             .addCommand(pivotBasket)
             .addWaitCommand(0.7)
-            .addCommand(telescopeBasket)
+            .addCommand(telescopeLimelightBasket)
             .addWaitCommand(0.3)
             .addCommand(wristBasket)
             .addCommand(intakeCommand)
