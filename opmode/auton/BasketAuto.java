@@ -300,20 +300,20 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(outtake)
             .addWaitCommand(0.2)
             .addCommand(telescopeUpABit)
-            .addCommand(stepBackCommand)
             .addWaitCommand(0.2)
             .addCommand(wristRetractFirst)
             .addWaitCommand(0.2)
             //.addCommand(wristRetractFirst)
-            .addCommand(wristRetract)
-            .addCommand(telescopeVerticalRetract)
-            .addWaitCommand(0.3)
             .addCommand(wristRetract)
             .addCommand(commandBusyFalse)
             .build();
 
     private CommandSequence sub2Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
+            .addCommand(wristRetract)
+            .addCommand(stepBackCommand)
+            .addCommand(telescopeVerticalRetract)
+            .addWaitCommand(.3)
             .addCommand(sub2Command)
             .addCommand(pivotUpIntake)
             .addWaitCommand(2.1)
@@ -346,7 +346,7 @@ public class BasketAuto extends LinearOpMode {
 
     private CommandSequence basket6Sequence = new CommandSequence()
             .addCommand(commandBusyTrue)
-            .addCommand(basket5Command)
+            .addCommand(basket6Command)
             .addCommand(intakeCommand)
             .addCommand(pivotBasket)
             .addWaitCommand(1.3)
@@ -358,13 +358,14 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(outtake)
             .addWaitCommand(0.2)
             .addCommand(telescopeUpABit)
-            .addCommand(stepBackCommand )
+            .addCommand(stepBackCommand)
             .addCommand(wristRetractFirst)
             .addWaitCommand(0.2)
             .addCommand(wristRetractFirst)
             .addCommand(telescopeVerticalRetract)
             .addWaitCommand(0.3)
             .addCommand(wristRetract)
+            .addCommand(driveStop)
             .addCommand(commandBusyFalse)
             .build();
     private CommandSequence resetPivot = new CommandSequence()
@@ -524,8 +525,7 @@ public class BasketAuto extends LinearOpMode {
         telemetry.update();
         stepBackTraj = drive
                 .trajectorySequenceBuilder(basket6Traj.end())
-                .setVelConstraint(fastDT)
-                .setAccelConstraint(fastDTA)
+                .setReversed(false)
                 .splineToLinearHeading(BasketConstants.STEP_BACK.getPose(), 5 * Math.PI / 4)
                 .build();
         telemetry.addLine("Built stepBackTraj");
