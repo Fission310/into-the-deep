@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -14,6 +13,7 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
+import org.firstinspires.ftc.teamcode.util.NominalVoltage;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 
@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 public class Pivot extends Mechanism {
     public static int ABIT = 1;
     public static int AUTO_BASKET_POS = 105;
-    public static int AUTO_INTAKE_GRAB_POS = 8;
+    public static int AUTO_INTAKE_GRAB_POS = 0;
     public static int RESET_POS = 88;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 72;
@@ -192,7 +192,7 @@ public class Pivot extends Mechanism {
         controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
         controller.setLength(telescope.getLength());
         power = controller.calculate((getPosition() + TICKS_PER_REV) % TICKS_PER_REV, target) / voltage.getVoltage()
-                * 12.0;
+                * NominalVoltage.VOLTAGE;
         motors[0].setPower(power);
         motors[1].setPower(power);
     }

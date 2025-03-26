@@ -11,6 +11,7 @@ import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
+import org.firstinspires.ftc.teamcode.util.NominalVoltage;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -18,19 +19,20 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Telescope extends Mechanism {
     public static double ABIT = 60;
     public static double UP_RETRACTION = -60;
-    public static double AUTO_INTAKE_FAR_POS = 347;
-    public static double AUTO_INTAKE_CENTER_POS = 394;
-    public static double AUTO_INTAKE_WALL_POS = 380;
-    public static double AUTO_BASKET_POS = 650;
-    public static double AUTO_EXTRA_UP_POS = 720;
+    public static double AUTO_INTAKE_FAR_POS = 358;
+    public static double AUTO_INTAKE_CENTER_POS = 414;
+    public static double AUTO_INTAKE_WALL_POS = 352;
+    public static double AUTO_BASKET_POS = 645;
+    public static double AUTO_LIMELIGHT_POS = 665;
+    public static double AUTO_BASKET_FIRST_POS = 690;
     public static double AUTO_SAMPLE_DROP = 300;
-    public static double AUTO_INTAKE_SHORT_POS = 67;
+    public static double AUTO_INTAKE_SHORT_POS = 50;
     public static double FRONT_VERTICAL_POS = -50;
     public static double FRONT_HORIZONTAL_POS = -50;
     public static double INTAKE_POS = 450;
     public static double INTAKE_SHORT_POS = 50;
     public static double WALL_POS = 100;
-    public static double BASKET_POS = 670;
+    public static double BASKET_POS = 630;
     public static double LOW_BASKET_POS = 220;
     public static double CLIP_POS = 330;
     public static double CLIP_SCORE = 100;
@@ -38,7 +40,7 @@ public class Telescope extends Mechanism {
     public static double BACK_POS = 300;
     public static double CLIMB_UP_1_POS = 500;
     public static double CLIMB_UP_2_POS = 200;
-    public static double CLIMB_DOWN_POS = -100;
+    public static double CLIMB_DOWN_POS = -50000;
     public static double CLIMB_GRANT = 300;
     public static double MAX_EXTENSION = 750;
     public static double MIN_LENGTH = 15;
@@ -110,13 +112,19 @@ public class Telescope extends Mechanism {
         setTarget(AUTO_BASKET_POS);
     }
 
+    public void autoLimelightBasketPos(){
+        controller = verticalController;
+        setTarget(AUTO_LIMELIGHT_POS);
+    }
+
+    public void autoBasketFirstPos(){
+        controller = verticalController;
+        setTarget(AUTO_BASKET_FIRST_POS);
+    }
+
     public void upPos() {
         controller = verticalController;
         setTarget(UP_RETRACTION);
-    }
-    public void upExtra(){
-        controller = verticalController;
-        setTarget(AUTO_EXTRA_UP_POS);
     }
 
     public void frontVerticalPos() {
@@ -212,7 +220,7 @@ public class Telescope extends Mechanism {
 
     public void setTargetInches(double target){
         controller = horizontalController;
-        setTarget(target / INCH_PER_TICK);
+        setTarget(target / INCH_PER_TICK * 0.8);
     }
 
     public double getPosition() {
@@ -229,7 +237,7 @@ public class Telescope extends Mechanism {
 
     public void update() {
         controller.setTarget(target);
-        power = controller.calculate(getPosition()) * POWER_MULTIPLIER / voltage.getVoltage() * 12.0;
+        power = controller.calculate(getPosition()) * POWER_MULTIPLIER / voltage.getVoltage() * NominalVoltage.VOLTAGE;
         if (target < getPosition() && controller == verticalController) {
             power *= DOWN_MULTIPLIER;
         }
