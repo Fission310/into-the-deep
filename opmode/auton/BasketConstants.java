@@ -29,12 +29,12 @@ public class BasketConstants {
             -52,
             33.5);
     public static Constant BASKET_5 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 24 + 3,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 7,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 24,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 4,
             39);
     public static Constant BASKET_6 = new Constant(
-            -TILE_LENGTH * 2.5 - BOT_WIDTH + 24 + 3,
-            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 - 7,
+            -TILE_LENGTH * 2.5 - BOT_WIDTH + 24,
+            -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2 + 4,
             39);
     public static Constant STEP_BACK = new Constant(
             0,
