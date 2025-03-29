@@ -19,8 +19,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Telescope extends Mechanism {
     public static double ABIT = 60;
     public static double UP_RETRACTION = -60;
-    public static double AUTO_INTAKE_FAR_POS = 353;
-    public static double AUTO_INTAKE_CENTER_POS = 381;
+    public static double AUTO_INTAKE_FAR_POS = 335;
+    public static double AUTO_INTAKE_CENTER_POS = 360;
     public static double AUTO_INTAKE_WALL_POS = 345;
     public static double AUTO_BASKET_POS = 645;
     public static double AUTO_LIMELIGHT_POS = 665;
