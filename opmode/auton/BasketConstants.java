@@ -87,7 +87,7 @@ public class BasketConstants {
     public static Constant SUBMERSIBLE_4 = new Constant(
             -25,
             -TILE_LENGTH / 2 + 6,
-            0);
+            0.0);
     public static Constant SUBMERSIBLE_5 = new Constant(
             -25,
             -TILE_LENGTH / 2 + 6,

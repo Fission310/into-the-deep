@@ -270,7 +270,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(sub1Command)
             .addCommand(pivotUpIntake)
-            .addWaitCommand(1.9)
+            .addWaitCommand(1.90)
             .addCommand(setResult)
             .addCommand(lineUpP2P)
             .addWaitCommand(0.4)
