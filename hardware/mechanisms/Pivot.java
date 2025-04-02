@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
+import org.firstinspires.ftc.teamcode.util.NominalVoltage;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
@@ -191,7 +192,7 @@ public class Pivot extends Mechanism {
         controller.setRotationConstants(HIGHEST, TICKS_PER_REV);
         controller.setLength(telescope.getLength());
         power = controller.calculate((getPosition() + TICKS_PER_REV) % TICKS_PER_REV, target) / voltage.getVoltage()
-                * 12.0;
+                * NominalVoltage.VOLTAGE;
         motors[0].setPower(power);
         motors[1].setPower(power);
     }

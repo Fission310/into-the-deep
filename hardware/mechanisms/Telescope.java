@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.stuyfission.fissionlib.input.GamepadStatic;
 import com.stuyfission.fissionlib.util.Mechanism;
+import org.firstinspires.ftc.teamcode.util.NominalVoltage;
+
 
 import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 import org.firstinspires.ftc.teamcode.util.PIDController;
@@ -236,7 +238,7 @@ public class Telescope extends Mechanism {
 
     public void update() {
         controller.setTarget(target);
-        power = controller.calculate(getPosition()) * POWER_MULTIPLIER / voltage.getVoltage() * 12.0;
+        power = controller.calculate(getPosition()) * POWER_MULTIPLIER / voltage.getVoltage() * NominalVoltage.VOLTAGE;
         if (target < getPosition() && controller == verticalController) {
             power *= DOWN_MULTIPLIER;
         }

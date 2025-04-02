@@ -263,7 +263,7 @@ public class Scoring extends Mechanism {
         drivetrain.loop(gamepad);
         pivot.update();
         telescope.update();
-        intake.update();
+
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
@@ -300,10 +300,10 @@ public class Scoring extends Mechanism {
                 climbDown.trigger();
             }
             climbPressed = true;
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_2) && state == State.CLIMB_DOWN) {
-            climb2.trigger();
-        } else if(GamepadStatic.isButtonPressed(gamepad, Controls.GRANT) && state == State.CLIMB_DOWN){
-            climbGrant.trigger();
+        //} else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_2) && state == State.CLIMB_DOWN) {
+        //    climb2.trigger();
+        //} else if(GamepadStatic.isButtonPressed(gamepad, Controls.GRANT) && state == State.CLIMB_DOWN){
+        //    climbGrant.trigger();
         }
         if (!GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
             climbPressed = false;
@@ -324,6 +324,7 @@ public class Scoring extends Mechanism {
                 intake.intake();
                 break;
             case FRONT:
+                wrist.frontPos();
                 scoreClicked = false;
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtake();
