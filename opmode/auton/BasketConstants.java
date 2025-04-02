@@ -30,7 +30,7 @@ public class BasketConstants {
             33.5);
     public static Constant BASKET_5 = new Constant(
             -49.5,
-            -56.5,
+            -56.50,
             39);
     public static Constant BASKET_6 = new Constant(
             -51,
