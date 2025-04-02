@@ -36,6 +36,18 @@ public class BasketConstants {
             -51,
             -57,
             40);
+    public static Constant BASKET_7 = new Constant(
+            -50,
+            -56,
+            40);
+    public static Constant BASKET_8 = new Constant(
+            -50,
+            -56,
+            40);
+    public static Constant BASKET_9 = new Constant(
+            -50,
+            -56,
+            40);
     public static Constant FAR_SAMPLE = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 28,
             -TILE_LENGTH * 5 / 2 + BOT_LENGTH / 2,
@@ -65,6 +77,18 @@ public class BasketConstants {
             -TILE_LENGTH / 2 + 3,
             0);
     public static Constant SUBMERSIBLE_2 = new Constant(
+            -25,
+            -TILE_LENGTH / 2 + 6,
+            0);
+    public static Constant SUBMERSIBLE_3 = new Constant(
+            -25,
+            -TILE_LENGTH / 2 + 6,
+            0);
+    public static Constant SUBMERSIBLE_4 = new Constant(
+            -25,
+            -TILE_LENGTH / 2 + 6,
+            0);
+    public static Constant SUBMERSIBLE_5 = new Constant(
             -25,
             -TILE_LENGTH / 2 + 6,
             0);

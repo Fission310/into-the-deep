@@ -49,6 +49,12 @@ public class BasketAuto extends LinearOpMode {
     private TrajectorySequence basket5Traj;
     private TrajectorySequence sub2Traj;
     private TrajectorySequence basket6Traj;
+    private TrajectorySequence sub3Traj;
+    private TrajectorySequence basket7Traj;
+    private TrajectorySequence sub4Traj;
+    private TrajectorySequence basket8Traj;
+    private TrajectorySequence sub5Traj;
+    private TrajectorySequence basket9Traj;
 
     private SampleMecanumDrive drive;
 
@@ -512,7 +518,7 @@ public class BasketAuto extends LinearOpMode {
                 .splineToLinearHeading(BasketConstants.SUBMERSIBLE_2.getPose(),
                         BasketConstants.SUBMERSIBLE_2.getH())
                 .build();
-        telemetry.addLine("Built sub2raj");
+        telemetry.addLine("Built sub2Traj");
         telemetry.update();
         basket6Traj = drive
                 .trajectorySequenceBuilder(sub2Traj.end())
@@ -522,6 +528,63 @@ public class BasketAuto extends LinearOpMode {
                 .splineToLinearHeading(BasketConstants.BASKET_6.getPose(), 5 * Math.PI / 4)
                 .build();
         telemetry.addLine("Built basket6Traj");
+        telemetry.update();
+        sub3Traj = drive
+                .trajectorySequenceBuilder(basket6Traj.end())
+                .setVelConstraint(fastDT)
+                .setAccelConstraint(fastDTA)
+                .setReversed(false)
+                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_3.getPose(),
+                        BasketConstants.SUBMERSIBLE_3.getH())
+                .build();
+        telemetry.addLine("Built sub3Traj");
+        telemetry.update();
+        basket7Traj = drive
+                .trajectorySequenceBuilder(sub3Traj.end())
+                .setVelConstraint(fastDT)
+                .setAccelConstraint(fastDTA)
+                .setReversed(true)
+                .splineToLinearHeading(BasketConstants.BASKET_7.getPose(), 5 * Math.PI / 4)
+                .build();
+        telemetry.addLine("Built basket7Traj");
+        telemetry.update();
+        sub4Traj = drive
+                .trajectorySequenceBuilder(basket7Traj.end())
+                .setVelConstraint(fastDT)
+                .setAccelConstraint(fastDTA)
+                .setReversed(false)
+                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_4.getPose(),
+                        BasketConstants.SUBMERSIBLE_4.getH())
+                .build();
+        telemetry.addLine("Built sub4Traj");
+        telemetry.update();
+        basket8Traj = drive
+                .trajectorySequenceBuilder(sub4Traj.end())
+                .setVelConstraint(fastDT)
+                .setAccelConstraint(fastDTA)
+                .setReversed(true)
+                .splineToLinearHeading(BasketConstants.BASKET_8.getPose(), 5 * Math.PI / 4)
+                .build();
+        telemetry.addLine("Built basket8Traj");
+        telemetry.update();
+        sub5Traj = drive
+                .trajectorySequenceBuilder(basket8Traj.end())
+                .setVelConstraint(fastDT)
+                .setAccelConstraint(fastDTA)
+                .setReversed(false)
+                .splineToLinearHeading(BasketConstants.SUBMERSIBLE_5.getPose(),
+                        BasketConstants.SUBMERSIBLE_5.getH())
+                .build();
+        telemetry.addLine("Built sub5raj");
+        telemetry.update();
+        basket9Traj = drive
+                .trajectorySequenceBuilder(sub5Traj.end())
+                .setVelConstraint(fastDT)
+                .setAccelConstraint(fastDTA)
+                .setReversed(true)
+                .splineToLinearHeading(BasketConstants.BASKET_9.getPose(), 5 * Math.PI / 4)
+                .build();
+        telemetry.addLine("Built basket9Traj");
         telemetry.update();
 
         while (opModeInInit() && !isStopRequested()) {
