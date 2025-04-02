@@ -46,7 +46,7 @@ public class BasketConstants {
             40);
     public static Constant BASKET_9 = new Constant(
             -50,
-            -56,
+            -56.0,
             40);
     public static Constant FAR_SAMPLE = new Constant(
             -TILE_LENGTH * 2.5 - BOT_WIDTH + 28,

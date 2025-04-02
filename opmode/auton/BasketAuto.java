@@ -188,7 +188,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(wristBasket)
             .addWaitCommand(0.2)
             .addCommand(outtake)
-            .addWaitCommand(0.3)
+            .addWaitCommand(0.30)
             .addCommand(wristMid)
             .addCommand(telescopeVerticalRetract)
             .addWaitCommand(0.3)
