@@ -19,6 +19,7 @@ public class Limelight extends Mechanism {
     private Limelight3A limelight;
     private ArrayList<Location> locations = new ArrayList<>();
     private Color targetColor;
+    private double ydist;
 
     public class Location {
         public double translation;
@@ -159,6 +160,7 @@ public class Limelight extends Mechanism {
     private double calculateDistance(List<Double> point1, List<Double> point2) {
         double dx = point1.get(0) - point2.get(0);
         double dy = point1.get(1) - point2.get(1);
+        this.ydist = dy;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -171,6 +173,9 @@ public class Limelight extends Mechanism {
         telemetry.addData("totalScore", Math.round(best.score * 100.0) / 100.0);
         telemetry.addData("numSamples", locations.size());
         telemetry.update();
+    }
+    public double getYdist(){
+        return this.ydist;
     }
 
     public void stop() {

@@ -59,7 +59,7 @@ public class Telescope extends Mechanism {
     private final PIDController verticalController = new PIDController(VERTICAL_KP, 0, 0);
     private final PIDController horizontalController = new PIDController(HORIZONTAL_KP, 0, 0);
     private PIDController controller;
-
+    private Limelight limelight;
     private final DcMotorEx[] motors = new DcMotorEx[2];
 
     private VoltageSensor voltage;
@@ -106,6 +106,7 @@ public class Telescope extends Mechanism {
 
     public void autoLimelightIntakePos(){
         controller = horizontalController;
+        this.AUTO_LIMELIGHT_INTAKE_POS = Math.abs(limelight.getYdist()) * 150;
         setTarget(AUTO_LIMELIGHT_INTAKE_POS);
     }
 
