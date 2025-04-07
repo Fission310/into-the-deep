@@ -110,6 +110,8 @@ public class BasketAuto extends LinearOpMode {
     private Command telescopeFar = () -> telescope.autoFarPos();
     private Command telescopeCenter = () -> telescope.autoCenterPos();
     private Command telescopeWall = () -> telescope.autoWallPos();
+    private Command limelightIntake = () -> telescope.autoLimelightIntakePos();
+
     private Command telescopeHorizontalRetract = () -> telescope.frontHorizontalPos();
     private Command telescopeVerticalRetract = () -> telescope.frontVerticalPos();
     private Command wristRetract = () -> wrist.frontPos();
@@ -289,7 +291,8 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeLL)
             .addWaitCommand(0.2)
-            .addCommand(telescopeExtendInches)
+            //.addCommand(telescopeExtendInches)
+            .addCommand(limelightIntake)
             .addCommand(sweepRetract)
             // .addCommand(sweepP2P)
             .addWaitCommand(0.9)
@@ -343,7 +346,8 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeLL)
             .addWaitCommand(0.2)
-            .addCommand(telescopeExtendInches)
+            //.addCommand(telescopeExtendInches)
+            .addCommand(limelightIntake)
             .addCommand(sweepRetract)
             // .addCommand(sweepP2P)
             .addWaitCommand(0.9)
@@ -396,7 +400,8 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeLL)
             .addWaitCommand(0.2)
-            .addCommand(telescopeExtendInches)
+            //.addCommand(telescopeExtendInches)
+            .addCommand(limelightIntake)
             .addCommand(sweepRetract)
             // .addCommand(sweepP2P)
             .addWaitCommand(0.9)
@@ -449,7 +454,8 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeLL)
             .addWaitCommand(0.2)
-            .addCommand(telescopeExtendInches)
+            //.addCommand(telescopeExtendInches)
+            .addCommand(limelightIntake)
             .addCommand(sweepRetract)
             // .addCommand(sweepP2P)
             .addWaitCommand(0.9)
@@ -502,7 +508,8 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(pivotGrabIntake)
             .addCommand(wristIntakeLL)
             .addWaitCommand(0.2)
-            .addCommand(telescopeExtendInches)
+            //.addCommand(telescopeExtendInches)
+            .addCommand(limelightIntake)
             .addCommand(sweepRetract)
             // .addCommand(sweepP2P)
             .addWaitCommand(0.9)

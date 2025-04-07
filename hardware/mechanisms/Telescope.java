@@ -25,6 +25,7 @@ public class Telescope extends Mechanism {
     public static double AUTO_INTAKE_WALL_POS = 345;
     public static double AUTO_BASKET_POS = 645;
     public static double AUTO_LIMELIGHT_POS = 665;
+    public static double AUTO_LIMELIGHT_INTAKE_POS = 350;
     public static double AUTO_BASKET_FIRST_POS = 690;
     public static double AUTO_SAMPLE_DROP = 300;
     public static double AUTO_INTAKE_SHORT_POS = 50;
@@ -101,6 +102,11 @@ public class Telescope extends Mechanism {
     public void autoCenterPos() {
         controller = horizontalController;
         setTarget(AUTO_INTAKE_CENTER_POS);
+    }
+
+    public void autoLimelightIntakePos(){
+        controller = horizontalController;
+        setTarget(AUTO_LIMELIGHT_INTAKE_POS);
     }
 
     public void autoWallPos() {
