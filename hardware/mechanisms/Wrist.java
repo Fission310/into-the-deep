@@ -16,18 +16,20 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 public class Wrist extends Mechanism {
     private Servo wristServoRight;
     private Servo wristServoLeft;
+    private Servo wristServoAdjuster;
 
     public static double INTAKE_DOWN_ABIT = 0.006;
     public static double BASKET_DOWN_ABIT = -0.15;
+    public static double INTAKE_FLICKABIT = 0.4;
     public static double[][] AUTO_INTAKE_POS =  { { 0.64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_INTAKE_LL_POS =  { { .64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_BASKET_POS =  { { .75, 0.315 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_MID_POS =  { { .5, 0.460 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
-    public static double[][] INTAKE_POS = { { 0.64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] INTAKE_POS = { { 0.4, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_MID_POS = { { .6875, 0.330 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_SHORT_POS = { { .65, 0.65 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_DOWN_POS = { { 1.0, 1.0 }, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
-    public static double[][] FRONT_POS = { { .8, 0.330 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
+    public static double[][] FRONT_POS = { { .5, 0.330 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] WALL_POS = { { 0.325, 0.315 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
     public static double[][] BASKET_POS = { { .7, 0.310 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
     public static double[][] CLIP_POS = { { 0.545, 0.545 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
@@ -48,9 +50,17 @@ public class Wrist extends Mechanism {
     public void init(HardwareMap hwMap) {
         wristServoRight = hwMap.get(Servo.class, "wristServoRight");
         wristServoLeft = hwMap.get(Servo.class, "wristServoLeft");
+//        wristServoAdjuster = hwMap.get(Servo.class, "wristServoAdjuster");
+        wristServoRight.setDirection(Direction.FORWARD);
         wristServoLeft.setDirection(Direction.REVERSE);
         currPos = FRONT_POS;
     }
+
+    public void rightForward() {wristServoRight.setDirection(Direction.FORWARD);}
+    public void rightReverse() {wristServoRight.setDirection(Direction.REVERSE);}
+    public void leftForward() {wristServoLeft.setDirection(Direction.FORWARD);}
+    public void leftReverse() {wristServoLeft.setDirection(Direction.REVERSE);}
+
     public void intakeABit(){
         wristServoRight.setPosition(currPos[wristPos][0] + INTAKE_DOWN_ABIT);
         wristServoLeft.setPosition(currPos[wristPos][0] + INTAKE_DOWN_ABIT);
@@ -63,7 +73,8 @@ public class Wrist extends Mechanism {
 
     private void setPosition() {
         wristServoRight.setPosition(currPos[wristPos][0]);
-        wristServoLeft.setPosition(currPos[wristPos][1]);
+        wristServoLeft.setPosition(currPos[wristPos][0]);
+//        wristServoAdjuster.setPosition(currPos[wristPos][1]);
     }
 
     public void rotateLeft() {
@@ -99,6 +110,7 @@ public class Wrist extends Mechanism {
     public void intakePos() {
         currPos = INTAKE_POS;
         setPosition();
+        updatePos(-INTAKE_FLICKABIT,+INTAKE_FLICKABIT);
     }
 
     public void intakeMidPos() {
@@ -171,6 +183,7 @@ public class Wrist extends Mechanism {
         telemetry.addData("wrist pos", currPos[0][0]);
         telemetry.addData("wrist servo left", wristServoLeft.getPosition());
         telemetry.addData("wrist servo right", wristServoRight.getPosition());
+//        telemetry.addData("wrist servo adjuster", wristServoAdjuster.getPosition());
     }
 
     @Override
