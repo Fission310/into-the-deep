@@ -360,13 +360,13 @@ public class Scoring extends Mechanism {
                     sweeper.retractPos();
                     intake.intake();
                 }
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_DOWN)) {
-                    wrist.down();
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_LEFT)) {
+                    wrist.rotateLeft();
                     pivot.intakeUpPos();
                     intake.intake();
                 }
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_UP)) {
-                    wrist.intakePos();
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
+                    wrist.frontPos();
                     pivot.intakeGrabPos();
                     intake.intake();
                 }
