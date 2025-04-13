@@ -31,7 +31,8 @@ public class Intake extends Mechanism {
     public static int BLUE2 = 1200;
     public static int YELLOW2 = 2500;
 
-    private CRServo intakeServo;
+    private CRServo rightServo;
+    private CRServo leftServo;
     private SampleSensor sampleSensor1;
     private SampleSensor sampleSensor2;
     private AnalogInput encoder;
@@ -47,15 +48,20 @@ public class Intake extends Mechanism {
 
     public void intake() {
         stop();
-        intakeServo.setPower(INTAKE_POWER);
+        rightServo.setPower(INTAKE_POWER);
+        leftServo.setPower(-INTAKE_POWER);
     }
 
     public void outtake() {
-        intakeServo.setPower(OUTTAKE_POWER);
+
+        rightServo.setPower(INTAKE_POWER);
+        leftServo.setPower(-INTAKE_POWER);
     }
 
     public void stop() {
-        intakeServo.setPower(0);
+
+        rightServo.setPower(INTAKE_POWER);
+        leftServo.setPower(-INTAKE_POWER);
     }
 
     public double getPosition() {
@@ -82,8 +88,10 @@ public class Intake extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        intakeServo = hwMap.get(CRServo.class, "intakeServo");
-        intakeServo.setDirection(Direction.FORWARD);
+        rightServo = hwMap.get(CRServo.class, "rightServo");
+        rightServo.setDirection(Direction.FORWARD);
+        leftServo = hwMap.get(CRServo.class, "leftServo");
+        leftServo.setDirection(Direction.FORWARD);
 
         sampleSensor1.init(hwMap);
         sampleSensor2.init(hwMap);

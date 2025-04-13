@@ -21,7 +21,7 @@ public class Wrist extends Mechanism {
     public static double INTAKE_DOWN_ABIT = 0.006;
     public static double BASKET_DOWN_ABIT = -0.15;
     public static double INTAKE_FLICKABIT = 0.4;
-    public static double[][] INTAKE_LEFT_POS = {{.8,.8},{.8,.8},{.8,.8},{.8,.8}};
+    public static double[][] INTAKE_LEFT_POS = {{.68,.12},{.8,.8},{.8,.8},{.8,.8}};
     public static double[][] AUTO_INTAKE_POS =  { { 0.64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_INTAKE_LL_POS =  { { .64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_BASKET_POS =  { { .75, 0.315 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
@@ -37,7 +37,7 @@ public class Wrist extends Mechanism {
     public static double[][] CLIP_SCORE_POS = { { 0.5, 0.53 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] BACK_POS = { { 0.15, 0.15 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] CLIMB_POS = { { 0.5, 0.5 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
-    public static double[][] RETRACT_POS = { { 0.695, 0.695 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
+    public static double[][] RETRACT_POS = { { .5, .5 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
     public static double[][] currPos;
 
     private int wristPos = 0;

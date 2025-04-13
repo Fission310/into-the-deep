@@ -87,6 +87,7 @@ public class Scoring extends Mechanism {
     private Command setStateIntake = () -> state = State.INTAKE;
     private Command setStateUp = () -> state = State.UP;
     private Command wristIntakeScore = () -> wrist.intakePos();
+    private Command wristFront = () -> wrist.frontPos();
     private Command telescopeGrant = () -> telescope.climbGrant();
     private Command pivotGrant = () -> pivot.climbGrantPos();
     private Command wristIntake = () -> {
@@ -99,7 +100,7 @@ public class Scoring extends Mechanism {
     private Command wristIntakeMid = () -> wrist.intakeMidPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristClimbPos = () -> wrist.climbPos();
-    private Command wristRetract = () -> wrist.frontPos();
+    private Command wristRetract = () -> wrist.retractPos();
     private Command pivotUp = () -> pivot.upPos();
     private Command pivotClipDown = () -> pivot.clipDownPos();
     private Command pivotClimbDownPos = () -> pivot.climbDownPos();
@@ -165,6 +166,7 @@ public class Scoring extends Mechanism {
 
     public CommandSequence retractTele = new CommandSequence()
             .addCommand(pivotUpIntake)
+            .addCommand(wristFront)
             .addCommand(wristRetract)
             .addWaitCommand(TELESCOPE_RETRACT_WAIT)
             .addCommand(telescopeHorizontalFront)
