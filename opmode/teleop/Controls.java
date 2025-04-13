@@ -13,7 +13,7 @@ public class Controls {
     public static final Input PIVOT_WALL = Input.X; // square
     public static final Input PIVOT_BASKET = Input.Y; // TRIANGLE
     public static final Input PIVOT_LOW_BASKET = Input.B; // CIRCLE
-    public static final Input PIVOT_CLIP = Input.NONE; // CIRCLE
+    public static final Input PIVOT_CLIP = Input.B; // CIRCLE
     public static final Input TELE_EXTEND = Input.RIGHT_TRIGGER;
     public static final Input TELE_RETRACT = Input.LEFT_TRIGGER;
     public static final Input WRIST_LEFT = Input.DPAD_LEFT;
