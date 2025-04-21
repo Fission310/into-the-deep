@@ -69,6 +69,7 @@ public class Scoring extends Mechanism {
 
     private Command intakeCommand = () -> intake.intake();
     private Command outakeCommand = () -> intake.outtake();
+    private Command spread = () -> intake.spread();
     private Command stopIntake = () -> intake.stop();
     private Command pivotFront = () -> pivot.frontPos();
     private Command pivotUpIntake = () -> pivot.intakeUpPos();
@@ -116,6 +117,7 @@ public class Scoring extends Mechanism {
 
     private CommandSequence scoreBasket = new CommandSequence()
             .addCommand(outakeCommand)
+            .addCommand(spread)
             .addWaitCommand(BASKET_RELEASE_WAIT)
             .addCommand(wristIntakeScore)
             .addWaitCommand(BASKET_OUTTAKE_WAIT)
@@ -340,6 +342,7 @@ public class Scoring extends Mechanism {
                 scoreClicked = false;
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtake();
+                    intake.spread();
                 }
                 drivetrain.setNormal();
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.INTAKE_SHORT)) {
@@ -398,6 +401,7 @@ public class Scoring extends Mechanism {
                 }*/
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtake();
+                    intake.spread();
                     pivot.intakeDownPos();
                 }
                 break;

@@ -62,8 +62,10 @@ public class Intake extends Mechanism {
 
         rightServo.setPower(OUTTAKE_POWER);
         leftServo.setPower(-OUTTAKE_POWER);
-        spreader.setPosition(OPEN_POWER);
 
+    }
+    public void spread(){
+        spreader.setPosition(OPEN_POWER);
     }
 
     public void stop() {
@@ -132,6 +134,7 @@ public class Intake extends Mechanism {
             intake();
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
             outtake();
+            spread();
         }
     }
 
