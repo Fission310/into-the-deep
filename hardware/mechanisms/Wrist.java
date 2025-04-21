@@ -32,7 +32,7 @@ public class Wrist extends Mechanism {
     public static double[][] INTAKE_DOWN_POS = { { .8, .19}, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
     public static double[][] FRONT_POS = { { .8, 0.190 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] WALL_POS = { { 0.325, 0.315 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
-    public static double[][] BASKET_POS = { { .7, 0.310 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
+    public static double[][] BASKET_POS = { {.31, .68 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
     public static double[][] CLIP_POS = { { 0.545, 0.545 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] CLIP_SCORE_POS = { { 0.5, 0.53 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] BACK_POS = { { 0.15, 0.15 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
@@ -69,7 +69,7 @@ public class Wrist extends Mechanism {
 
     public void basketABit(){
         wristServoRight.setPosition(currPos[wristPos][0] - BASKET_DOWN_ABIT);
-        wristServoLeft.setPosition(currPos[wristPos][0] - BASKET_DOWN_ABIT);
+        wristServoLeft.setPosition(currPos[wristPos][1] - BASKET_DOWN_ABIT);
     }
 
     private void setPosition() {
@@ -195,10 +195,10 @@ public class Wrist extends Mechanism {
             }
             pressed = true;
         } else if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
-            if (!pressed) {
+            if (pressed) {
                 rotateRight();
             }
-            pressed = true;
+            pressed = false;
         } else {
             pressed = false;
         }

@@ -25,6 +25,7 @@ public class Scoring extends Mechanism {
 
     private State state = State.FRONT;
     private Color color;
+    private boolean turned = true;
 
     private enum State {
         FRONT,
@@ -88,6 +89,7 @@ public class Scoring extends Mechanism {
     private Command setStateUp = () -> state = State.UP;
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristFront = () -> wrist.frontPos();
+    private Command wristTurn  = () -> wrist.rotateLeft();
     private Command telescopeGrant = () -> telescope.climbGrant();
     private Command pivotGrant = () -> pivot.climbGrantPos();
     private Command wristIntake = () -> {
@@ -97,6 +99,7 @@ public class Scoring extends Mechanism {
             wrist.intakePos();
         }
     };
+    private Command wristOutake = () -> wrist.basketPos();
     private Command wristIntakeMid = () -> wrist.intakeMidPos();
     private Command wristClipScore = () -> wrist.clipScorePos();
     private Command wristClimbPos = () -> wrist.climbPos();
@@ -199,6 +202,9 @@ public class Scoring extends Mechanism {
             .addCommand(pivotGrant)
             .addCommand(telescopeGrant)
             .build();
+    public CommandSequence wait = new CommandSequence()
+            .addWaitCommand(.3)
+            .build();
 
     public void goFront() {
         state = State.FRONT;
@@ -214,12 +220,16 @@ public class Scoring extends Mechanism {
         telescope.wallPos();
         wrist.wallPos();
     }
+    private CommandSequence extendo = new CommandSequence()
+            .addWaitCommand(.3)
+            .addCommand(wristOutake)
+            .build();
 
     public void goBasket() {
         state = State.BASKET;
         pivot.basketPos();
         telescope.basketPos();
-//        wrist.basketPos();
+        extendo.trigger();
     }
 
     public void goLowBasket() {
@@ -363,15 +373,29 @@ public class Scoring extends Mechanism {
                     intake.intake();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_LEFT)) {
-                    wrist.rotateLeft();
-                    pivot.intakeUpPos();
-                    intake.intake();
+                    if (turned) {
+                        wrist.rotateLeft();
+                        pivot.intakeUpPos();
+                        intake.intake();
+                        wait.trigger();
+                        turned = false;
+                    }
+                    else{
+                        wrist.frontPos();
+                        pivot.intakeGrabPos();
+                        intake.intake();
+                        wait.trigger();
+                        turned = true;
+                    }
                 }
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
-                    wrist.frontPos();
-                    pivot.intakeGrabPos();
-                    intake.intake();
-                }
+                /*if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
+                    if (!turned) {
+                        wrist.frontPos();
+                        pivot.intakeGrabPos();
+                        intake.intake();
+                        turned = true;
+                    }
+                }*/
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtake();
                     pivot.intakeDownPos();

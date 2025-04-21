@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
@@ -18,8 +20,10 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 
 @Config
 public class Intake extends Mechanism {
-    public static double INTAKE_POWER = -1;
-    public static double OUTTAKE_POWER = 0.8;
+    public static double INTAKE_POWER = 1;
+    public static double OUTTAKE_POWER = -0.8;
+    public static double OPEN_POWER = .25;
+    public static double CLOSE_POWER = .01;
     public static double SAMPLE_ROTATION = 200;
     public static int SAMPLE1 = 22;
     public static int RED1 = 500;
@@ -33,6 +37,7 @@ public class Intake extends Mechanism {
 
     private CRServo rightServo;
     private CRServo leftServo;
+    private Servo spreader;
     private SampleSensor sampleSensor1;
     private SampleSensor sampleSensor2;
     private AnalogInput encoder;
@@ -50,18 +55,22 @@ public class Intake extends Mechanism {
         stop();
         rightServo.setPower(INTAKE_POWER);
         leftServo.setPower(-INTAKE_POWER);
+        spreader.setPosition(CLOSE_POWER);
     }
 
     public void outtake() {
 
-        rightServo.setPower(INTAKE_POWER);
-        leftServo.setPower(-INTAKE_POWER);
+        rightServo.setPower(OUTTAKE_POWER);
+        leftServo.setPower(-OUTTAKE_POWER);
+        spreader.setPosition(OPEN_POWER);
+
     }
 
     public void stop() {
 
         rightServo.setPower(INTAKE_POWER);
         leftServo.setPower(-INTAKE_POWER);
+        spreader.setPosition(CLOSE_POWER);
     }
 
     public double getPosition() {
@@ -92,6 +101,8 @@ public class Intake extends Mechanism {
         rightServo.setDirection(Direction.FORWARD);
         leftServo = hwMap.get(CRServo.class, "leftServo");
         leftServo.setDirection(Direction.FORWARD);
+        spreader = hwMap.get(Servo.class, "spreader");
+        spreader.setPosition(CLOSE_POWER);
 
         sampleSensor1.init(hwMap);
         sampleSensor2.init(hwMap);
