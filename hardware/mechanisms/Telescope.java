@@ -34,7 +34,7 @@ public class Telescope extends Mechanism {
     public static double INTAKE_POS = 450;
     public static double INTAKE_SHORT_POS = 50;
     public static double WALL_POS = 100;
-    public static double BASKET_POS = 630;
+    public static double BASKET_POS = 690;
     public static double LOW_BASKET_POS = 220;
     public static double CLIP_POS = 330;
     public static double CLIP_SCORE = 100;

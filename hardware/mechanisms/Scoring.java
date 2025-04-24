@@ -110,6 +110,7 @@ public class Scoring extends Mechanism {
     private Command pivotClimbDownPos = () -> pivot.climbDownPos();
     private Command pivotClimbUpPos = () -> pivot.climbUpPos();
     private Command telescopeScoreClip = () -> telescope.clipScorePos();
+    private Command intakeStop = () -> intake.stop();
 
     private CommandSequence intakeGrab = new CommandSequence()
             .addCommand(intakeCommand)
@@ -119,15 +120,16 @@ public class Scoring extends Mechanism {
             .addCommand(outakeCommand)
             .addCommand(spread)
             .addWaitCommand(BASKET_RELEASE_WAIT)
-            .addCommand(wristIntakeScore)
             .addWaitCommand(BASKET_OUTTAKE_WAIT)
             .addCommand(stopIntake)
+            .addCommand(wristRetract)
+            .addWaitCommand(.3)
             .addCommand(telescopeVerticalFront)
             .addWaitCommand(BASKET_RETRACT_WAIT)
-            .addCommand(wristRetract)
             .addWaitCommand(UP_POS_WAIT)
             .addCommand(pivotFront)
             .addCommand(setStateFront)
+            .addCommand(wristFront)
             .build();
 
     private CommandSequence scoreClip = new CommandSequence()
@@ -148,7 +150,16 @@ public class Scoring extends Mechanism {
             .addCommand(outakeCommand)
             .addCommand(pivotDownIntake)
             .addCommand(telescopeIntake)
-            .addCommand(wristIntakeMid)
+            .addCommand(wristFront)
+            .addWaitCommand(PIVOT_DOWN_WAIT)
+            .addCommand(setStateIntake)
+            .build();
+    public CommandSequence rotatedIntake = new CommandSequence()
+            .addCommand(outakeCommand)
+            .addCommand(pivotDownIntake)
+            .addCommand(telescopeIntake)
+            .addCommand(wristFront)
+            .addCommand(wristTurn)
             .addWaitCommand(PIVOT_DOWN_WAIT)
             .addCommand(setStateIntake)
             .build();
@@ -168,14 +179,22 @@ public class Scoring extends Mechanism {
             .addWaitCommand(PIVOT_GRAB_WAIT)
             .addCommand(intakeCommand)
             .build();
+    public CommandSequence rotateIntake = new CommandSequence()
+            .addCommand(pivotGrabIntake)
+            .addCommand(wristIntake)
+            .addCommand(wristTurn)
+            .addWaitCommand(PIVOT_GRAB_WAIT)
+            .addCommand(intakeCommand)
+            .build();
 
     public CommandSequence retractTele = new CommandSequence()
             .addCommand(pivotUpIntake)
-            .addCommand(wristFront)
             .addCommand(wristRetract)
+            .addCommand(intakeStop)
             .addWaitCommand(TELESCOPE_RETRACT_WAIT)
             .addCommand(telescopeHorizontalFront)
             .addWaitCommand(PIVOT_UP_WAIT)
+            .addCommand(intakeCommand)
             .addCommand(pivotUp)
             .addCommand(setStateUp)
             .build();
@@ -229,6 +248,7 @@ public class Scoring extends Mechanism {
 
     public void goBasket() {
         state = State.BASKET;
+        intake.stop();
         pivot.basketPos();
         telescope.basketPos();
         extendo.trigger();
@@ -371,24 +391,29 @@ public class Scoring extends Mechanism {
                     frontClicked = false;
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
-                    grabIntake.trigger();
+                    if (!turned) {
+                        grabIntake.trigger();
+                    }
+                    else{
+                        rotateIntake.trigger();
+                    }
                     sweeper.retractPos();
                     intake.intake();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_LEFT)) {
                     if (turned) {
-                        wrist.rotateLeft();
+                        wrist.frontPos();
                         pivot.intakeUpPos();
                         intake.intake();
                         wait.trigger();
                         turned = false;
                     }
                     else{
-                        wrist.frontPos();
+                        wrist.rotateLeft();
                         pivot.intakeGrabPos();
                         intake.intake();
                         wait.trigger();
-                        turned = true;
+                        turned = false;
                     }
                 }
                 /*if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {

@@ -31,6 +31,7 @@ public class BasketAuto extends LinearOpMode {
     }
 
     private Color color;
+    private final Color yellow = Color.YELLOW;
     private boolean commandBusy = false;
     private Pose2d targetPoint = null;
     private Pose2d drivePos = null;
