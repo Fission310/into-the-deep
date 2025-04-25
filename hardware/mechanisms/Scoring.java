@@ -297,6 +297,14 @@ public class Scoring extends Mechanism {
         drivetrain.loop(gamepad);
         pivot.update();
         telescope.update();
+        if (intake.hasWrongColor(color)){
+            intake.outtake();
+            intake.spread();
+            wait.trigger();
+            intake.stop();
+            pivot.intakeDownPos();
+            intake.intake();
+        }
 
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
