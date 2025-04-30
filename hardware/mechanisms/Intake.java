@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 @Config
 public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
-    public static double OUTTAKE_POWER = -0.8;
+    public static double OUTTAKE_POWER = -0.25;
     public static double OPEN_POWER = .35;
     public static double CLOSE_POWER = .01;
     public static double SAMPLE_ROTATION = 200;
@@ -44,6 +44,7 @@ public class Intake extends Mechanism {
     private double prevPos;
     private double currPos;
     private double rotation;
+    public Color color;
 
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -90,11 +91,11 @@ public class Intake extends Mechanism {
     }
 
     public boolean hasColor(Color color) {
-        return sampleSensor1.isSampleColor(color) || sampleSensor2.isSampleColor(color);
+        return sampleSensor1.isntSampleColor(color) || sampleSensor2.isntSampleColor(color);
     }
 
     public boolean hasWrongColor(Color color) {
-        return sampleSensor1.isSampleWrongColor(color) || sampleSensor2.isSampleWrongColor(color);
+        return !sampleSensor1.isntSampleColor(color) || !sampleSensor2.isntSampleColor(color);
     }
 
     @Override
@@ -161,7 +162,7 @@ public class Intake extends Mechanism {
         public void init(HardwareMap hwMap) {
             sensor = hwMap.get(ColorRangeSensor.class, name);
 
-            sensor.enableLed(false);
+            sensor.enableLed(true);
         }
 
         public boolean isSample() {
@@ -175,11 +176,16 @@ public class Intake extends Mechanism {
             green = sensor.green();
         }
 
-        public boolean isSampleColor(Color color) {
-            if (color == Color.BLUE) {
-                return (isBlue() || isYellow()) && isSample();
+        public boolean isntSampleColor(Color color) {
+            if (isSample()) {
+                if (color == Color.BLUE) {
+                    return isRed();
+                }
+                if (color == Color.RED){
+                    return isBlue();
+                }
             }
-            return (isRed() || isYellow()) && isSample();
+            return false;
         }
 
         public boolean isSampleWrongColor(Color color) {
@@ -200,6 +206,7 @@ public class Intake extends Mechanism {
         public boolean isYellow() {
             return green > YELLOW;
         }
+
 
         @Override
         public void telemetry(Telemetry telemetry) {

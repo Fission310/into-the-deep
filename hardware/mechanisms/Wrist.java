@@ -21,7 +21,7 @@ public class Wrist extends Mechanism {
     public static double INTAKE_DOWN_ABIT = 0.003;
     public static double BASKET_DOWN_ABIT = -0.01;
     public static double INTAKE_FLICKABIT = 0.4;
-    public static double[][] INTAKE_LEFT_POS = {{.68,.12},{.8,.8},{.8,.8},{.8,.8}};
+    public static double[][] INTAKE_LEFT_POS = {{.6,.15},{.8,.8},{.8,.8},{.8,.8}};
     public static double[][] AUTO_INTAKE_POS =  { { 0.64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_INTAKE_LL_POS =  { { .64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_BASKET_POS =  { { .75, 0.315 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
@@ -64,12 +64,12 @@ public class Wrist extends Mechanism {
 
     public void intakeABit(){
         wristServoRight.setPosition(currPos[wristPos][0] + INTAKE_DOWN_ABIT );
-        wristServoLeft.setPosition(currPos[wristPos][1] + INTAKE_DOWN_ABIT);
+        wristServoLeft.setPosition(currPos[wristPos][1] - INTAKE_DOWN_ABIT);
     }
 
     public void basketABit(){
         wristServoRight.setPosition(currPos[wristPos][0] - BASKET_DOWN_ABIT);
-        wristServoLeft.setPosition(currPos[wristPos][1] - BASKET_DOWN_ABIT);
+        wristServoLeft.setPosition(currPos[wristPos][1] + BASKET_DOWN_ABIT);
     }
 
     private void setPosition() {

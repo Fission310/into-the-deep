@@ -297,15 +297,6 @@ public class Scoring extends Mechanism {
         drivetrain.loop(gamepad);
         pivot.update();
         telescope.update();
-        if (intake.hasWrongColor(color)){
-            intake.outtake();
-            intake.spread();
-            wait.trigger();
-            intake.stop();
-            pivot.intakeDownPos();
-            intake.intake();
-        }
-
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
@@ -384,6 +375,14 @@ public class Scoring extends Mechanism {
                         shortIntake = false;
                     }
                     frontClicked = true;
+                    if (intake.hasWrongColor(color)){
+                        intake.outtake();
+                        intake.spread();
+                        wait.trigger();
+                        intake.stop();
+                        pivot.intakeDownPos();
+                        intake.intake();
+                    }
                 } else {
                     frontClicked = false;
                 }
@@ -404,6 +403,14 @@ public class Scoring extends Mechanism {
                     }
                     else{
                         rotateIntake.trigger();
+                    }
+                    if (intake.hasWrongColor(color)){
+                        intake.outtake();
+                        intake.spread();
+                        wait.trigger();
+                        intake.stop();
+                        pivot.intakeDownPos();
+                        intake.intake();
                     }
                     sweeper.retractPos();
                     intake.intake();

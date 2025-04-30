@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Scoring;
 import org.firstinspires.ftc.teamcode.opmode.auton.util.Color;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -12,9 +13,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class BlueMain extends LinearOpMode {
 
     private Robot robot = new Robot(this, Color.BLUE);
+    public boolean running = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        running = true;
+
         robot.init(hardwareMap);
 
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
