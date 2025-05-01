@@ -17,7 +17,7 @@ IC2 Bus 0:
 IC2 Bus 1:
 0 - intakeSensor1 (REV Color Sensor V3)
 IC2 Bus 2:
-0 - intakeSensor2 (REV Color Sensor V3)
+0 - intakeSensor2 (REV Color Sensor V3)=
 
 Expansion Hub:
 Motors:

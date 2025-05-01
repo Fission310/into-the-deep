@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 @Config
 public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
-    public static double OUTTAKE_POWER = -0.25;
+    public static double OUTTAKE_POWER = -0.3;
     public static double OPEN_POWER = .35;
     public static double CLOSE_POWER = .01;
     public static double SAMPLE_ROTATION = 200;
@@ -133,7 +133,7 @@ public class Intake extends Mechanism {
         update();
         if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
             intake();
-        } else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
+        }   else if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
             outtake();
             spread();
         }

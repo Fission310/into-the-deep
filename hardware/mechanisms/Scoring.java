@@ -403,7 +403,7 @@ public class Scoring extends Mechanism {
                     }
                     else{
                         rotateIntake.trigger();
-                    }
+                    } /*
                     if (intake.hasWrongColor(color)){
                         intake.outtake();
                         intake.spread();
@@ -412,6 +412,7 @@ public class Scoring extends Mechanism {
                         pivot.intakeDownPos();
                         intake.intake();
                     }
+                    */
                     sweeper.retractPos();
                     intake.intake();
                 }
