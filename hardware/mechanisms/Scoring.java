@@ -25,7 +25,7 @@ public class Scoring extends Mechanism {
 
     private State state = State.FRONT;
     private Color color;
-    private boolean turned = true;
+    private boolean turned = false;
 
     private enum State {
         FRONT,
@@ -94,11 +94,11 @@ public class Scoring extends Mechanism {
     private Command telescopeGrant = () -> telescope.climbGrant();
     private Command pivotGrant = () -> pivot.climbGrantPos();
     private Command wristIntake = () -> {
-        if (shortIntake) {
-            wrist.intakeShortPos();
-        } else {
+      //  if (shortIntake) {
+     //       wrist.intakeShortPos();
+     //   } else {
             wrist.intakePos();
-        }
+   //     }
     };
     private Command wristOutake = () -> wrist.basketPos();
     private Command wristIntakeMid = () -> wrist.intakeMidPos();
@@ -400,11 +400,11 @@ public class Scoring extends Mechanism {
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
                     if (!turned) {
                         grabIntake.trigger();
-                    }
-                    else{
-                        rotateIntake.trigger();
-                    } /*
-                    if (intake.hasWrongColor(color)){
+                    }//
+                   else{
+                       rotateIntake.trigger();
+                   }
+                    /*if (intake.hasWrongColor(color)){
                         intake.outtake();
                         intake.spread();
                         wait.trigger();
