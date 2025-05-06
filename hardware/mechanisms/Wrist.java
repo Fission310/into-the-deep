@@ -79,12 +79,14 @@ public class Wrist extends Mechanism {
     }
 
     public void rotateLeft() {
-        currPos = INTAKE_LEFT_POS;
+        wristPos++;
+        wristPos %= 4;
         setPosition();
     }
 
     public void rotateRight() {
-        currPos = FRONT_POS;
+        wristPos += 3;
+        wristPos %= 4;
         setPosition();
     }
 

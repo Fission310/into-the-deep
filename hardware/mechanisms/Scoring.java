@@ -25,7 +25,7 @@ public class Scoring extends Mechanism {
 
     private State state = State.FRONT;
     private Color color;
-    private boolean turned = false;
+    private boolean turnButtonDown = false;
 
     private enum State {
         FRONT,
@@ -90,15 +90,15 @@ public class Scoring extends Mechanism {
     private Command setStateUp = () -> state = State.UP;
     private Command wristIntakeScore = () -> wrist.intakePos();
     private Command wristFront = () -> wrist.frontPos();
-    private Command wristTurn  = () -> wrist.rotateLeft();
+    private Command wristTurn = () -> wrist.rotateLeft();
     private Command telescopeGrant = () -> telescope.climbGrant();
     private Command pivotGrant = () -> pivot.climbGrantPos();
     private Command wristIntake = () -> {
-      //  if (shortIntake) {
-     //       wrist.intakeShortPos();
-     //   } else {
-            wrist.intakePos();
-   //     }
+        //  if (shortIntake) {
+        //       wrist.intakeShortPos();
+        //   } else {
+        wrist.intakePos();
+        //     }
     };
     private Command wristOutake = () -> wrist.basketPos();
     private Command wristIntakeMid = () -> wrist.intakeMidPos();
@@ -241,6 +241,7 @@ public class Scoring extends Mechanism {
         telescope.wallPos();
         wrist.wallPos();
     }
+
     private CommandSequence extendo = new CommandSequence()
             .addWaitCommand(.3)
             .addCommand(wristOutake)
@@ -333,10 +334,10 @@ public class Scoring extends Mechanism {
                 climbDown.trigger();
             }
             climbPressed = true;
-        //} else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_2) && state == State.CLIMB_DOWN) {
-        //    climb2.trigger();
-        //} else if(GamepadStatic.isButtonPressed(gamepad, Controls.GRANT) && state == State.CLIMB_DOWN){
-        //    climbGrant.trigger();
+            //} else if (GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_2) && state == State.CLIMB_DOWN) {
+            //    climb2.trigger();
+            //} else if(GamepadStatic.isButtonPressed(gamepad, Controls.GRANT) && state == State.CLIMB_DOWN){
+            //    climbGrant.trigger();
         }
         if (!GamepadStatic.isButtonPressed(gamepad, Controls.CLIMB_1)) {
             climbPressed = false;
@@ -375,7 +376,7 @@ public class Scoring extends Mechanism {
                         shortIntake = false;
                     }
                     frontClicked = true;
-                    if (intake.hasWrongColor(color)){
+                    if (intake.hasWrongColor(color)) {
                         intake.outtake();
                         intake.spread();
                         wait.trigger();
@@ -398,12 +399,8 @@ public class Scoring extends Mechanism {
                     frontClicked = false;
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
-                    if (!turned) {
-                        grabIntake.trigger();
-                    }//
-                   else{
-                       rotateIntake.trigger();
-                   }
+                    grabIntake.trigger();
+
                     /*if (intake.hasWrongColor(color)){
                         intake.outtake();
                         intake.spread();
@@ -417,21 +414,23 @@ public class Scoring extends Mechanism {
                     intake.intake();
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_LEFT)) {
-                    if (turned) {
-                        wrist.frontPos();
-                        pivot.intakeUpPos();
-                        intake.intake();
-                        wait.trigger();
-                        turned = false;
-                    }
-                    else{
+                    if (!turnButtonDown) {
                         wrist.rotateLeft();
-                        pivot.intakeGrabPos();
-                        intake.intake();
-                        wait.trigger();
-                        turned = false;
+                        turnButtonDown = true;
                     }
+                } else {
+                    turnButtonDown = false;
                 }
+                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
+                    if (!turnButtonDown) {
+                        wrist.rotateRight();
+                        turnButtonDown = true;
+                    }
+                } else {
+                    turnButtonDown = false;
+                }
+
+
                 /*if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
                     if (!turned) {
                         wrist.frontPos();
