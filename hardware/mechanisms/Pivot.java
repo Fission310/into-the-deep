@@ -25,12 +25,12 @@ public class Pivot extends Mechanism {
     public static int RESET_POS = 88;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 72;
-    public static int FRONT_POS = 50;
+    public static int FRONT_POS = 60;
     public static int INTAKE_UP_POS = 50;
     public static int INTAKE_DOWN_POS = 32;
-    public static int INTAKE_GRAB_POS = 17;
+    public static int INTAKE_GRAB_POS = 12;
     public static int WALL_POS = 50;
-    public static int BASKET_POS = 114;
+    public static int BASKET_POS = 115;
     public static int CLIP_POS = 92;
     public static int CLIP_DOWN_POS = 85;
     public static int CLIP_BACK_POS = 124;

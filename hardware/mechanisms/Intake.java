@@ -21,14 +21,14 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.Controls;
 @Config
 public class Intake extends Mechanism {
     public static double INTAKE_POWER = 1;
-    public static double OUTTAKE_POWER = -0.3;
-    public static double OPEN_POWER = .35;
+    public static double OUTTAKE_POWER = -0.2;
+    public static double OPEN_POWER = .25;
     public static double CLOSE_POWER = .01;
     public static double SAMPLE_ROTATION = 200;
     public static int SAMPLE1 = 22;
     public static int RED1 = 500;
     public static int BLUE1 = 600;
-    public static int YELLOW1 = 1000;
+    public static int YELLOW1 = 2000;
 
     public static int SAMPLE2 = 22;
     public static int RED2 = 1500;
@@ -91,11 +91,11 @@ public class Intake extends Mechanism {
     }
 
     public boolean hasColor(Color color) {
-        return sampleSensor1.isntSampleColor(color) || sampleSensor2.isntSampleColor(color);
+        return sampleSensor1.isCorrectSample(color) || sampleSensor2.isCorrectSample(color);
     }
 
     public boolean hasWrongColor(Color color) {
-        return !sampleSensor1.isntSampleColor(color) || !sampleSensor2.isntSampleColor(color);
+        return sampleSensor1.isntSampleColor(color) || sampleSensor2.isntSampleColor(color);
     }
 
     @Override
@@ -188,6 +188,14 @@ public class Intake extends Mechanism {
             return false;
         }
 
+        public boolean isCorrectSample(Color color) {
+            if (!isSample()) return false;
+            if (color == Color.RED) {
+                return !isBlue();
+            }
+            return !isRed();
+        }
+
         public boolean isSampleWrongColor(Color color) {
             if (color == Color.RED) {
                 return isBlue();
@@ -196,15 +204,18 @@ public class Intake extends Mechanism {
         }
 
         public boolean isBlue() {
-            return blue > BLUE;
+            //return blue > BLUE;
+            return blue > green && blue > red;
         }
 
         public boolean isRed() {
-            return red > RED && !isYellow();
+            //return red > RED && !isYellow();
+            return red > blue && red > green;
         }
 
         public boolean isYellow() {
-            return green > YELLOW;
+            //return green > YELLOW;
+            return green > blue && green > red;
         }
 
 

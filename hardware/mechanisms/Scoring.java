@@ -223,6 +223,14 @@ public class Scoring extends Mechanism {
             .addCommand(pivotGrant)
             .addCommand(telescopeGrant)
             .build();
+    public CommandSequence eject = new CommandSequence()
+            .addCommand(outakeCommand)
+            .addCommand(spread)
+            .addWaitCommand(0.3)
+            .addCommand(stopIntake)
+            .addCommand(pivotDownIntake)
+            .addCommand(intakeCommand)
+            .build();
     public CommandSequence wait = new CommandSequence()
             .addWaitCommand(.3)
             .build();
@@ -297,6 +305,7 @@ public class Scoring extends Mechanism {
         drivetrain.loop(gamepad);
         pivot.update();
         telescope.update();
+        intake.update();
 
         if (GamepadStatic.isButtonPressed(gamepad, Controls.TELE_EXTEND)) {
             telescope.upABit();
@@ -389,6 +398,12 @@ public class Scoring extends Mechanism {
                 break;
             case INTAKE:
                 drivetrain.setIntake();
+                if (intake.hasColor(this.color) && !intake.hasWrongColor(this.color)) {
+                    retractTele.trigger();
+                }
+                if (intake.hasWrongColor(this.color)) {
+                    eject.trigger();
+                }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
                         retractTele.trigger();
@@ -443,7 +458,7 @@ public class Scoring extends Mechanism {
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.OUTTAKE)) {
                     intake.outtake();
                     intake.spread();
-                    pivot.intakeDownPos();
+                    pivot.intakeUpPos();
                 }
                 break;
             case WALL:
