@@ -22,7 +22,7 @@ public class Wrist extends Mechanism {
     public static double BASKET_DOWN_ABIT = -0.01;
     public static double INTAKE_FLICKABIT = 0.4;
     public static double[][] INTAKE_LEFT_POS = {{.15,.63},{.8,.8},{.8,.8},{.8,.8}};
-    public static double[][] AUTO_INTAKE_POS =  { { 0.64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
+    public static double[][] AUTO_INTAKE_POS =  { { 0.37, 0.62 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_INTAKE_LL_POS =  { { .64, 0.64 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_BASKET_POS =  { { .75, 0.315 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] AUTO_MID_POS =  { { .5, 0.460 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
@@ -30,14 +30,14 @@ public class Wrist extends Mechanism {
     public static double[][] INTAKE_MID_POS = { { .6875, 0.330 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_SHORT_POS = { { .65, 0.65 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_DOWN_POS = { { .8, .19}, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
-    public static double[][] FRONT_POS = { { .25, 0.72}, {.15,.63}, {.3,.48}, {.47,.58} };
+    public static double[][] FRONT_POS = { { .37, 0.62}, {.15,.63}, {.3,.48}, {.47,.58} };
     public static double[][] WALL_POS = { { 0.325, 0.315 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
-    public static double[][] BASKET_POS = { {.7, .25 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
+    public static double[][] BASKET_POS = { {.77, .23 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
     public static double[][] CLIP_POS = { { 0.545, 0.545 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] CLIP_SCORE_POS = { { 0.5, 0.53 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
     public static double[][] BACK_POS = { { 0.15, 0.15 }, { 0.25, 0.25 }, { 0.25, 0.25 }, { 0.25, 0.25 } };
     public static double[][] CLIMB_POS = { { 0.5, 0.5 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
-    public static double[][] RETRACT_POS = { { .47, .48 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
+    public static double[][] RETRACT_POS = { { .55, .44 }, { 0.7, 0.7 }, { 0.7, 0.7 }, { 0.7, 0.7 } };
     public static double[][] currPos;
 
     private int wristPos = 0;

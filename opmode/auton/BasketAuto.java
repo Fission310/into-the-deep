@@ -84,7 +84,7 @@ public class BasketAuto extends LinearOpMode {
     private Pivot pivot;
     private Telescope telescope;
     private Wrist wrist;
-    private Limelight limelight;
+//    private Limelight limelight;
     private Sweeper sweeper;
 
     private Command commandBusyTrue = () -> commandBusy = true;
@@ -92,7 +92,7 @@ public class BasketAuto extends LinearOpMode {
     private Command outtake = () -> intake.outtake();
     private Command stopIntake = () -> intake.stop();
     private Command intakeCommand = () -> intake.intake();
-    private Command pivotFront = () -> pivot.frontPos();
+    private Command pivotFront = () -> pivot.autoFrontPos();
     private Command pivotInit = () -> pivot.initPos();
     private Command pivotClip = () -> pivot.clipPos();
     private Command pivotClipDown = () -> pivot.clipDownPos();
@@ -122,7 +122,7 @@ public class BasketAuto extends LinearOpMode {
     private Command wristIntakeScore = () -> wrist.autoIntakePos();
     private Command wristIntakeLL = () -> wrist.autoIntakeLLPos();
     private Command setResult = () -> {
-        loc = limelight.getBest();
+//        loc = limelight.getBest();
         if (loc.extension == 0) {
             loc.extension = 10;
         }
@@ -160,7 +160,7 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(wristBasket)
             .addWaitCommand(0.2)
             .addCommand(outtake)
-            .addWaitCommand(0.3)
+            .addWaitCommand(0.8)
             .addCommand(wristMid)
             .addCommand(telescopeVerticalRetract)
             .addWaitCommand(0.3)
@@ -172,14 +172,14 @@ public class BasketAuto extends LinearOpMode {
             .addCommand(commandBusyTrue)
             .addCommand(farSampleCommand)
             .addCommand(pivotFront)
-            .addWaitCommand(0.45)
+            .addWaitCommand(0.65)
             .addCommand(telescopeFar)
+            .addWaitCommand(0.03)
             .addCommand(pivotGrabIntake)
-            .addWaitCommand(0.5)
+            .addWaitCommand(0.3)
             .addCommand(wristIntakeScore)
-            .addWaitCommand(0.2)
-            .addCommand(farSampleIntCommand)
             .addCommand(intakeCommand)
+            .addWaitCommand(0.9)
             .addCommand(commandBusyFalse)
             .build();
 
@@ -582,7 +582,7 @@ public class BasketAuto extends LinearOpMode {
         telescope = new Telescope(this);
         pivot = new Pivot(this, telescope);
         wrist = new Wrist(this);
-        limelight = new Limelight(this, color);
+//        limelight = new Limelight(this, color);
         sweeper = new Sweeper(this);
 
         intake.init(hardwareMap);
@@ -590,7 +590,7 @@ public class BasketAuto extends LinearOpMode {
         pivot.initPos();
         wrist.init(hardwareMap);
         telescope.init(hardwareMap);
-        limelight.init(hardwareMap);
+//        limelight.init(hardwareMap);
         sweeper.init(hardwareMap);
         wrist.frontPos();
 
@@ -620,7 +620,7 @@ public class BasketAuto extends LinearOpMode {
         telemetry.addLine("Built farSampleIntTraj");
         telemetry.update();
         basket2Traj = drive
-                .trajectorySequenceBuilder(farSampleIntTraj.end())
+                .trajectorySequenceBuilder(farSampleTraj.end())
                 .setReversed(true)
                 .lineToLinearHeading(BasketConstants.BASKET_2.getPose())
                 .build();
@@ -786,15 +786,15 @@ public class BasketAuto extends LinearOpMode {
             drive.update();
             telescope.update();
             pivot.update();
-            limelight.update();
+//            limelight.update();
             commandMachine.run(drive.isBusy() || commandBusy);
             if (loc != null) {
                 telemetry.addData("limelight strafe distance", loc.translation);
                 telemetry.addData("telescope extend dist", loc.extension);
             } else {
-                Location l = limelight.getBest();
-                telemetry.addData("limelight strafe distance", l.translation);
-                telemetry.addData("telescope extend dist", l.extension);
+//                Location l = limelight.getBest();
+//                telemetry.addData("limelight strafe distance", l.translation);
+//                telemetry.addData("telescope extend dist", l.extension);
             }
             telemetry.addData("target pose", targetPoint);
             telemetry.addData("drive x", drive.getPoseEstimate().getX());
@@ -802,7 +802,7 @@ public class BasketAuto extends LinearOpMode {
             telemetry.update();
         }
 
-        limelight.stop();
+//        limelight.stop();
         Thread.sleep(500);
     }
 }
