@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.stuyfission.fissionlib.input.GamepadStatic.Input;
 
 public class Controls {
-    public static final Input SWEEP = Input.RIGHT_STICK_BUTTON;
+    public static final Input SWEEP = Input.NONE;
     public static final Input WRIST_DOWN = Input.DPAD_DOWN;
     public static final Input WRIST_UP = Input.DPAD_UP;
     public static final Input GRAB = Input.RIGHT_BUMPER;
@@ -16,8 +16,8 @@ public class Controls {
     public static final Input PIVOT_CLIP = Input.B; // CIRCLE
     public static final Input TELE_EXTEND = Input.RIGHT_TRIGGER;
     public static final Input TELE_RETRACT = Input.LEFT_TRIGGER;
-    public static final Input WRIST_LEFT = Input.DPAD_LEFT;
-    public static final Input WRIST_RIGHT = Input.DPAD_RIGHT;
+    public static final Input WRIST_LEFT = Input.LEFT_STICK_BUTTON;
+    public static final Input WRIST_RIGHT = Input.RIGHT_STICK_BUTTON;
     public static final Input CLIMB_1 = Input.DPAD_UP; //Input.DPAD_UP;
     public static final Input CLIMB_2 = Input.DPAD_LEFT;
     public static final Input DISENGAGE = Input.LEFT_BUMPER;

@@ -433,10 +433,8 @@ public class Scoring extends Mechanism {
                         wrist.rotateLeft();
                         turnButtonDown = true;
                     }
-                } else {
-                    turnButtonDown = false;
                 }
-                if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
+                else if (GamepadStatic.isButtonPressed(gamepad, Controls.WRIST_RIGHT)) {
                     if (!turnButtonDown) {
                         wrist.rotateRight();
                         turnButtonDown = true;
