@@ -21,12 +21,12 @@ import org.firstinspires.ftc.teamcode.util.PIDFController.FeedForward;
 public class Pivot extends Mechanism {
     public static int ABIT = 1;
     public static int AUTO_BASKET_POS = 105;
-    public static int AUTO_INTAKE_GRAB_POS = 23;
+    public static int AUTO_INTAKE_GRAB_POS = 20;
     public static int RESET_POS = 88;
     public static int RESET_WAIT = 1;
     public static int INIT_POS = 72;
-    public static int FRONT_POS = 80;
-    public static int AUTO_FRONT_POS = 40;
+    public static int FRONT_POS = 60;
+    public static int AUTO_FRONT_POS = 50;
     public static int INTAKE_UP_POS = 50;
     public static int INTAKE_DOWN_POS = 32;
     public static int INTAKE_GRAB_POS = 12;

@@ -30,7 +30,8 @@ public class Wrist extends Mechanism {
     public static double[][] INTAKE_MID_POS = { { .6875, 0.330 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_SHORT_POS = { { .65, 0.65 }, { 0.59, 0.58 }, { 0.59, 0.58 }, { 0.59, 0.58 } };
     public static double[][] INTAKE_DOWN_POS = { { .8, .19}, { 0.76, 0.53 }, { 0.76, 0.53 }, { 0.76, 0.53 } };
-    public static double[][] FRONT_POS = { { .37, 0.62}, {.15,.63}, {.3,.48}, {.47,.58} };
+    public static double[][] FRONT_POS = { { .37, 0.62}, {.23,.55}, {.37,.62}, {.23,.55} };
+    public static double[][] AUTO_INIT_POS = { { .24, 0.76}, {.15,.63}, {.3,.48}, {.47,.58} };
     public static double[][] WALL_POS = { { 0.325, 0.315 }, { 0.43, 0.42 }, { 0.43, 0.42 }, { 0.43, 0.42 } };
     public static double[][] BASKET_POS = { {.77, .23 }, { 0.35, 0.35 }, { 0.35, 0.35 }, { 0.35, 0.35 } };
     public static double[][] CLIP_POS = { { 0.545, 0.545 }, { 0.65, 0.65 }, { 0.65, 0.65 }, { 0.65, 0.65 } };
@@ -54,7 +55,7 @@ public class Wrist extends Mechanism {
 //        wristServoAdjuster = hwMap.get(Servo.class, "wristServoAdjuster");
         wristServoRight.setDirection(Direction.FORWARD);
         wristServoLeft.setDirection(Direction.REVERSE);
-        currPos = FRONT_POS;
+        currPos = AUTO_INIT_POS;
     }
 
     public void rightForward() {wristServoRight.setDirection(Direction.FORWARD);}
@@ -92,25 +93,25 @@ public class Wrist extends Mechanism {
 
     public void defaultPos() {
         wristPos = 0;
-        currPos = FRONT_POS;
+        //urrPos = FRONT_POS;
         setPosition();
     }
 
     public void down() {
         currPos = INTAKE_DOWN_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void retractPos() {
         wristPos = 0;
         currPos = RETRACT_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void frontPos() {
         wristPos = 0;
         currPos = FRONT_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void intakePos() {
@@ -141,43 +142,43 @@ public class Wrist extends Mechanism {
 
     public void autoBasketPos() {
         currPos = AUTO_BASKET_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void autoMidPos() {
         currPos = AUTO_MID_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void wallPos() {
         currPos = WALL_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void basketPos() {
         wristPos = 0;
         currPos = BASKET_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void clipPos() {
         currPos = CLIP_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void clipScorePos() {
         currPos = CLIP_SCORE_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void backPos() {
         currPos = BACK_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void climbPos() {
         currPos = CLIMB_POS;
-        setPosition();
+        defaultPos();
     }
 
     public void updatePos(double left, double right) {
