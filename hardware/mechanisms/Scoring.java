@@ -385,26 +385,26 @@ public class Scoring extends Mechanism {
                         shortIntake = false;
                     }
                     frontClicked = true;
-//                    if (intake.hasWrongColor(color)) {
-//                        intake.outtake();
-//                        intake.spread();
-//                        wait.trigger();
-//                        intake.stop();
-//                        pivot.intakeDownPos();
-//                        intake.intake();
-//                    }
+                    if (intake.hasWrongColor(color)) {
+                        intake.outtake();
+                        intake.spread();
+                        wait.trigger();
+                        intake.stop();
+                        pivot.intakeDownPos();
+                        intake.intake();
+                    }
                 } else {
                     frontClicked = false;
                 }
                 break;
             case INTAKE:
                 drivetrain.setIntake();
-//                if (intake.hasColor(this.color) && !intake.hasWrongColor(this.color)) {
-//                    retractTele.trigger();
-//                }
-//                if (intake.hasWrongColor(this.color)) {
-//                    eject.trigger();
-//                }
+                if (intake.hasColor(this.color) && !intake.hasWrongColor(this.color)) {
+                    retractTele.trigger();
+                }
+                if (intake.hasWrongColor(this.color)) {
+                    eject.trigger();
+                }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.PIVOT_FRONT)) {
                     if (!frontClicked) {
                         retractTele.trigger();
@@ -415,16 +415,6 @@ public class Scoring extends Mechanism {
                 }
                 if (GamepadStatic.isButtonPressed(gamepad, Controls.GRAB)) {
                     grabIntake.trigger();
-
-                    /*if (intake.hasWrongColor(color)){
-                        intake.outtake();
-                        intake.spread();
-                        wait.trigger();
-                        intake.stop();
-                        pivot.intakeDownPos();
-                        intake.intake();
-                    }
-                    */
                     sweeper.retractPos();
                     intake.intake();
                 }

@@ -48,8 +48,8 @@ public class Intake extends Mechanism {
 
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
-//        sampleSensor1 = new SampleSensor(opMode, "intakeSensor1", SAMPLE1, RED1, BLUE1, YELLOW1);
-//        sampleSensor2 = new SampleSensor(opMode, "intakeSensor2", SAMPLE2, RED2, BLUE2, YELLOW2);
+        sampleSensor1 = new SampleSensor(opMode, "intakeSensor1", SAMPLE1, RED1, BLUE1, YELLOW1);
+        sampleSensor2 = new SampleSensor(opMode, "intakeSensor2", SAMPLE2, RED2, BLUE2, YELLOW2);
     }
 
     public void intake() {
@@ -70,7 +70,6 @@ public class Intake extends Mechanism {
     }
 
     public void stop() {
-
         rightServo.setPower(0);
         leftServo.setPower(0);
         spreader.setPosition(CLOSE_POWER);
@@ -107,8 +106,8 @@ public class Intake extends Mechanism {
         spreader = hwMap.get(Servo.class, "spreader");
         spreader.setPosition(CLOSE_POWER);
 
-//        sampleSensor1.init(hwMap);
-//        sampleSensor2.init(hwMap);
+        sampleSensor1.init(hwMap);
+        sampleSensor2.init(hwMap);
         encoder = hwMap.get(AnalogInput.class, "intakeEncoder");
         currPos = getPosition();
     }
@@ -118,14 +117,14 @@ public class Intake extends Mechanism {
         telemetry.addData("positionPrev", prevPos);
         telemetry.addData("positionCurr", currPos);
         telemetry.addData("rotation", rotation);
-//        sampleSensor1.telemetry(telemetry);
-//        sampleSensor2.telemetry(telemetry);
+        sampleSensor1.telemetry(telemetry);
+        sampleSensor2.telemetry(telemetry);
     }
 
     public void update() {
         setPosition();
-//        sampleSensor1.update();
-//        sampleSensor2.update();
+        sampleSensor1.update();
+        sampleSensor2.update();
     }
 
     @Override
