@@ -123,8 +123,8 @@ public class Intake extends Mechanism {
 
     public void update() {
         setPosition();
-        sampleSensor1.update();
-        sampleSensor2.update();
+//        sampleSensor1.update();
+//        sampleSensor2.update();
     }
 
     @Override
